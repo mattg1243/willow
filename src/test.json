@@ -1,0 +1,42 @@
+{
+  "_id": { "$oid": "6138f5d8107df90ee4958625" },
+  "username": "scottg2139",
+  "email": "scott.gallucci@gmail.com",
+  "password": 23456789,
+  "clients": [
+    {
+      "lastname": "Doe",
+      "firstname": "John",
+      "retainer": 3200.00,
+      "balance": 0.0,
+      "sessions": [
+        {
+          "date": "09-06-2021",
+          "minutes": 30,
+          "rate": 150.00,
+          "charge": 75.0
+        },
+        {
+          "date": "10-06-2020",
+          "minutes": 42.0,
+          "rate": 125.0,
+          "charge": 87.5
+        }
+      ]
+    },
+    {
+      "lastname": "Smith",
+      "firstname": "Jane",
+      "retainer": 0.0,
+      "balance": 242.36,
+      "sessions": [
+        {
+          "date": "07-24-2021",
+          "minutes": 120.0,
+          "rate": 220.0,
+          "charge": 440.0
+        }
+      ]
+    }
+  ]
+}
