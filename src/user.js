@@ -1,5 +1,5 @@
-//import * as mongodb from 'mongodb';
-const mongo = require('node:module')
+const mongodb = require('mongodb')
+
 const un = 'mattg1243';
 const pw = 'chewyvuitton';
 const cluster = 'main-cluster';
@@ -39,10 +39,8 @@ async function createUser(User) {
 
         const db = mongoClient.db('maindb');
         const users = db.collection('users');
-        
         const result = await users.insertOne(User);
         console.log(`${User.username} was added to the database as a new user`);
-        alert(`${User.username} was added to the database as a new user`);
 
     } finally {
         await mongoClient.close();
@@ -172,5 +170,4 @@ async function run() {
 // addTest.addEvent(testClient, eventArr);
 
 // run().catch(console.dir);
-
-export {User, Client, Event, un, pw, uri, mongoClient}
+createUser({"fname": "sam", "lname": "iam", "email": "aslkdjhf@gmail.com", "password": "fuckthis"})
