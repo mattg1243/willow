@@ -1,0 +1,25 @@
+{
+  "name": "billing-project",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "a basic billing webapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattg1243/billing-tracker.git"
+  },
+  "keywords": [],
+  "author": "matt gallucci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattg1243/billing-tracker/issues"
+  },
+  "homepage": "https://github.com/mattg1243/billing-tracker#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
+}

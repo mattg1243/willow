@@ -1,36 +1,20 @@
-const { MongoClient } = require('mongodb');
-const readLine = require('readline');
-const inquirer = require('inquirer');
-let un = 'mattg1243';
-let pw = 'chewyvuitton';
-let cluster = 'main-cluster';
-let uri = `mongodb+srv://${un}:${pw}@${cluster}.5pmmm.mongodb.net/maindb?writeConcern=majority`;
-const mongoClient = new MongoClient(uri);
+//import * as mongodb from 'mongodb';
+const mongo = require('node:module')
+const un = 'mattg1243';
+const pw = 'chewyvuitton';
+const cluster = 'main-cluster';
+const uri = `mongodb+srv://${un}:${pw}@${cluster}.5pmmm.mongodb.net/maindb?writeConcern=majority`;
+const mongoClient = new mongodb.MongoClient(uri);
 
 
-function User(username, email, password, clients) {
+function User(fname, lname, email, password, clients = []) {
     
-    this.username = username,
+    this.fname = fname,
+    this.lname = lname;
     this.email = email,
     this.password = password,
-    this.clients = clients
+    this.clients = clients;
 
-}
-
-User.prototype.addClient = async function(client) {
-    try {
-        await mongoClient.connect();
-
-        const db = mongoClient.db('maindb');
-        const users = db.collection('users');
-        const query = {'username': this.username};
-        
-        const result = await users.updateOne(query, { $push: {clients: client}})
-        
-        console.log(`${result.insertedCount} clients were inserted to the ${this.username}'s profile.`)
-    } finally {
-        await mongoClient.close();
-    }
 }
 
 User.prototype.addUserToDB = async function() {
@@ -42,20 +26,76 @@ User.prototype.addUserToDB = async function() {
         
         const result = await users.insertOne(this);
         console.log(`${this.username} was added to the database as a new user`);
+        alert(`${this.username} was added to the database as a new user`);
 
     } finally {
         await mongoClient.close();
     }
 }
 
+async function createUser(User) {
+    try {
+        await mongoClient.connect();
 
-function Client(lastname, firstname, retainer, sessions, clientBalance) {
+        const db = mongoClient.db('maindb');
+        const users = db.collection('users');
+        
+        const result = await users.insertOne(User);
+        console.log(`${User.username} was added to the database as a new user`);
+        alert(`${User.username} was added to the database as a new user`);
+
+    } finally {
+        await mongoClient.close();
+    }
+}
+
+User.prototype.addClient = async function(client) {
+    try {
+       
+        await mongoClient.connect();
+
+        const db = mongoClient.db('maindb');
+        const users = db.collection('users');
+        const query = {'username': this.username};
+        
+        const result = await users.updateOne(query, { $push: {clients: client}})
+        
+        console.log(`${result.insertedCount} clients were inserted to the ${this.username}'s profile.`)
+
+    } finally {
+        
+        await mongoClient.close();
+
+    }
+}
+
+User.prototype.addEvent = async function(client, event) {
+    
+    try {
+
+        await mongoClient.connect();
+
+        const db = mongoClient.db('maindb');
+        const users = db.collection('users');
+        const userQuery = {'username': this.username};
+        const clients = await users.findOne(userQuery).clients;
+        const currentClient = await clients.findOne({'lastname': client.lastname, 'firstName': client.firstname});
+
+        const result = await currentClient.update({ $push: {events: event}})
+        console.log(`${result}`)
+    } finally {
+
+        await mongoClient.close();
+
+    }
+}
+
+function Client(lastname, firstname, balance, sessions) {
     
     this.lastname = lastname,
     this.firstname = firstname,
-    this.retainer = retainer,
+    this.balance = balance,
     this.sessions = sessions
-    this.balance = clientBalance;
 
 }
 
@@ -72,26 +112,7 @@ function Event(date, type, duration, rate, charge, amount) {
 }
 
 
-let regQuestions = [
-    {
-        type: 'input',
-        name: 'username',
-        message: 'Enter a username for the new user : '
-    },
-    {
-        type: 'input',
-        name: 'email',
-        message: 'Now enter an email for the user : '
-    },
-    {
-        type: 'input',
-        name: 'password',
-        message: 'Set your password : ',
-    }
-]
-
-
-
+/*
 clientFname = 'Eric';
 clientLname = 'Smith';
 clientBalance = 732;
@@ -104,7 +125,11 @@ testClient1 = new Client(clientLname, clientFname, testSession, clientBalance);
 testClient2 = new Client('Smith', 'Jane', 3200, testSession2);
 testClient3 = new Client('Appleseed', 'Jonny', 300, testSession2);
 
+testClient = new Client('Boy', 'Kid', 2000, testSession)
+
 clientsArr = [testClient1, testClient2];
+
+eventArr = [testSession, testSession2];
 
 // testUser = new User(username, email, password, clientsArr);
 
@@ -113,7 +138,7 @@ let ethan = new User('eg123', 'something', 'refund@gmail', clientsArr);
 console.dir(testClient1);
 console.log('\n+++++++++++++++++++++++++++++\n');
 console.log(testClient1['clients']);
-
+*/
 async function run() {
     try {
         await mongoClient.connect();
@@ -134,9 +159,18 @@ async function run() {
     }
 }
 
-let addTest = new User('addtest', 'asdkjfh', 'asdkfjh', clientsArr);
 
-ethan.addClient(testClient3);
-addTest.addUserToDB();
+
+
+
+// ethan.addClient(testClient3);
+// addTest.addUserToDB();
+
+
+// addTest.addUserToDB().catch(console.dir());
+// addTest.addClient(testClient).catch(console.dir());
+// addTest.addEvent(testClient, eventArr);
 
 // run().catch(console.dir);
+
+export {User, Client, Event, un, pw, uri, mongoClient}
