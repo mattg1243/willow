@@ -1,6 +1,7 @@
 const express = require('express');
 var router = require('express').Router();
 const User = require('../models/user-model')
+const Client = require('../models/client-schema')
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -47,7 +48,14 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
 })
 
 router.post('/dashboard/newclient', function(req, res) {
-    
+
+    const newClient = new Client({"fname": req.body.fname, "lname": req.body.lname, "balance": req.body.balance}); 
+
+    newClient.save(function(err, client) {
+        if (err) return console.error(err);
+        console.log(newClient.fname + 'added as a client')
+    })
+
 })
 
 
