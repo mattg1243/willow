@@ -1,5 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  if (user)
+    p Your are currently logged in as #{user.usernamer}
+  else 
+    p Please login or register

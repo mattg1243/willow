@@ -1,0 +1,21 @@
+extends layout 
+
+block content 
+
+    h2(style="font-family: 'Source Code Pro', monospace, heavy;") Welcome #{fname}
+
+    h3(style="font-family: 'Source Code Pro', monospace;") Add a client:
+    
+    div(class='container-sm')
+        form(action='dashboard/newclient' method='post' style="font-family: 'Encode Sans', monospace;")
+            div(class="mb-3") 
+                label First Name 
+                input(type="text", name="lname" class="form-control")
+            div(class="mb-3") 
+                label Last Name 
+                input(type="text", name="lname" class="form-control")
+            div(class="mb-3") 
+                label Balance 
+                input(type="number", name="balance" class="form-control")
+            div(class="mb-3") 
+                input(type="submit", value="Add" class="btn btn-secondary center")

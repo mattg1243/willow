@@ -1,0 +1,32 @@
+extends layout 
+
+
+block content 
+    h2(style="font-family: 'Source Code Pro', monospace, heavy;") Register
+
+    div(class="container-sm")
+        form(action="register/newuser", method="post" style="font-family: 'Encode Sans', monospace;")
+            div(class="mb-3") 
+                label username
+                input(type="text", name="username" class="form-control")
+            
+            div(class="mb-3") 
+                label Firstname 
+                input(type="text", name="fname" class="form-control")
+            
+            div(class="mb-3") 
+                label Lastname 
+                input(type="text", name="lname" class="form-control")
+
+            div(class="mb-3") 
+                label Email 
+                input(type="text", name="email" class="form-control")
+
+            div(class="mb-3") 
+                label Password 
+                input(type="password", name="password" class="form-control")
+
+            div(class="mb-3") 
+                input(type="submit", value="Register" class="btn btn-secondary center")
+
+        
