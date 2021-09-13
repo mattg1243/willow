@@ -9,7 +9,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
 const UserSchema = new Schema({
     
-    _id: {type: mongoose.Schema.Types.ObjectId},
     username: {type: String, required: true, maxLength: 100},
     fname: {type: String, required: true, maxLength: 100},
     lname: {type: String, required: true, maxLength: 100},
