@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
+const mongoStore = require('connect-mongo');
 var path = require('path');
 const favicon = require('favicon');
 var cookieParser = require('cookie-parser');
@@ -19,7 +20,7 @@ var app = express();
 // connect to MongoDB
 var mongoose = require('mongoose');
 var dburi = 'mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority';
-mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true, useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
@@ -35,16 +36,12 @@ app.use(session({
   secret: '123456',
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 60 * 60 * 1000} // 1 hour
+  cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
+  store: mongoStore.create({ mongoUrl: dburi }),
 }));
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session') ({
-  secret: "jack the pup",
-  resave: false,
-  saveUninitialized: false
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 

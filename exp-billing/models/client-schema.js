@@ -5,11 +5,11 @@ const passportLocalMongoose = require('passport-local-mongoose');
 var dburi = 'mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority';
 mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
-var clients = db.collections('clients');
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
 const ClientSchema = new Schema({
 
+    ownerID: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     fname: {type: String, required: true, maxLength: 100},
     lname: {type: String, required: true, maxLength: 100},
     balance: {type: Number, required: false, maxLength: 100},
@@ -17,4 +17,4 @@ const ClientSchema = new Schema({
 
 })
 
-module.exports = mongoose.model('Client', ClientSchema);
+module.exports = mongoose.model('Client', ClientSchema, 'clients');

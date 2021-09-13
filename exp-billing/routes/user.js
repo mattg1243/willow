@@ -49,14 +49,20 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
 
 router.post('/dashboard/newclient', function(req, res) {
 
-    const newClient = new Client({"fname": req.body.fname, "lname": req.body.lname, "balance": req.body.balance}); 
-
+    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, balance: req.body.balance}); 
+    console.log(newClient);
     newClient.save(function(err, client) {
+       
         if (err) return console.error(err);
-        console.log(newClient.fname + 'added as a client')
-    })
+        
+        console.log(client.fname + ' added as a client to ' + req.user['_id'])
+        User.findOneAndUpdate({ _id: req.user['_id'] }, { $push: { clients: client['_id'] } })
+        .populate('clients').exec(function(err, clients) {
+            console.log("Clients added : " + clients)
+        })
+        res.redirect('/');
 
-})
+})});
 
 
 module.exports = router;
