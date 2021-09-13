@@ -1,16 +1,13 @@
-const express = require('express');
 var router = require('express').Router();
-const User = require('../models/user-model')
-const Client = require('../models/client-schema')
-const mongoose = require('mongoose');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const passportLocalMongoose = require('passport-local-mongoose')
-const Schema = mongoose.Schema;
-const connectEnsureLogin = require('connect-ensure-login');
+var User = require('../models/user-model')
+var Client = require('../models/client-schema')
+var passport = require('passport');
+var connectEnsureLogin = require('connect-ensure-login');
 
 router.get('/register', function(req, res, next) {
-  res.render('register');
+  
+    res.render('register');
+
 })
 
 
@@ -47,8 +44,6 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
         console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients })
     });
-   // res.render('dashboard', { fname: req.user['fname'], clients: clients })
-
 })
 
 router.post('/dashboard/newclient', function(req, res) {
@@ -64,7 +59,7 @@ router.post('/dashboard/newclient', function(req, res) {
         .populate('clients').exec(function(err, clients) {
             console.log("Clients added : " + clients)
         })
-        res.redirect('/');
+        res.redirect('/user/dashboard');
 
 })});
 

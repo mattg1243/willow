@@ -21,5 +21,13 @@ block content
                 input(type="submit", value="Add" class="btn btn-secondary center")
 
     h3(style="font-family: 'Source Code Pro', monospace;") Existing Clients
-        table 
-            th #{clients}
+        table.table.table-responsive(style="font-family: 'Arial'") 
+            tr
+                th Name 
+                th Balance 
+                th Last Session 
+                th
+            each c in clients 
+                tr  
+                    td= c.fname + c.lname
+                    td= c.balance

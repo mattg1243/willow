@@ -1,16 +1,15 @@
 var createError = require('http-errors');
 var express = require('express');
-const session = require('express-session');
-const mongoStore = require('connect-mongo');
+var session = require('express-session');
 var path = require('path');
-const favicon = require('favicon');
 var cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser')
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var mongoStore = require('connect-mongo');
 var passport = require('./node_modules/passport')
 var LocalStrategy = require('./node_modules/passport-local');
-var passportLocalMongoose = require('passport-local-mongoose');
 var User = require('./models/user-model')
+require('dotenv').config();
 
 var layoutRouter = require('./routes/index');
 var userRouter = require('./routes/user')
@@ -18,9 +17,7 @@ var userRouter = require('./routes/user')
 var app = express();
 
 // connect to MongoDB
-var mongoose = require('mongoose');
-var dburi = 'mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority';
-mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true, useMongoClient: true });
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
@@ -37,7 +34,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
-  store: mongoStore.create({ mongoUrl: dburi }),
+  store: mongoStore.create({ mongoUrl: process.env.DB_URL }),
 }));
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());

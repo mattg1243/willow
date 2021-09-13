@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
 const Schema = mongoose.Schema;
+require('dotenv').config();
 
-var dburi = 'mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority';
-mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
@@ -19,7 +19,5 @@ const UserSchema = new Schema({
 })
 
 UserSchema.plugin(passportLocalMongoose);
-
-// const User = mongoose.model('User', UserSchema)
 
 module.exports = mongoose.model('User', UserSchema, 'users');
