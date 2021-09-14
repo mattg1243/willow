@@ -4,6 +4,7 @@ var Client = require('../models/client-schema')
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 var mongoose = require('mongoose');
+const { route } = require('.');
 
 router.get('/register', function(req, res, next) {
   
@@ -41,7 +42,7 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/login'
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
     
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
-    Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
+    Client.find({ ownerID: req.user['_id'] }, 'fname lname', function(err, clients) {
         console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients })
     });
@@ -49,7 +50,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
 
 router.post('/dashboard/newclient', function(req, res) {
 
-    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, balance: req.body.balance}); 
+    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email}); 
     console.log(newClient);
     newClient.save(function(err, client) {
        
@@ -63,6 +64,21 @@ router.post('/dashboard/newclient', function(req, res) {
         res.redirect('/user/dashboard');
 
 })});
+
+router.get("/client/:id", function(req, res) {
+
+    Client.findById(req.params.id, function(err, client) {
+        if (err) return console.error(err)
+
+        console.log(client)
+        res.render('clientpage', { client: client })
+
+    })
+});
+
+router.post('addsession/:date:type:time:rate', function(req, res){
+    res.send(req.params)
+})
 
 
 module.exports = router;

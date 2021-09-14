@@ -1,0 +1,30 @@
+extends layout 
+
+block content 
+
+    h1(style="font-family: 'PT Sans', sans-serif") Here is #{client['fname']}'s page
+        
+    table.table.table-striped Sessions 
+        tr
+            th Date 
+            th Type 
+            th Time 
+            th Charge 
+
+    h2 Add an event
+    form(action="addsession")
+        div.form-group
+            label.sr-only Date 
+            input.form-control(type="date" name="date" placeholder="date")     
+        div.form-group
+            label.sr-only(placeholder="type") Type 
+            input.form-control(type="text" name="type" placeholder="type")   
+        div.form-group
+            label.sr-only Time 
+            input.form-control(type="number" name="time" placeholder="duration") 
+        div.form-group
+            label.sr-only Rate 
+            input.form-control(type="number" name="rate" placeholder="rate")
+        div(class="mb-3") 
+            input(type="submit", value="Create Event" class="btn btn-secondary center") 
+            
