@@ -27,6 +27,8 @@
     "favicon": "^0.0.2",
     "flash": "^1.1.0",
     "http-errors": "~1.6.3",
+    "moment": "^2.29.1",
+    "momentjs": "^2.0.0",
     "mongo": "^0.1.0",
     "mongoose": "^6.0.5",
     "morgan": "~1.9.1",
