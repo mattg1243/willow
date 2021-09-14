@@ -15,19 +15,17 @@ block content
                 label Last Name 
                 input(type="text", name="lname" class="form-control")
             div(class="mb-3") 
-                label Balance 
-                input(type="number", name="balance" class="form-control")
+                label Phone Number 
+                input(type="tel", name="phonenumber" class="form-control")
+            div(class="mb-3") 
+                label Email Address 
+                input(type="email", name="email" class="form-control")
             div(class="mb-3") 
                 input(type="submit", value="Add" class="btn btn-secondary center")
 
     h3(style="font-family: 'Source Code Pro', monospace;") Existing Clients
-        table.table.table-responsive(style="font-family: 'Arial'") 
-            tr
-                th Name 
-                th Balance 
-                th Last Session 
-                th
-            each c in clients 
-                tr  
-                    td= c.fname + c.lname
-                    td= c.balance
+        ul(class="list-group" style="font-family: 'PT Sans', sans-serif")
+            each c in clients
+                a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
+
+            
