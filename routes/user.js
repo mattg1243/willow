@@ -1,9 +1,11 @@
 var router = require('express').Router();
 var User = require('../models/user-model')
 var Client = require('../models/client-schema')
+var Event = require('../models/event-schema')
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 var mongoose = require('mongoose');
+var moment = require('moment')
 const { route } = require('.');
 
 router.get('/register', function(req, res, next) {
@@ -44,7 +46,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
     Client.find({ ownerID: req.user['_id'] }, 'fname lname', function(err, clients) {
         console.log(clients); // clients is an array of the doc objects
-        res.render('dashboard', { fname: req.user['fname'], clients: clients })
+        res.render('dashboard', { fname: req.user['fname'], clients: clients})
     });
 })
 
@@ -68,17 +70,46 @@ router.post('/dashboard/newclient', function(req, res) {
 router.get("/client/:id", function(req, res) {
 
     Client.findById(req.params.id, function(err, client) {
+        
         if (err) return console.error(err)
 
-        console.log(client)
-        res.render('clientpage', { client: client })
-
+        Event.find({ clientID: req.params.id }, function(err, events) {
+           
+            if (err) return console.error(err);
+    
+            console.log(client)
+            console.log(events)
+            res.render('clientpage', { client: client, events: events })
+        })
     })
 });
 
-router.post('addsession/:date:type:time:rate', function(req, res){
-    res.send(req.params)
+router.post('/client/:id/addsession', function(req, res){
+
+    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: req.body.time, rate: req.body.rate, amount: req.body.time * req.body.rate });
+    event.save(function(err) {
+
+        if (err) return console.error(err);
+        console.log(event)
+        console.log('Event added')
+        res.redirect('/user/dashboard')
+
+    })
+
+    //event.save(function(err, event) {
+        
+        //if (err) return console.error(err);
+
+
+    //})
 })
+
+router.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+})
+
+
 
 
 module.exports = router;

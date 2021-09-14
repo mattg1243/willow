@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 const EventSchema = new Schema({
 
-    date: {type: Date, required: true, maxLength: 100},
+    ownerID: {type: mongoose.Schema.Types.ObjectID},
+    clientID: {type: mongoose.Schema.Types.ObjectID},
+    date: {type: mongoose.Schema.Types.Date, required: true, maxLength: 100},
     type: {type: String, required: true, maxLength: 100},
     duration: {type: Number, required: true, maxLength: 100},
     rate: {type: Number, required: true, maxLength: 10},
@@ -11,4 +13,4 @@ const EventSchema = new Schema({
 
 })
 
-module.exports = mongoose.model('Event', EventSchema);
+module.exports = mongoose.model('EventModel', EventSchema, 'events');

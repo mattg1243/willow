@@ -9,10 +9,20 @@ block content
             th Date 
             th Type 
             th Time 
-            th Charge 
+            th Charge  
+            th Amount
+        
+        each e in events 
+            tr
+                th= moment(e.date).format("MMM Do YY")
+                th= e.type
+                th= e.time
+                th= e.duration 
+                th= e.amount
+
 
     h2 Add an event
-    form(action="addsession")
+    form(action=`/user/client/${client._id}/addsession` method="post")
         div.form-group
             label.sr-only Date 
             input.form-control(type="date" name="date" placeholder="date")     

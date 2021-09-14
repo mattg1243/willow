@@ -12,14 +12,14 @@ html
       .container-fluid 
         a.brand(href="/") Home
         ul.nav 
-        if (typeof(user) == 'undefined')
+        if (!loggedIn)
           li 
             a(href='/user/register') Register 
           li 
             a(href='/user/login') Log In 
         else 
           li 
-            a(href='/logout') Log Out
+            a(href='/user/logout' method="post") Log Out
       .container-fluid
 
 

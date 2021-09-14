@@ -15,6 +15,8 @@ var layoutRouter = require('./routes/index');
 var userRouter = require('./routes/user')
 
 var app = express();
+app.locals.moment = require('moment');
+app.locals.passport = require('passport');
 
 // connect to MongoDB
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useMongoClient: true, tls: true });
@@ -45,6 +47,14 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next) {
+
+  res.locals.loggedIn = req.isAuthenticated();
+
+  next();
+  
+})
 
 // ROUTES:
 
