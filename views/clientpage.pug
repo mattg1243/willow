@@ -2,26 +2,32 @@ extends layout
 
 block content 
 
-    h1(style="font-family: 'PT Sans', sans-serif") Here is #{client['fname']}'s page
+    h2(style="font-family: 'PT Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
         
-    table.table.table-striped Sessions 
-        tr
-            th Date 
-            th Type 
-            th Time 
-            th Charge  
-            th Amount
+    
+    if events.length == 0
+    
+    table.table.highlight.centered(height=200 style="table-layout: fixed;") Events
         
-        each e in events 
-            tr
-                th= moment(e.date).format("MMM Do YY")
-                th= e.type
-                th= e.time
-                th= e.duration 
-                th= e.amount
+        if events.length == 0
+            tr(height=200) 
+                th(style="text-align: center;") No events logged for this client 
+        else
+            tr(height=50)
+                th Date 
+                th Type 
+                th Time  
+                th Amount
+            
+            each e in events 
+                tr(height=50)
+                    th= moment(e.date).format("MMM Do YY")
+                    th= e.type
+                    th= e.duration 
+                    th= '$ '+ e.amount
 
 
-    h2 Add an event
+    h4 Add an event
     form(action=`/user/client/${client._id}/addsession` method="post")
         div.form-group
             label.sr-only Date 

@@ -5,13 +5,26 @@ block content
     h2 Welcome #{fname}
     
     h3 
-        .collection.with-header.z-depth-1 
+        .collection.with-header 
             h4.collection-header Clients
                 each c in clients 
                     a(href=`client/${c._id}` class="collection-item" )= c.fname + ' ' + c.lname
                     
                 
                     //a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
+        a.btn-floating.btn-large.waves-effect.waves-light.blue.modal-trigger(href="#addClientModal")
+            i.material-icons +
+        
+        #addClientModal.modal
+            .modal-content
+                h4 Modal Header
+                p A bunch of text
+            .modal-footer
+                a.modal-close.waves-effect.waves-green.btn-flat(href='#!') Agree
+
+        a.btn-floating.btn-large.waves-effect.waves-light.red.right
+            i.material-icons -
+
     
 
     h3(style="font-family: 'Fire Sans', sans-serif;") Add a client:    

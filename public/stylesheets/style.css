@@ -1,6 +1,16 @@
+h1, h2 {
+  font-family: 'Encode Sans', monospace;
+}
+
 body {
-  padding: 50px;
-  font: 24px "Monospace";
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  font-family: 'Encode Sans', monospace;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 a {
