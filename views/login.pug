@@ -3,17 +3,12 @@ extends layout
 block content 
     h2 Log In 
 
+        form(action='login' method='post')
+        
+            label Username 
+            input(type="text", name="username" class="validate")
+        
+            label Password 
+            input(type="password", name="password" class="validate")
 
-        if message != ''
-            .alert.alert-error #{message}
-        div(class="container-sm")
-            form(action='login' method='post' style="font-family: 'Encode Sans', monospace;")
-                div(class="mb-3") 
-                    label Username 
-                    input(type="text", name="username" class="form-control")
-                div(class="mb-3") 
-                    label Password 
-                    input(type="password", name="password" class="form-control")
-
-                div(class="mb-3") 
-                    input(type="submit", value="Log In" class="btn btn-secondary center")
+            input(type="submit", value="Log In" class="btn btn-secondary center")

@@ -7,38 +7,42 @@ html
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css")
     link(rel='stylesheet', href='https://fonts.googleapis.com/css2?family=Encode+Sans&family=Source+Code+Pro:ital,wght@1,900&display=swap')
     link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Fira+Sans&family=Indie+Flower&family=PT+Sans&display=swap")
+    link(rel="stylesheet" href="stylesheets/style.css")
+    script(src="javascripts/script.js")
   body
-    nav
-      .nav-wrapper 
-        a.brand-logo.left(href='/' style="font-family: 'Indie Flower', cursive;") EZ
-          ul.right
-            if (!loggedIn)
-              li 
-                a(href='/user/register') Register 
-              li 
-                a(href='/user/login') Log In
-            else
-              li 
-                a(href='/user/dashboard') Dashboard 
-              li 
-                a(href='/user/logout') Log Out
-  .container
-    block content
+    main
+      nav
+        .nav-wrapper 
+          a.brand-logo.left(href='/' style="font-family: 'Indie Flower', cursive;") EZ
+            ul.right
+              if (!loggedIn)
+                li 
+                  a(href='/user/register') Register 
+                li 
+                  a(href='/user/login') Log In
+              else
+                li 
+                  a(href='/user/dashboard') Dashboard 
+                li 
+                  a(href='/user/logout') Log Out
+        
+      .container    
+        block content
 
-footer.page-footer
-  .container
-    .row
-      .col.l6.s12
-        h5.white-text 
-        p.grey-text.text-lighten-4
-      .col.l4.offset-l2.s12
-        h5.white-text 
-        ul
-          li
-            a.grey-text.text-lighten-3(href='#!')
-          li
-            a.grey-text.text-lighten-3(href='#!')
-  .footer-copyright
-    .container
-      | © EZ
-      a.grey-text.text-lighten-4.right(href='#') GitHub
+    footer.page-footer.footer-fixed
+      .container
+        .row
+          .col.l6.s12
+            h5.white-text 
+            p.grey-text.text-lighten-4
+          .col.l4.offset-l2.s12
+            h5.white-text 
+            ul
+              li
+                a.grey-text.text-lighten-3(href='#!')
+              li
+                a.grey-text.text-lighten-3(href='#!')
+      .footer-copyright
+        .container
+          | © EZ
+          a.grey-text.text-lighten-4.right(href='#') GitHub
