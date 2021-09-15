@@ -1,7 +1,13 @@
 extends layout
 
 block content
-  if (user)
-    p Your are currently logged in as #{user.usernamer}
+  
+  .container.valign-wrapper
+      p(style="font-family: 'Indie Flower', cursive; font-size: 4rem; margin-top: auto;") $ made ez
+  
+  if (loggedIn)
+    .container.center-align
+      p(style="font-family: 'Indie Flower', cursive; font-size: 3rem; margin-top: auto;") Your are currently logged in
   else 
-    p Please login or register
+    .container.center-align
+      p(style="font-family: 'Indie Flower', cursive; font-size: 2rem; margin-top: auto;") Login or sign up to get started

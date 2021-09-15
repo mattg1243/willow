@@ -86,7 +86,7 @@ router.get("/client/:id", function(req, res) {
 
 router.post('/client/:id/addsession', function(req, res){
 
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: req.body.time, rate: req.body.rate, amount: req.body.time * req.body.rate });
+    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: req.body.time, rate: req.body.rate, amount: (req.body.time * req.body.rate).toFixed(2) });
     event.save(function(err) {
 
         if (err) return console.error(err);

@@ -2,30 +2,34 @@ extends layout
 
 block content 
 
-    h2(style="font-family: 'Source Code Pro', monospace, heavy;") Welcome #{fname}
-
-    h3(style="font-family: 'Source Code Pro', monospace;") Add a client:
+    h2 Welcome #{fname}
     
-    div(class='container-sm')
-        form(action='dashboard/newclient' method='post' style="font-family: 'Encode Sans', monospace;")
-            div(class="mb-3") 
-                label First Name 
-                input(type="text", name="fname" class="form-control")
-            div(class="mb-3") 
-                label Last Name 
-                input(type="text", name="lname" class="form-control")
-            div(class="mb-3") 
-                label Phone Number 
-                input(type="tel", name="phonenumber" class="form-control")
-            div(class="mb-3") 
-                label Email Address 
-                input(type="email", name="email" class="form-control")
-            div(class="mb-3") 
-                input(type="submit", value="Add" class="btn btn-secondary center")
+    h3 
+        .collection.with-header.z-depth-1 
+            h4.collection-header Clients
+                each c in clients 
+                    a(href=`client/${c._id}` class="collection-item" )= c.fname + ' ' + c.lname
+                    
+                
+                    //a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
+    
 
-    h3(style="font-family: 'Source Code Pro', monospace;") Existing Clients
-        ul(class="list-group" style="font-family: 'PT Sans', sans-serif")
-            each c in clients
-                a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
+    h3(style="font-family: 'Fire Sans', sans-serif;") Add a client:    
+        div(class='container-sm')
+            form(action='dashboard/newclient' method='post' style="font-family: 'Encode Sans', monospace;")
+                div(class="mb-3") 
+                    label First Name 
+                    input(type="text", name="fname" class="form-control")
+                div(class="mb-3") 
+                    label Last Name 
+                    input(type="text", name="lname" class="form-control")
+                div(class="mb-3") 
+                    label Phone Number 
+                    input(type="tel", name="phonenumber" class="form-control")
+                div(class="mb-3") 
+                    label Email Address 
+                    input(type="email", name="email" class="form-control")
+                div(class="mb-3") 
+                    input(type="submit", value="Add" class="btn btn-secondary center")
 
             
