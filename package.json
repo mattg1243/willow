@@ -13,6 +13,8 @@
   "dependencies": {
     "async": "^3.2.1",
     "body-parser": "^1.19.0",
+    "bootstrap": "^3.4.1",
+    "bower": "^1.8.12",
     "connect": "^3.7.0",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
@@ -27,6 +29,7 @@
     "favicon": "^0.0.2",
     "flash": "^1.1.0",
     "http-errors": "~1.6.3",
+    "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.29.1",
     "momentjs": "^2.0.0",
     "mongo": "^0.1.0",
