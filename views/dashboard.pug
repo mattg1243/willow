@@ -2,32 +2,30 @@ extends layout
 
 block content 
 
-    h2 Welcome #{fname}
+
     
-    h3 
+    h3(style="font-family: 'Amatic SC', cursive;") Dashboard
         .collection.with-header 
             h4.collection-header Clients
-                each c in clients 
-                    a(href=`client/${c._id}` class="collection-item" )= c.fname + ' ' + c.lname
+            each c in clients 
+                a(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
+                    p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
                     
                 
                     //a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
-        a.btn-floating.btn-large.waves-effect.waves-light.blue.modal-trigger(href="#addClientModal")
-            i.material-icons +
-        
-        #addClientModal.modal
-            .modal-content
-                h4 Modal Header
-                p A bunch of text
-            .modal-footer
-                a.modal-close.waves-effect.waves-green.btn-flat(href='#!') Agree
-
-        a.btn-floating.btn-large.waves-effect.waves-light.red.right
-            i.material-icons -
+    a.btn-floating.btn-large.waves-effect.waves-light.blue.modal-trigger(href="#addClientModal")
+        i.material-icons +
+    
+    #addClientModal.modal
+        .modal-content
+            h4 Modal Header
+            p A bunch of text
+        .modal-footer
+            a.modal-close.waves-effect.waves-green.btn-flat(href='#!') Agree
 
     
 
-    h3(style="font-family: 'Fire Sans', sans-serif;") Add a client:    
+    h3(style="font-family: 'Amatic SC', cursive;") Add a client:    
         div(class='container-sm')
             form(action='dashboard/newclient' method='post' style="font-family: 'Encode Sans', monospace;")
                 div(class="mb-3") 
