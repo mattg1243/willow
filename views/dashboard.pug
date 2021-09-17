@@ -10,18 +10,7 @@ block content
             each c in clients 
                 a(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
                     p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
-                    
-                
-                    //a(href=`client/${c._id}` class="list-group-item" )= c.fname + ' ' + c.lname
-    a.btn-floating.btn-large.waves-effect.waves-light.blue.modal-trigger(href="#addClientModal")
-        i.material-icons +
-    
-    #addClientModal.modal
-        .modal-content
-            h4 Modal Header
-            p A bunch of text
-        .modal-footer
-            a.modal-close.waves-effect.waves-green.btn-flat(href='#!') Agree
+
 
     
 

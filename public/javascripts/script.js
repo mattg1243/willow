@@ -1,3 +1,3 @@
-$(document).on('ready', function(){
-  $('.modal').modal();
-});
+import { AutoInit } from './materialize.min.js';
+
+AutoInit();

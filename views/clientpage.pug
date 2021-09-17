@@ -29,20 +29,46 @@ block content
                     th= '$ '+ e.amount
 
 
-    h4 Add an event
-    form(action=`/user/client/${client._id}/addsession` method="post")
-        div.form-group
-            label.sr-only Date 
-            input.form-control(type="date" name="date" placeholder="date")     
-        div.form-group
-            label.sr-only(placeholder="type") Type 
-            input.form-control(type="text" name="type" placeholder="type")   
-        div.form-group
-            label.sr-only Time 
-            input.form-control(type="number" step=0.1 name="time" placeholder="duration") 
-        div.form-group
-            label.sr-only Rate 
-            input.form-control(type="number" name="rate" placeholder="rate")
-        div(class="mb-3") 
-            input(type="submit", value="Create Event" class="btn btn-secondary center") 
-            
+    button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
+    
+
+    #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+        .modal-dialog(role='form')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Event Details
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body
+                    .form.form-control(action="/client/:id/addsession" method="post")
+                        div.form-group
+                            label.sr-only Date 
+                            input.form-control(type="date" step=0.1 name="time" placeholder="Date")
+                        .form-group 
+                            .dropdown
+                                button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Type
+                                .dropdown-menu(aria-labelledby='dropdownMenuButton')
+                                    a.dropdown-item(href='#meeting') 1:1 Meeting
+                                    a.dropdown-item(href='#meeting') 3 Way Meeting
+                                    a.dropdown-item(href='#meeting') 4 Way Meeting
+                                    a.dropdown-item(href='#meeting') 5 Way Meeting
+                                    a.dropdown-item(href='#meeting') 6 Way Meeting
+                                    .dropdown-divider
+                                    a.dropdown-item(href='#') Emails
+                                    a.dropdown-item(href='#') Intention Statement 
+                                    a.dropdown-item(href='#') Notes
+                                    a.dropdown-item(href='#') Parenting Plan 
+                                    a.dropdown-item(href='#') Phone Call
+                                    a.dropdown-item(href='#') Refund
+                                    a.dropdown-item(href='#') Retainer
+                                    a.dropdown-item(href='#') Team Meeting
+                                    a.dropdown-item(href='#') Travel Time                     
+                        div.form-group
+                            label.sr-only Time 
+                            input.form-control(type="number" step=0.1 name="time" placeholder="these will change") 
+                        div.form-group
+                            label.sr-only Rate 
+                            input.form-control(type="number" name="rate" placeholder="depending on type selection")
+                        div.form-group(class="mb-3") 
+                            .btn.btn-primary(type="submit" action="/client/:id/addsession" method="post") Create Event
+
