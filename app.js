@@ -11,7 +11,7 @@ var LocalStrategy = require('./node_modules/passport-local');
 var User = require('./models/user-model')
 require('dotenv').config();
 
-var layoutRouter = require('./routes/index');
+var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user')
 
 var app = express();
@@ -29,7 +29,8 @@ app.set('view engine', 'pug');
 
 
 // middleware
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(session({
@@ -59,8 +60,12 @@ app.use(function(req, res, next) {
 
 // ROUTES:
 
-app.use('/', layoutRouter);
+app.use('/', indexRouter);
 app.use('/user', userRouter);
+
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, '/public/scripts/materialize.min.js'))
+})
 
 
 // catch 404 and forward to error handler
