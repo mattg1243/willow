@@ -52,7 +52,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
 
 router.post('/dashboard/newclient', function(req, res) {
 
-    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email}); 
+    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
     console.log(newClient);
     newClient.save(function(err, client) {
        
@@ -61,9 +61,13 @@ router.post('/dashboard/newclient', function(req, res) {
         console.log(client.fname + ' added as a client to ' + req.user['_id'])
         User.findOneAndUpdate({ _id: req.user['_id'] }, { $push: { clients: client['_id'] } })
         .populate('clients').exec(function(err, clients) {
+            
+            if(err) return console.error(err);
+            
             console.log("Clients added : " + clients)
         })
-        res.redirect('/user/dashboard');
+        
+        res.redirect(`/user/client/${client._id}`);
 
 })});
 
@@ -87,14 +91,36 @@ router.get("/client/:id", function(req, res) {
 router.post('/client/:id/addsession', function(req, res){
 
     const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: req.body.time, rate: req.body.rate, amount: (req.body.time * req.body.rate).toFixed(2) });
-    event.save(function(err) {
+    event.save(function(err, event) {
 
         if (err) return console.error(err);
+        
+        const amount = event['duration'] * event['rate']
+        
+        if (event['type'] == 'retainer' || event['type'] == 'payment') {    
+            
+            Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
+                
+                if (err) console.error(err);
+
+                else console.log(result);
+
+            })} else {
+                
+                Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: -amount }}, function(err, result) {
+                
+                    if (err) console.error(err);
+    
+                    else console.log(result);
+
+            })
+
         console.log(event)
         console.log('Event added')
-        res.redirect('/user/dashboard')
 
-    })
+        res.redirect(`/user/client/${req.params.id}`)
+        
+    }})
 
     //event.save(function(err, event) {
         

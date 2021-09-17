@@ -10,7 +10,8 @@ const EventSchema = new Schema({
     type: {type: String, required: true, maxLength: 100},
     duration: {type: Number, required: false, maxLength: 100},
     rate: {type: Number, required: false, maxLength: 10},
-    amount: {type: mongoose.Schema.Types.Decimal128, required: false}
+    amount: {type: mongoose.Schema.Types.Decimal128, required: false,
+            get: v => new mongoose.Types.Decimal128((+v.toString()).toFixed(2))}
 
 })
 
