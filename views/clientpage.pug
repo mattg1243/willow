@@ -33,42 +33,41 @@ block content
     
 
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
-        .modal-dialog(role='form')
+        .modal-dialog(role='document')
             .modal-content
                 .modal-header
-                    h5#exampleModalLabel.modal-title Event Details
+                    h3#exampleModalLabel.modal-title(style="font-size: 1em;") Event Details
                     button.close(type='button', data-dismiss='modal', aria-label='Close')
                     span(aria-hidden='true') &times;
-                .modal-body
-                    .form.form-control(action="/client/:id/addsession" method="post")
-                        div.form-group
-                            label.sr-only Date 
-                            input.form-control(type="date" step=0.1 name="time" placeholder="Date")
-                        .form-group 
-                            .dropdown
-                                button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Type
-                                .dropdown-menu(aria-labelledby='dropdownMenuButton')
-                                    a.dropdown-item(href='#meeting') 1:1 Meeting
-                                    a.dropdown-item(href='#meeting') 3 Way Meeting
-                                    a.dropdown-item(href='#meeting') 4 Way Meeting
-                                    a.dropdown-item(href='#meeting') 5 Way Meeting
-                                    a.dropdown-item(href='#meeting') 6 Way Meeting
-                                    .dropdown-divider
-                                    a.dropdown-item(href='#') Emails
-                                    a.dropdown-item(href='#') Intention Statement 
-                                    a.dropdown-item(href='#') Notes
-                                    a.dropdown-item(href='#') Parenting Plan 
-                                    a.dropdown-item(href='#') Phone Call
-                                    a.dropdown-item(href='#') Refund
-                                    a.dropdown-item(href='#') Retainer
-                                    a.dropdown-item(href='#') Team Meeting
-                                    a.dropdown-item(href='#') Travel Time                     
-                        div.form-group
-                            label.sr-only Time 
-                            input.form-control(type="number" step=0.1 name="time" placeholder="these will change") 
-                        div.form-group
-                            label.sr-only Rate 
-                            input.form-control(type="number" name="rate" placeholder="depending on type selection")
-                        div.form-group(class="mb-3") 
-                            .btn.btn-primary(type="submit" action="/client/:id/addsession" method="post") Create Event
+                .modal-body.text-center.mb-1
+                    .md-form.mb-5(action="/client/:id/addsession" method="post")
+                        label.sr-only Date 
+                        input.form-control(type="date" step=0.1 name="time" placeholder="Date")
+                    .md-form.mb-5 
+                        .dropdown
+                            button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Type
+                            .dropdown-menu(aria-labelledby='dropdownMenuButton')
+                                a.dropdown-item(href='#meeting') 1:1 Meeting
+                                a.dropdown-item(href='#meeting') 3 Way Meeting
+                                a.dropdown-item(href='#meeting') 4 Way Meeting
+                                a.dropdown-item(href='#meeting') 5 Way Meeting
+                                a.dropdown-item(href='#meeting') 6 Way Meeting
+                                .dropdown-divider
+                                a.dropdown-item(href='#') Emails
+                                a.dropdown-item(href='#') Intention Statement 
+                                a.dropdown-item(href='#') Notes
+                                a.dropdown-item(href='#') Parenting Plan 
+                                a.dropdown-item(href='#') Phone Call
+                                a.dropdown-item(href='#') Refund
+                                a.dropdown-item(href='#') Retainer
+                                a.dropdown-item(href='#') Team Meeting
+                                a.dropdown-item(href='#') Travel Time                     
+                    .md-form.mb-5 
+                        label.sr-only Time 
+                        input.form-control(type="number" step=0.1 name="time" placeholder="these will change") 
+                    .md-form.mb-5 
+                        label.sr-only Rate 
+                        input.form-control(type="number" name="rate" placeholder="depending on type selection")
+                .modal-footer.d-flex.justify-content-center 
+                    .btn.btn-primary(type="submit" action="/client/:id/addsession" method="post") Create Event
 
