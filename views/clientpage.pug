@@ -31,43 +31,67 @@ block content
 
     button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
     
-
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
                 .modal-header
-                    h3#exampleModalLabel.modal-title(style="font-size: 1em;") Event Details
+                    h2#exampleModalLabel.modal-title(style="font-size: 2em;") Event Details
                     button.close(type='button', data-dismiss='modal', aria-label='Close')
                     span(aria-hidden='true') &times;
                 .modal-body.text-center.mb-1
-                    .md-form.mb-5(action="/client/:id/addsession" method="post")
-                        label.sr-only Date 
-                        input.form-control(type="date" step=0.1 name="time" placeholder="Date")
-                    .md-form.mb-5 
-                        .dropdown
-                            button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Type
-                            .dropdown-menu(aria-labelledby='dropdownMenuButton')
-                                a.dropdown-item(href='#meeting') 1:1 Meeting
-                                a.dropdown-item(href='#meeting') 3 Way Meeting
-                                a.dropdown-item(href='#meeting') 4 Way Meeting
-                                a.dropdown-item(href='#meeting') 5 Way Meeting
-                                a.dropdown-item(href='#meeting') 6 Way Meeting
-                                .dropdown-divider
-                                a.dropdown-item(href='#') Emails
-                                a.dropdown-item(href='#') Intention Statement 
-                                a.dropdown-item(href='#') Notes
-                                a.dropdown-item(href='#') Parenting Plan 
-                                a.dropdown-item(href='#') Phone Call
-                                a.dropdown-item(href='#') Refund
-                                a.dropdown-item(href='#') Retainer
-                                a.dropdown-item(href='#') Team Meeting
-                                a.dropdown-item(href='#') Travel Time                     
-                    .md-form.mb-5 
-                        label.sr-only Time 
-                        input.form-control(type="number" step=0.1 name="time" placeholder="these will change") 
-                    .md-form.mb-5 
-                        label.sr-only Rate 
-                        input.form-control(type="number" name="rate" placeholder="depending on type selection")
-                .modal-footer.d-flex.justify-content-center 
-                    .btn.btn-primary(type="submit" action="/client/:id/addsession" method="post") Create Event
+                    form(action=`${client._id}/addsession` method="post")
+                        .md-form.mb-5
+                            label.sr-only Date 
+                            input.form-control(type="date" step=0.1 name="date" placeholder="Date")
+                        .md-form.mb-5 
+                            select.custom-select#eventTypeSelector(name="type") Type
+                                option(value='meeting') 1:1 Meeting   
+                                option(value='meeting') 3 Way Meeting  
+                                option(value='meeting') 4 Way Meeting  
+                                option(value='meeting') 5 Way Meeting  
+                                option(value='meeting') 6 Way Meeting  
+                                option(value='emails') Emails               
+                                option(value='intention statements') Intention Statement   
+                                option(value='notes') Notes
+                                option(value='parenting plan') Parenting Plan 
+                                option(value='phone call') Phone Call
+                                option(value='refund') Refund
+                                option(value='retainer') Retainer
+                                option(value='team meeting') Team Meeting
+                                option(value='travel time') Travel Time                     
+                        
+                        .md-form.mb-5#timeField(style="display: none;")
+                            .inline-form 
+                                select.custom-select(name="hours")
+                                    option(value=1) 1 hr
+                                    option(value=2) 2 hr
+                                    option(value=3) 3 hr
+                                    option(value=4) 4 hr
+                                    option(value=5) 5 hr
+                                    option(value=6) 6 hr
+                                    option(value=7) 7 hr
+                                    option(value=8) 8 hr
+                                    option(value=9) 9 hr
+                                    option(value=9) 10 hr
+                                    option(value=0) 0 hr
+                                select.custom-select(name="minutes") 
+                                    option(value=0) 0 mins
+                                    option(value=.1) 1-6 mins
+                                    option(value=.2) 7-12 mins
+                                    option(value=.3) 13-18 mins 
+                                    option(value=.4) 19-24 mins
+                                    option(value=.5) 25-30 mins
+                                    option(value=.6) 31-36 mins
+                                    option(value=.7) 37-42 mins
+                                    option(value=.8) 43-48 mins
+                                    option(value=.9) 49-54 mins
+                        .md-form.mb-5#rateField(style="display: none;")
+                            label.sr-only Rate 
+                            input.form-control(type="number" name="rate" placeholder="Rate")
+                        .md-form.mb-5#amountField(style="display: none;") 
+                            label.sr-only Amount 
+                            input.form-control(type="text" name="amount" placeholder="Amount")
+
+                        .modal-footer.d-flex.justify-content-center 
+                            input.btn.btn-primary(type="submit" value="Create Event")
 
