@@ -53,6 +53,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next) {
 
   res.locals.loggedIn = req.isAuthenticated();
+  res.locals.eventType = 'none';
 
   next();
   
