@@ -6,8 +6,6 @@ block content
         h4 Balance: $ #{parseFloat(client.balance.toString()).toFixed(2)}
         
     
-    if events.length == 0
-    
     table.table.highlight.centered(height=200 style="table-layout: fixed;") Events
         
         if events.length == 0
@@ -19,6 +17,7 @@ block content
                 th Type 
                 th Time  
                 th Amount
+                th Actions
                 
             
             each e in events 
@@ -27,6 +26,9 @@ block content
                     th= e.type
                     th= e.duration 
                     th= '$ '+ e.amount
+                    th 
+                        a(href=`${client._id}/deleteevent/${e._id}` method="post")
+                            span.material-icons-outlined delete
 
 
     button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
@@ -72,19 +74,19 @@ block content
                                     option(value=7) 7 hr
                                     option(value=8) 8 hr
                                     option(value=9) 9 hr
-                                    option(value=9) 10 hr
+                                    option(value=10) 10 hr
                                     option(value=0) 0 hr
                                 select.custom-select(name="minutes") 
                                     option(value=0) 0 mins
-                                    option(value=.1) 1-6 mins
-                                    option(value=.2) 7-12 mins
-                                    option(value=.3) 13-18 mins 
-                                    option(value=.4) 19-24 mins
-                                    option(value=.5) 25-30 mins
-                                    option(value=.6) 31-36 mins
-                                    option(value=.7) 37-42 mins
-                                    option(value=.8) 43-48 mins
-                                    option(value=.9) 49-54 mins
+                                    option(value=0.1) 1-6 mins
+                                    option(value=0.2) 7-12 mins
+                                    option(value=0.3) 13-18 mins 
+                                    option(value=0.4) 19-24 mins
+                                    option(value=0.5) 25-30 mins
+                                    option(value=0.6) 31-36 mins
+                                    option(value=0.7) 37-42 mins
+                                    option(value=0.8) 43-48 mins
+                                    option(value=0.9) 49-54 mins
                         .md-form.mb-5#rateField(style="display: none;")
                             label.sr-only Rate 
                             input.form-control(type="number" name="rate" placeholder="Rate")

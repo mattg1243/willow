@@ -90,45 +90,63 @@ router.get("/client/:id", function(req, res) {
 
 router.post('/client/:id/addsession', function(req, res){
 
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: req.body.hours + req.body.minutes, rate: req.body.rate, amount: (req.body.hours + req.body.minutes) * req.body.rate });
+    const time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
+    
+    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: time * req.body.rate });
     event.save(function(err, event) {
 
         if (err) return console.error(err);
         
-        const amount = event['duration'] * event['rate']
+        let amount = 0;
+
+        if (req.body.type == 'retainer') { // need to do something similar for refund type
+
+            event.amount = req.body.amount;
+            const amount = req.body.amount;
+
+            } else {
+
+            amount = -(event['duration'] * event['rate'])
         
-        if (event['type'] == 'retainer' || event['type'] == 'payment') {    
-            
-            Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
-                
-                if (err) console.error(err);
+         }
 
-                else console.log(result);
-
-            })} else {
+         Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
                 
-                Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: -amount }}, function(err, result) {
-                
-                    if (err) console.error(err);
-    
-                    else console.log(result);
+            if (err) console.error(err);
 
-            })
+            else console.log(result);
+        })
 
         console.log(event)
         console.log('Event added')
 
         res.redirect(`/user/client/${req.params.id}`)
         
-    }})
-
-    //event.save(function(err, event) {
-        
-        //if (err) return console.error(err);
-
-
-    //})
+    })
 })
+
+router.get('/client/:id/deleteevent/:eventid', function (req, res) {
+
+    // need to go and change the amounts inc in the balance to be either positive or negative to be able to undo them
+
+    Event.findByIdAndDelete(req.params.eventid, function (err, event) {
+
+        if (err) return console.error(err);
+
+        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: event.amount }}, function(err, result) {
+                
+            if (err) console.error(err);
+
+            else console.log(result);
+        })
+
+    })
+
+    res.redirect(`/user/client/${req.params.id}`);
+
+})
+
+
 
 router.get('/logout', function(req, res) {
     req.logout();
