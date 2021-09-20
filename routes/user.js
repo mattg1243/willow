@@ -36,7 +36,7 @@ router.get('/login', function(req, res, next) {
 })
 
 
-router.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: false }), function(req, res) {
+router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
     console.log(req.user);
     res.redirect('dashboard');
 })
@@ -73,6 +73,8 @@ router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), functio
 
 router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
+    const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting']
+    
     Client.findById(req.params.id, function(err, client) {
         
         if (err) return console.error(err)
@@ -83,7 +85,7 @@ router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res
     
             console.log(client)
             console.log(events)
-            res.render('clientpage', { client: client, events: events })
+            res.render('clientpage', { client: client, events: events, meetings: meetingTypes })
         })
     })
 });

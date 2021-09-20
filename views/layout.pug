@@ -9,22 +9,23 @@ html
     link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amatic+SC&family=Caveat&family=Fira+Sans&family=Indie+Flower&family=Open+Sans:wght@300&family=PT+Sans&family=PT+Sans+Narrow&family=Permanent+Marker&family=Slabo+27px&display=swap")
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css")
+    link(rel="stylesheet" href="/stylesheets/style.css")
     meta(charset="UTF-8")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name='viewport' content='width=device-width', initial-scale=1)
-    body.flex-column.h-100
-      main.flex-shrink-0.text-center
-        nav.navbar.navbar-expand-lg.navbar-light.bg-primary
+    body.d-flex.flex-column.align-items-center
+      
+      nav.navbar.navbar-expand-lg.navbar-light.shadow-1-strong
           .container-fluid.text-white 
-            a.navbar-brand.left(href='/' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: white !important;") EZ
+            a.navbar-brand(href='/' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: white !important;") EZ
             if (!loggedIn)
-              a.nav-link(href='/user/register' style="color: white !important;") Register 
-              a.nav-link(href='/user/login' style="color: white !important;") Log In
+              a.nav-link(href='#')
+              a.nav-link(href='/user/login') Login
             else
-              a.nav-link(href='/user/dashboard' style="color: white !important;") Dashboard 
-              a.nav-link(href='/user/logout' style="color: white !important; font-size: 1rem;") Log Out
-          
-      .container-fluid.h-100.text-center    
+              a.nav-link(href='/user/dashboard') Dashboard 
+              a.nav-link(href='/user/logout')  Log Out
+      
+      main.text-center   
         block content
 
       script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
@@ -34,7 +35,7 @@ html
       script(src='/scripts/script.js')
 
 
-      footer.text-center.fixed-bottom.bg-primary
+      footer.text-center.fixed-bottom
         .container.p-4.text-light
           span.text-muted.text-light(style="font-family: 'Indie Flower', cursive; color: white !important;") $ Made EZ
 

@@ -2,22 +2,18 @@ extends layout
 
 
 block content 
-    h2(style="font-family: 'Source Code Pro', monospace, heavy;") Register
 
-    div(class="container-sm")
+    .container-xl.shadow-2-strong.container-xl.shadow-2-strong#loginCont(style="align-content: center;")
         form(action="register/newuser", method="post" style="font-family: 'Encode Sans', monospace;")
             div(class="mb-3") 
-                label username
-                input(type="text", name="username" class="form-control")
-            
-            div(class="mb-3") 
-                label Firstname 
+                label First Name 
                 input(type="text", name="fname" class="form-control")
-            
             div(class="mb-3") 
-                label Lastname 
+                label Last Name 
                 input(type="text", name="lname" class="form-control")
-
+            div(class="mb-3") 
+                label Username
+                input(type="text", name="username" class="form-control")
             div(class="mb-3") 
                 label Email 
                 input(type="text", name="email" class="form-control")
