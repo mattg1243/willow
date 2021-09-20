@@ -7,7 +7,7 @@ block content
         
     
     .table-responsive-md(style="padding-top: 20px; padding-bottom: 20px;")
-        table.table.table-striped.align-middle#eventTable(height=200 style="table-layout: fixed;")
+        table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
 
 
             if events.length == 0
@@ -30,7 +30,7 @@ block content
                             td= e.duration 
                         else   
                             td - 
-                        td= '$ '+ `${e.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        td= '$ ' + `${e['amount'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
                         td 
                             a(href=`${client._id}/deleteevent/${e._id}` method="post")
                                 i.material-icons(style="font-size: .6rem;") delete
