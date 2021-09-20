@@ -95,7 +95,7 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
     let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
     let amount = 0;
     
-    if (req.body.type == 'retainer') { // need to do something similar for refund type
+    if (req.body.type == 'Retainer') { // need to do something similar for refund type
 
         amount = req.body.amount;
 

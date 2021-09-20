@@ -3,13 +3,13 @@ $('#eventTypeSelector').on('change', function(){
 
     const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting']
 
-    if (meetingTypes.includes(selection) || ! selection == 'Refund' && ! selection == 'Refund' ){
+    if (meetingTypes.includes(selection)){
         $("#amountField").hide()
         $("#amountField").val(0)
         $("#hrsField").show()
         $("#minField").show()
         $("#rateField").show()
-    } else if (selection == 'Retainer' || selection == 'Refund') {
+    } else if (selection == 'Retainer') {
 
         $("#hrsField").hide()
         $("#minField").hide()
