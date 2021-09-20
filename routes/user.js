@@ -50,7 +50,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
     });
 })
 
-router.post('/dashboard/newclient', function(req, res) {
+router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
     console.log(newClient);
@@ -71,7 +71,7 @@ router.post('/dashboard/newclient', function(req, res) {
 
 })});
 
-router.get("/client/:id", function(req, res) {
+router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     Client.findById(req.params.id, function(err, client) {
         
@@ -88,33 +88,33 @@ router.get("/client/:id", function(req, res) {
     })
 });
 
-router.post('/client/:id/addsession', function(req, res){
+router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), function(req, res){
 
-    const time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
+    let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
+    let amount = 0;
     
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: time * req.body.rate });
+    if (req.body.type == 'retainer') { // need to do something similar for refund type
+
+        amount = req.body.amount;
+
+        } else {
+
+        amount = -(time * req.body.rate)
+    
+     }
+
+
+    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, tableType: req.body.type.textContent, duration: time, rate: req.body.rate, amount: amount });
     event.save(function(err, event) {
 
         if (err) return console.error(err);
+
+        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
+            
+        if (err) console.error(err);
+
+        else console.log(result);
         
-        let amount = 0;
-
-        if (req.body.type == 'retainer') { // need to do something similar for refund type
-
-            event.amount = req.body.amount;
-            const amount = req.body.amount;
-
-            } else {
-
-            amount = -(event['duration'] * event['rate'])
-        
-         }
-
-         Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
-                
-            if (err) console.error(err);
-
-            else console.log(result);
         })
 
         console.log(event)
@@ -125,15 +125,16 @@ router.post('/client/:id/addsession', function(req, res){
     })
 })
 
-router.get('/client/:id/deleteevent/:eventid', function (req, res) {
+router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
 
     // need to go and change the amounts inc in the balance to be either positive or negative to be able to undo them
 
     Event.findByIdAndDelete(req.params.eventid, function (err, event) {
 
         if (err) return console.error(err);
+    
 
-        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: event.amount }}, function(err, result) {
+        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: - parseInt(event.amount.toString()) }}, function(err, result) {
                 
             if (err) console.error(err);
 

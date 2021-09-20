@@ -2,36 +2,40 @@ extends layout
 
 block content 
 
-    h1(style="font-family: 'PT Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
-        h4 Balance: $ #{parseFloat(client.balance.toString()).toFixed(2)}
+    h1(style="font-family: 'Fire Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
+        h4 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    table.table.highlight.centered(height=200 style="table-layout: fixed;") Events
-        
-        if events.length == 0
-            tr(height=200) 
-                th(style="text-align: center;") No events logged for this client 
-        else
-            tr(height=50)
-                th Date 
-                th Type 
-                th Time  
-                th Amount
-                th Actions
-                
+    .table-responsive-md
+        table.table.table-hover.align-middle(height=200 style="table-layout: fixed;")
             
-            each e in events 
-                tr(height=50)
-                    th= moment(e.date).format("MMM Do YY")
-                    th= e.type
-                    th= e.duration 
-                    th= '$ '+ e.amount
-                    th 
-                        a(href=`${client._id}/deleteevent/${e._id}` method="post")
-                            span.material-icons-outlined delete
+            if events.length == 0
+                tr(height=200) 
+                    th(style="text-align: center;") No events logged for this client 
+            else
+                tr(height=50) Events
+                    th(scope="col") Date 
+                    th(scope="col") Type 
+                    th(scope="col") Time  
+                    th(scope="col") Amount
+                    th(scope="col") Actions
+                    
+                
+                each e in events 
+                    tr(height=50)
+                        td= moment(e.date).format("MM/DD/YYYY")
+                        td= e.tableType
+                        if (!e.type == 'retainer' && !e.type == 'refund')
+                            td= e.duration 
+                        else   
+                            td - 
+                        td= '$ '+ e.amount
+                        td 
+                            a(href=`${client._id}/deleteevent/${e._id}` method="post")
+                                i.material-icons delete
 
 
-    button.btn.btn-primary(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
+    button.btn.btn-primary#addEvent(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
     
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
@@ -44,9 +48,10 @@ block content
                     form(action=`${client._id}/addsession` method="post")
                         .md-form.mb-5
                             label.sr-only Date 
-                            input.form-control(type="date" step=0.1 name="date" placeholder="Date")
+                            input.form-control#datePicker(type="date" step=0.1 name="date" placeholder="Date" required)
                         .md-form.mb-5 
-                            select.custom-select#eventTypeSelector(name="type") Type
+                            select.form-select#eventTypeSelector(name="type" required) Type
+                                option(value='') Type...
                                 option(value='meeting') 1:1 Meeting   
                                 option(value='meeting') 3 Way Meeting  
                                 option(value='meeting') 4 Way Meeting  
@@ -61,32 +66,32 @@ block content
                                 option(value='retainer') Retainer
                                 option(value='team meeting') Team Meeting
                                 option(value='travel time') Travel Time                     
-                        
-                        .md-form.mb-5#timeField(style="display: none;")
-                            .inline-form 
-                                select.custom-select(name="hours")
-                                    option(value=1) 1 hr
-                                    option(value=2) 2 hr
-                                    option(value=3) 3 hr
-                                    option(value=4) 4 hr
-                                    option(value=5) 5 hr
-                                    option(value=6) 6 hr
-                                    option(value=7) 7 hr
-                                    option(value=8) 8 hr
-                                    option(value=9) 9 hr
-                                    option(value=10) 10 hr
-                                    option(value=0) 0 hr
-                                select.custom-select(name="minutes") 
-                                    option(value=0) 0 mins
-                                    option(value=0.1) 1-6 mins
-                                    option(value=0.2) 7-12 mins
-                                    option(value=0.3) 13-18 mins 
-                                    option(value=0.4) 19-24 mins
-                                    option(value=0.5) 25-30 mins
-                                    option(value=0.6) 31-36 mins
-                                    option(value=0.7) 37-42 mins
-                                    option(value=0.8) 43-48 mins
-                                    option(value=0.9) 49-54 mins
+                        .md-form.mb-5.d-inline-flex.justify-content-center#timeField(style="display: none;")
+                            select.form-select.form-control#hrsField(name="hours" style="display: none;")
+                                option(value='') hr
+                                option(value=1) 1 hr
+                                option(value=2) 2 hr
+                                option(value=3) 3 hr
+                                option(value=4) 4 hr
+                                option(value=5) 5 hr
+                                option(value=6) 6 hr
+                                option(value=7) 7 hr
+                                option(value=8) 8 hr
+                                option(value=9) 9 hr
+                                option(value=10) 10 hr
+                                option(value=0) 0 hr
+                            select.form-select.form-control#minField(name="minutes" style="display: none;") 
+                                option(value='') mins
+                                option(value=0) 0 mins
+                                option(value=0.1) 1-6 mins
+                                option(value=0.2) 7-12 mins
+                                option(value=0.3) 13-18 mins 
+                                option(value=0.4) 19-24 mins
+                                option(value=0.5) 25-30 mins
+                                option(value=0.6) 31-36 mins
+                                option(value=0.7) 37-42 mins
+                                option(value=0.8) 43-48 mins
+                                option(value=0.9) 49-54 mins
                         .md-form.mb-5#rateField(style="display: none;")
                             label.sr-only Rate 
                             input.form-control(type="number" name="rate" placeholder="Rate")

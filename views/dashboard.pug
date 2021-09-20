@@ -5,10 +5,9 @@ block content
 
     
     h3(style="font-family: 'Amatic SC', cursive;") Dashboard
-        .collection.with-header 
-            h4.collection-header Clients
+        .list-group Clients 
             each c in clients 
-                a(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
+                a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
                     p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
 
 
