@@ -3,12 +3,14 @@ extends layout
 block content 
     h2 Log In 
 
-        form(action='login' method='post')
-        
-            label Username 
-            input(type="text", name="username" class="validate")
-        
-            label Password 
-            input(type="password", name="password" class="validate")
+        .container-xl.d-flex.flex-column.h-100(style="align-content: center;")
+            form(action='login' method='post')
 
-            input(type="submit", value="Log In" class="btn btn-secondary center")
+                .form-outline.mb-4
+                    label.form-label Username 
+                    input.form-control(type="text", name="username" requried)
+                .form-outline.mb-4
+                    label.form-label Password 
+                    input.form-control(type="password", name="password" required)
+                .form-outline.mb-4
+                    input(type="submit", value="Log In" class="btn btn-secondary center")
