@@ -104,7 +104,7 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
      }
 
 
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, tableType: req.body.type.textContent, duration: time, rate: req.body.rate, amount: amount });
+    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: amount });
     event.save(function(err, event) {
 
         if (err) return console.error(err);
