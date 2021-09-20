@@ -8,7 +8,6 @@ const EventSchema = new Schema({
     clientID: {type: mongoose.Schema.Types.ObjectID},
     date: {type: mongoose.Schema.Types.Date, required: true, maxLength: 100},
     type: {type: String, required: true, maxLength: 100},
-    tableType: {type: String, required: true, maxLength: 100},
     duration: {type: Number, required: false, maxLength: 100},
     rate: {type: Number, required: false, maxLength: 10},
     amount: {type: mongoose.Schema.Types.Decimal128, required: false,
