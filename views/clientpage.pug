@@ -3,12 +3,13 @@ extends layout
 block content 
 
     h1(style="font-family: 'Fire Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
-        h4 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+    p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table-responsive-md
-        table.table.table-hover.align-middle(height=200 style="table-layout: fixed;")
-            
+    .table-responsive-md(style="padding-top: 20px; padding-bottom: 20px;")
+        table.table.table-striped.align-middle#eventTable(height=200 style="table-layout: fixed;")
+
+
             if events.length == 0
                 tr(height=200) 
                     th(style="text-align: center;") No events logged for this client 
@@ -18,32 +19,34 @@ block content
                     th(scope="col") Type 
                     th(scope="col") Time  
                     th(scope="col") Amount
-                    th(scope="col") Actions
+                    th(scope="col") 
                     
                 
                 each e in events 
-                    tr(height=50)
+                    tr(scope="row" height=50)
                         td= moment(e.date).format("MM/DD/YYYY")
                         td= e.type
-                        if (e.type == 'meeting')
+                        if (meetings.includes(e.type))
                             td= e.duration 
                         else   
                             td - 
                         td= '$ '+ `${e.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
                         td 
                             a(href=`${client._id}/deleteevent/${e._id}` method="post")
-                                i.material-icons delete
+                                i.material-icons(style="font-size: .6rem;") delete
 
 
-    button.btn.btn-primary#addEvent(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
+    .container.d-inline-flex.justify-content-center.gap-5
+        button.btn.btn-primary#addEvent(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
+        button.btn.btn-secondary#makeStatement(type='button') Create Statement
     
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
                 .modal-header
                     h2#exampleModalLabel.modal-title(style="font-size: 2em;") Event Details
-                    button.close(type='button', data-dismiss='modal', aria-label='Close')
-                    span(aria-hidden='true') &times;
+                    button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
+
                 .modal-body.text-center.mb-1
                     form(action=`${client._id}/addsession` method="post")
                         .md-form.mb-5
@@ -52,20 +55,20 @@ block content
                         .md-form.mb-5 
                             select.form-select#eventTypeSelector(name="type" required) Type
                                 option(value='') Type...
-                                option(value='meeting') 1:1 Meeting   
-                                option(value='meeting') 3 Way Meeting  
-                                option(value='meeting') 4 Way Meeting  
-                                option(value='meeting') 5 Way Meeting  
-                                option(value='meeting') 6 Way Meeting  
-                                option(value='emails') Emails               
-                                option(value='intention statements') Intention Statement   
-                                option(value='notes') Notes
-                                option(value='parenting plan') Parenting Plan 
-                                option(value='phone call') Phone Call
-                                option(value='refund') Refund
-                                option(value='retainer') Retainer
-                                option(value='team meeting') Team Meeting
-                                option(value='travel time') Travel Time                     
+                                option(value='1:1 Meeting') 1:1 Meeting   
+                                option(value='3 Way Meeting') 3 Way Meeting  
+                                option(value='4 Way Meeting') 4 Way Meeting  
+                                option(value='5 Way Meeting') 5 Way Meeting  
+                                option(value='6 Way Meeting') 6 Way Meeting  
+                                option(value='Emails') Emails               
+                                option(value='Intention Statements') Intention Statement   
+                                option(value='Notes') Notes
+                                option(value='Parenting Plan') Parenting Plan 
+                                option(value='Phone Call') Phone Call
+                                option(value='Refund') Refund
+                                option(value='Retainer') Retainer
+                                option(value='Team Meeting') Team Meeting
+                                option(value='Travel Time') Travel Time                     
                         .md-form.mb-5.d-inline-flex.justify-content-center#timeField(style="display: none;")
                             select.form-select.form-control#hrsField(name="hours" style="display: none;")
                                 option(value='') hr

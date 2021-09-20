@@ -31,6 +31,7 @@ app.set('view engine', 'pug');
 // middleware
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
+app.use('/images', express.static(path.join(__dirname, 'public/images')))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(session({

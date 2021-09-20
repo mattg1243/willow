@@ -4,12 +4,16 @@ block content
 
 
     
-    h3(style="font-family: 'Amatic SC', cursive;") Dashboard
-        .list-group Clients 
-            each c in clients 
-                a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
-                    p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
-
+    h3 Clients
+    .list-group-flush#clientList
+        each c in clients 
+            a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
+                p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
+    .container.d-inline-flex.justify-content-center.gap-5
+        a(style="color: #0d6efd; width: 50%;" role="button")     
+            i.fas.fa-plus.fa-lg
+        a(style="color: #0d6efd; width: 50%;" role="button")     
+            i.fas.fa-edit.fa-lg
 
     
 

@@ -1,18 +1,66 @@
 h1, h2 {
-  font-family: 'Encode Sans', monospace;
+  font-family: 'Fire Sans', sans-serif;
+}
+
+h3 {
+  font-size: 2rem;
 }
 
 body {
-  display: flex;
+  width: 100%;
   min-height: 100vh;
-  flex-direction: column;
   font-family: 'Encode Sans', monospace;
 }
 
+
 main {
-  flex: 1 0 auto;
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-a {
-  color: #00B7FF;
+.navbar, footer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  background-color: #0752c2
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#welcomePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70vh;
+  padding: 20px;
+}
+
+#eventTable {
+  text-align: center;
+  vertical-align: middle;
+  font-size: .65rem;
+  padding-top: 30px;
+
+}
+
+
+#clientList {
+  padding: 10px;
+}
+
+#loginCont {
+  margin-top: 50%;
+  border-radius: 10%;
+  padding: 10px;
+}
+
+.nav-link {
+  font-size: .75rem;
+  color: #ffffff;
 }
