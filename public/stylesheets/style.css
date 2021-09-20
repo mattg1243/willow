@@ -46,9 +46,13 @@ img {
 #eventTable {
   text-align: center;
   vertical-align: middle;
-  font-size: .65rem;
+  font-size: .75rem;
   padding-top: 30px;
 
+}
+
+td {
+  white-space: nowrap;
 }
 
 

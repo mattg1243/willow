@@ -6,7 +6,7 @@ block content
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table-responsive-md(style="padding-top: 20px; padding-bottom: 20px;")
+    .table-responsive-lg(style="padding-top: 20px; padding-bottom: 20px;")
         table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
 
 
@@ -20,6 +20,7 @@ block content
                     th(scope="col") Time  
                     th(scope="col") Amount
                     th(scope="col") 
+
                     
                 
                 each e in events 
@@ -33,7 +34,7 @@ block content
                         td= '$ ' + `${e['amount'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
                         td 
                             a(href=`${client._id}/deleteevent/${e._id}` method="post")
-                                i.material-icons(style="font-size: .6rem;") delete
+                                i.material-icons(style="font-size: .5rem;") delete
 
 
     .container.d-inline-flex.justify-content-center.gap-5
