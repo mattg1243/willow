@@ -2,11 +2,12 @@ extends layout
 
 block content 
 
+    i.fas.fa-user-edit.fa-4x#clientIcon
     h1(style="font-family: 'Fire Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table-responsive-lg(style="padding-top: 20px; padding-bottom: 20px;")
+    .table-responsive-lg(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
         table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
 
 
@@ -14,7 +15,7 @@ block content
                 tr(height=200) 
                     th(style="text-align: center;") No events logged for this client 
             else
-                tr(height=50) Events
+                tr(height=50)
                     th(scope="col") Date 
                     th(scope="col") Type 
                     th(scope="col") Time  
@@ -37,9 +38,9 @@ block content
                                 i.material-icons(style="font-size: .5rem;") delete
 
 
-    .container.d-inline-flex.justify-content-center.gap-5
-        button.btn.btn-primary#addEvent(type='button', data-toggle='modal', data-target='#exampleModal') Add Event
-        button.btn.btn-secondary#makeStatement(type='button') Create Statement
+    .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
+        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type='button', data-toggle='modal', data-target='#exampleModal') Add Event
+        button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button') Create Statement
     
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
         .modal-dialog(role='document')

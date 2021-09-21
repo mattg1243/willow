@@ -3,36 +3,41 @@ extends layout
 block content 
 
 
-    
     h3 Clients
-    .list-group-flush#clientList
+    .list-group.list-group-flush#clientList
         each c in clients 
             a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
                 p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
-    .container.d-inline-flex.justify-content-center.gap-5
-        a(style="color: #0d6efd; width: 50%;" role="button")     
-            i.fas.fa-plus.fa-lg
-        a(style="color: #0d6efd; width: 50%;" role="button")     
-            i.fas.fa-edit.fa-lg
+    .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addClientCont
+        button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type="button" data-mdb-toggle="modal" data-mdb-target="#addClientModal")     
+            i.fas.fa-plus.fa-3x
+        button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" role="button")     
+            i.fas.fa-edit.fa-3x
 
     
 
-    h3(style="font-family: 'Amatic SC', cursive;") Add a client:    
-        div(class='container-sm')
-            form(action='dashboard/newclient' method='post' style="font-family: 'Encode Sans', monospace;")
-                div(class="mb-3") 
-                    label First Name 
-                    input(type="text", name="fname" class="form-control")
-                div(class="mb-3") 
-                    label Last Name 
-                    input(type="text", name="lname" class="form-control")
-                div(class="mb-3") 
-                    label Phone Number 
-                    input(type="tel", name="phonenumber" class="form-control")
-                div(class="mb-3") 
-                    label Email Address 
-                    input(type="email", name="email" class="form-control")
-                div(class="mb-3") 
-                    input(type="submit", value="Add" class="btn btn-secondary center")
+    .modal.fade#addClientModal(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")    
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Add Client
+                    button.btn-close(type="button" data-mdb-dismiss="modal" aria-label="Close")
+                .modal-body  
+                    form#addClientForm(action='dashboard/newclient' method='post')
+                        .form-outline.mb-3 
+                            label.form-label First Name
+                            input(type="text", name="fname" class="form-control")
+                        .form-outline.mb-3
+                            label.form-label Last Name 
+                            input(type="text", name="lname" class="form-control")
+                        .form-outline.mb-3 
+                            label.form-label Phone Number 
+                            input(type="tel", name="phonenumber" class="form-control")
+                        .form-outline.mb-3 
+                            label.form-labell Email Address 
+                            input(type="email", name="email" class="form-control")
+                        .modal-footer   
+                            button.btn.btn-primary(type="submit") Save 
+                            button.btn.btn-danger(data-mdb-dismiss="modal") Cancel
 
             

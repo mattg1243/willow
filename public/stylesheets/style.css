@@ -3,11 +3,14 @@ h1, h2 {
 }
 
 h3 {
+  display: block;
+  text-align: center;
   font-size: 2rem;
+  padding: 2rem;
+  margin-top: 3rem;
 }
 
 body {
-  align-items: center;
   width: 100%;
   min-height: 100vh;
   font-family: 'Encode Sans', monospace;
@@ -15,17 +18,36 @@ body {
 
 
 main {
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: 20px;
+  height: 80vh;
 
 }
 
-.navbar, footer {
+.navbar {
   display: flex;
   width: 100%;
   justify-content: center;
   background-color: #0752c2
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+  width: 75%;
+  font-size: 1.5rem;
+}
+
+footer {
+  background-color: white;
+  border-top: .15px solid rgb(174, 174, 174);
+  color: #0752c2 !important 
 }
 
 img {
@@ -57,17 +79,53 @@ td {
 
 
 #clientList {
+  display: block;
+  text-align: center;
+  justify-content: center;
   padding: 10px;
+  min-height: 70vh;
+}
+
+
+#clientIcon {
+  color: #0752c2;
+  padding-bottom: 20px;
+  margin-top: 5rem;
 }
 
 #loginCont {
   align-items: center;
   justify-content: center;
   border-radius: 10%;
-  padding: 10px;
+  padding: 5px;
 }
 
 .nav-link {
   font-size: .75rem;
   color: #ffffff;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+}
+
+
+#addEvent {
+  background-color: #fff;
+  align-items: center;
+}
+
+#makeStatement {
+  background-color: #fff;
+  align-items: center;
+  color: #b23cfd;
+}
+#addEventCont, #addClientCont {
+  margin-bottom: 1rem;
+  font-size: 1rem;
 }
