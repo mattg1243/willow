@@ -28,7 +28,7 @@ block content
                     tr(scope="row" height=50)
                         td= moment(e.date).format("MM/DD/YYYY")
                         td= e.type
-                        if (meetings.includes(e.type))
+                        if (meetings.includes(e.type) || misc.includes(e.type))
                             td= e.duration 
                         else   
                             td - 
