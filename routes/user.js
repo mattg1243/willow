@@ -74,6 +74,7 @@ router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), functio
 router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting']
+    const miscTypes = ['Emails', 'Intention Statement', 'Notes', 'Parenting Plan', 'Phone Call', 'Travel Time']
     
     Client.findById(req.params.id, function(err, client) {
         
@@ -85,7 +86,7 @@ router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res
     
             console.log(client)
             console.log(events)
-            res.render('clientpage', { client: client, events: events, meetings: meetingTypes })
+            res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
         })
     })
 });
