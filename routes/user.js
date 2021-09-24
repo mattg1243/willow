@@ -99,6 +99,10 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
         amount = req.body.amount;
 
+        } else if(req.body.type == 'Refund') {
+
+            amount = -(req.body.amount);
+
         } else {
 
         amount = -(time * req.body.rate)
