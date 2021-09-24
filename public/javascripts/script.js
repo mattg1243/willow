@@ -1,15 +1,16 @@
 $('#eventTypeSelector').on('change', function(){
     var selection = $(this).val();
 
-    const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting']
+    const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting', 'Team Meeting']
+    const miscTypes = ['Emails', 'Intention Statement', 'Notes', 'Parenting Plan', 'Phone Call', 'Travel Time']
 
-    if (meetingTypes.includes(selection)){
+    if (meetingTypes.includes(selection) || miscTypes.includes(selection)){
         $("#amountField").hide()
         $("#amountField").val(0)
         $("#hrsField").show()
         $("#minField").show()
         $("#rateField").show()
-    } else if (selection == 'Retainer') {
+    } else if (selection == 'Retainer' || selection == 'Refund') {
 
         $("#hrsField").hide()
         $("#minField").hide()
