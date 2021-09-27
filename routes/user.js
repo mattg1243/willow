@@ -38,7 +38,7 @@ router.get('/login', function(req, res, next) {
 
 router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
     console.log(req.user);
-    res.redirect('dashboard');
+    res.redirect('/dashboard');
 })
 
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
@@ -154,6 +154,18 @@ router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn
 
 })
 
+router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
+
+    Event.find({_id: req.params.eventid}, function(err, event) {
+        
+        if (err) return console.error(err);
+        
+        console.log(event)
+        res.render('eventpage', { event: event });
+    });
+ 
+
+})
 
 
 router.get('/logout', function(req, res) {
