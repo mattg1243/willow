@@ -7,39 +7,36 @@ block content
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table-responsive-lg(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
+    .table.table-hover(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
         table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
+            thead
 
+                if events.length == 0
+                    tr(height=200) 
+                        th(style="text-align: center;") No events logged for this client 
+                else
+                    tr(height=50)
+                        th(scope="col") Date 
+                        th(scope="col") Type 
+                        th(scope="col") Time  
+                        th(scope="col") Amount
 
-            if events.length == 0
-                tr(height=200) 
-                    th(style="text-align: center;") No events logged for this client 
-            else
-                tr(height=50)
-                    th(scope="col") Date 
-                    th(scope="col") Type 
-                    th(scope="col") Time  
-                    th(scope="col") Amount
-                    th(scope="col") 
-
+                        
                     
-                
-                each e in events 
-                    tr(scope="row" height=50)
-                        td= moment(e.date).format("MM/DD/YYYY")
-                        td= e.type
-                        if (meetings.includes(e.type) || misc.includes(e.type))
-                            td= e.duration 
-                        else   
-                            td - 
-                        td= '$ ' + `${e['amount'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                        td 
-                            a(href=`${client._id}/deleteevent/${e._id}` method="post")
-                                i.material-icons(style="font-size: .5rem;") delete
+                    each e in events 
+                        tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
+                            td= moment(e.date).format("MM/DD/YYYY")
+                            td= e.type
+                            if (meetings.includes(e.type) || misc.includes(e.type))
+                                td= e.duration 
+                            else   
+                                td - 
+                            td= '$ ' + `${e['amount'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+
 
 
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
-        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#exampleModal") Add Event
+        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#exampleModal") Add Event
         button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button') Create Statement
     
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')

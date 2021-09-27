@@ -9,10 +9,7 @@ block content
             a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
                 p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addClientCont
-        button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type="button" data-mdb-toggle="modal" data-mdb-target="#addClientModal")     
-            i.fas.fa-plus.fa-3x
-        button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" role="button")     
-            i.fas.fa-edit.fa-3x
+        button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type="button" data-mdb-toggle="modal" data-mdb-target="#addClientModal") New Client
 
     
 
@@ -25,17 +22,17 @@ block content
                 .modal-body  
                     form#addClientForm(action='dashboard/newclient' method='post')
                         .form-outline.mb-3 
-                            label.form-label First Name
                             input(type="text", name="fname" class="form-control")
+                            label.form-label First Name
                         .form-outline.mb-3
-                            label.form-label Last Name 
                             input(type="text", name="lname" class="form-control")
+                            label.form-label Last Name 
                         .form-outline.mb-3 
-                            label.form-label Phone Number 
                             input(type="tel", name="phonenumber" class="form-control")
+                            label.form-label Phone Number
                         .form-outline.mb-3 
-                            label.form-labell Email Address 
                             input(type="email", name="email" class="form-control")
+                            label.form-label Email Address
                         .modal-footer   
                             button.btn.btn-primary(type="submit") Save 
                             button.btn.btn-danger(data-mdb-dismiss="modal") Cancel
