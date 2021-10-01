@@ -84,16 +84,19 @@ def _record_handling(all_records, clientID):
         # Loop through data gathered
         # Verify ObjectIds
         for row in all_records:
-            if _verify_object(clientID, row['clientID']):
-                IDs.append(row['clientID'])
-            else:
-                pass
-            dates.append(row['date'])
-            types.append(row['type'])
-            durations.append(row['duration'])
-            rates.append(row['rate'])
-            amounts.append(row['amount'])
-            counter += 1
+            try:
+                _verify_object(clientID, row['clientID'])
+            except Exception as _verify_objectID_error_handler:
+                print('Exception thrown verifying Clients ObjectId %s' % _verify_objectID_error_handler)
+            try:    
+                dates.append(row['date'])
+                types.append(row['type'])
+                durations.append(row['duration'])
+                rates.append(row['rate'])
+                amounts.append(row['amount'])
+                counter += 1
+            except Exception as _data_appending_error_handler:
+                print('Exception thrown appending data fetched to buffers %s' % _data_appending_error_handler)
 
         length_amounts = len(amounts)
         debug_print(IDs, dates, types, rates, amounts, durations)
@@ -134,13 +137,18 @@ def debug_print(IDs, DATES, TYPES, RATES, AMOUNTS, DURATIONS):
     pprint(DURATIONS)
     print('\n')
 
-
-# IMPORTANT!!!!!!!!
+#TODO: Refine and test this function: For now, we're doing balance calculation in
+# record handling loop, ideally should define a function that can adjust balance
+# more dynamically
+# 
 # This function adjusts balance, audit it thourghouly
 def _adjust_balance(start_balance, amounts):
     start_balance = Decimal(start_balance)
-    new_balance = Decimal()
-
+    new_balance = start_balance
+    for x in amounts:
+        new_balance += amounts[x]
+    return new_balance
+        
 
 # STATEMENT GENERATION
 def skele():
@@ -154,36 +162,42 @@ def skele():
 # Builds Statement Header
 def _build_statment_header():
     header = Table(number_of_rows=5, number_of_columns=3)
-
+    
+    # Address1
     header.add(Paragraph("1600 Waverly Road"))
+    # Date Issued
     header.add(Paragraph("Date Issued:", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
     now = datetime.now()
     header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
-
+    # City
     header.add(Paragraph("San Francisco, Ca"))
+    # Invoice ID ---- Serves no purpose for now
     header.add(Paragraph("Invoice #", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
     header.add(Paragraph("%d" % random.randint(1000, 10000)))
-
+    # Due Date 
     header.add(Paragraph(" "))
     header.add(Paragraph("Due Date", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
     header.add(Paragraph("%d/%d/%d" % (now.month + 1, now.day, now.year)))
-
+    # Spacing
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
 
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-
+    # Padding
     header.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     header.no_borders()
+
     return header
 
 
 def _build_billing_table(name):
+    # Client's name
     NAME = name
 
+    # Build Billing Table 
     b_table = Table(number_of_rows=3, number_of_columns=2)
     b_table.add(
         Paragraph(
@@ -220,12 +234,14 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
             )
         )
 
+    # black
     odd_color = HexColor("BBBBBB")
+    # white
     even_color = HexColor("FFFFFF")
 
+    # This loop can be improved
     count = 0
     length_of_events = len(hourly)
-   
     while(count < length_of_events):
         hourly_rate = str(hourly[count])
         balance = Decimal(balance)
@@ -286,12 +302,16 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
     # Add image
+    # TODO: Implement different Image method:
+    #     // Not From Web, but from backend ideally. Zeros risk of erroring if
+    #     this url changes or stops operating
     page_layout.add(Image(
             "https://miro.medium.com/max/1400/1*6HdI84r__tiI65f2vhZN1g.png",
             width=Decimal(140),
             height=Decimal(103),
-        )
+        ),
     )
+    
 
     # Appends
     page_layout.add(_build_statment_header())
