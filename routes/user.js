@@ -38,7 +38,7 @@ router.get('/login', function(req, res, next) {
 
 router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
     console.log(req.user);
-    res.redirect('/dashboard');
+    res.redirect('/user/dashboard');
 })
 
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
