@@ -1,0 +1,305 @@
+# General
+import random       
+import pymongo    
+from decimal import Decimal      
+from pprint import pprint           
+from bson import ObjectId   
+from datetime import datetime        
+# For PDF Handling 
+from borb.pdf.pdf import PDF
+from borb.pdf.page.page import Page
+from borb.pdf.document import Document
+from borb.pdf.canvas.layout.page_layout.multi_column_layout import SingleColumnLayout
+from borb.pdf.canvas.layout.table.fixed_column_width_table import FixedColumnWidthTable as Table
+from borb.pdf.canvas.layout.text.paragraph import Paragraph
+from borb.pdf.canvas.layout.layout_element import Alignment
+from borb.pdf.canvas.layout.image.image import Image
+from borb.pdf.canvas.color.color import HexColor, X11Color
+from borb.pdf.canvas.layout.table.table import TableCell
+
+# Defines Mongo Cluster
+def _mongo_cluster():
+    cluster = "mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?w=majority"
+    return cluster
+
+# Defines Mongo Client Instance
+def _mongo_client(cluster):
+    client = pymongo.MongoClient(cluster, document_class=dict)
+    return client
+
+# Defines Instance Criteria
+def _set_crit(clientID, FROM, TO):
+    criteria = {'clientID': ObjectId(clientID),'$and': [{'date': {'$gte': FROM, '$lte': TO}}]}
+    return criteria
+
+# Converts to Decimal from Decimal128
+def convert_from_d28(amounts, length_amounts):
+    x = 0
+    while(x < length_amounts):
+        amounts[x] = amounts[x].to_decimal()
+        x += 1
+    return amounts
+
+# Sums all Decimal Objects
+def calc_amounts(amounts, length_amounts):
+        total = Decimal()
+        x = 0
+        
+        while(x < length_amounts):
+            total += amounts[x]
+            x += 1
+        return total
+
+
+
+# Verify ObjectIDs match system arguments
+def _verify_object(clientID, ID):
+    verified = False if ObjectId(ID) != ObjectId(clientID) else True
+    return verified
+
+
+# Defines Record Handling Methods
+def _record_handling(all_records, clientID):
+        # initialize buffers
+        # ------------------
+        IDs = []
+
+        # holds all dates
+        dates = []
+    
+        # holds all types
+        types = []
+
+        # holds all durations
+        durations = []
+
+        # holds all rates
+        rates = []
+
+        # holds all amounts
+        amounts = []
+
+        counter = 0
+
+        # Loop through data gathered
+        # Verify ObjectIds
+        for row in all_records:
+            if _verify_object(clientID, row['clientID']):
+                IDs.append(row['clientID'])
+            else:
+                pass
+            dates.append(row['date'])
+            types.append(row['type'])
+            durations.append(row['duration'])
+            rates.append(row['rate'])
+            amounts.append(row['amount'])
+            counter += 1
+
+        length_amounts = len(amounts)
+        debug_print(IDs, dates, types, rates, amounts, durations)
+
+
+        # Convert list of amounts to working Decimal values
+        amounts = convert_from_d28(amounts, length_amounts)
+    
+        print("Amounts after conversion method: \n")
+        print(type(amounts[0]))
+        print(amounts, '\n')
+        
+        total = calc_amounts(amounts, length_amounts)
+        print("Total values after Decimal object summing: \n")
+        print(type(total))
+        print(total , '\n')
+        generate("Ethan", dates, types, durations, rates, amounts, 2000)
+
+
+# Debug 
+def debug_print(IDs, DATES, TYPES, RATES, AMOUNTS, DURATIONS):
+    print('\n')
+    print(IDs)
+    print('\n')
+    print('Dates:\n')
+    pprint(DATES)
+    print('\n')
+    print('Types:\n')
+    pprint(TYPES)
+    print('\n')
+    print('Rates:\n')
+    pprint(RATES)
+    print('\n')
+    print('Amounts:\n')
+    pprint(AMOUNTS)
+    print('\n')
+    print('Durations:\n')
+    pprint(DURATIONS)
+    print('\n')
+
+
+# IMPORTANT!!!!!!!!
+# This function adjusts balance, audit it thourghouly
+def _adjust_balance(start_balance, amounts):
+    start_balance = Decimal(start_balance)
+    new_balance = Decimal()
+
+
+# STATEMENT GENERATION
+def skele():
+    pdf = Document()
+    page = Page()
+    pdf.append_page(page)
+    page_layout = SingleColumnLayout
+    page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
+    return pdf
+
+# Builds Statement Header
+def _build_statment_header():
+    header = Table(number_of_rows=5, number_of_columns=3)
+
+    header.add(Paragraph("1600 Waverly Road"))
+    header.add(Paragraph("Date Issued:", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
+    now = datetime.now()
+    header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
+
+    header.add(Paragraph("San Francisco, Ca"))
+    header.add(Paragraph("Invoice #", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
+    header.add(Paragraph("%d" % random.randint(1000, 10000)))
+
+    header.add(Paragraph(" "))
+    header.add(Paragraph("Due Date", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT))
+    header.add(Paragraph("%d/%d/%d" % (now.month + 1, now.day, now.year)))
+
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+
+    header.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
+    header.no_borders()
+    return header
+
+
+def _build_billing_table(name):
+    NAME = name
+
+    b_table = Table(number_of_rows=3, number_of_columns=2)
+    b_table.add(
+        Paragraph(
+            "BILL TO",
+            background_color=HexColor("FFFFFF"),
+            font_color=X11Color("Black"),
+        )
+    )
+    b_table.add(
+        Paragraph(
+            " ",
+            background_color=HexColor("263238"),
+            font_color=X11Color("White"),
+        )
+    )
+    b_table.add(Paragraph(NAME))        
+    b_table.add(Paragraph(" "))     
+    b_table.add(Paragraph(" "))          
+    b_table.add(Paragraph(" "))          
+                
+    b_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
+    b_table.no_borders()
+    return b_table
+
+
+def _description_table(session, dates, durations, hourly, amounts, balance):
+    
+    descrip_table = Table(number_of_rows=15, number_of_columns=6)
+    for h in ["DATE", "TYPE", "DURATION", "HOURLY RATE", "AMOUNT", "BALANCE"]:
+        descrip_table.add(
+            TableCell(
+                Paragraph(h, font_color=X11Color("White")),
+                background_color=HexColor("000000"),
+            )
+        )
+
+    odd_color = HexColor("BBBBBB")
+    even_color = HexColor("FFFFFF")
+
+    count = 0
+    length_of_events = len(hourly)
+   
+    while(count < length_of_events):
+        hourly_rate = str(hourly[count])
+        balance = Decimal(balance)
+        balance += amounts[count]
+        amount = str(amounts[count])
+        balance = str(balance)
+        date = datetime.strftime(dates[count], "%m-%d-%y")
+        descrip_table.add(TableCell(Paragraph(date), background_color=even_color))
+        descrip_table.add(TableCell(Paragraph(str(session[count])), background_color=even_color))
+        descrip_table.add(TableCell(Paragraph(str(durations[count])), background_color=even_color))
+        descrip_table.add(TableCell(Paragraph("$ " + hourly_rate), background_color=even_color))
+        descrip_table.add(TableCell(Paragraph("$ " + amount), background_color=even_color))
+        descrip_table.add(TableCell(Paragraph("$ " + balance), background_color=even_color))
+        count += 1
+
+
+    # Optionally add some empty rows to have a fixed number of rows for styling purposes
+    #for row_number in range(9, 18):
+        #c = even_color if row_number % 2 == 0 else odd_color
+        #for _ in range(0, 11):
+            #descrip_table.add(TableCell(Paragraph(" "), background_color=c))
+    print(count)
+    # If alloted lines is less than the max space
+    # Available, fill remaining space with empty rows
+    if(count < 15):
+        for row_number in range(count+1, 15):
+            col_count = 0
+            while(col_count < 6):
+                descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
+                col_count += 1
+        pass
+            
+
+   # descrip_table.add(Paragraph(" "))
+   # descrip_table.add(Paragraph(" "))
+   # descrip_table.add(Paragraph(" "))
+    descrip_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
+    descrip_table.no_borders()
+    return descrip_table
+
+
+
+def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
+    cli = CLIENT
+    dates = DATES
+    types = TYPES
+    dur = DURATIONS
+    rates = RATES
+    amounts = AMOUNTS
+
+    now = datetime.now()
+    
+
+    pdf = Document()
+    page = Page()
+    pdf.append_page(page)
+    page_layout = SingleColumnLayout(page)
+    page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
+
+    # Add image
+    page_layout.add(Image(
+            "https://miro.medium.com/max/1400/1*6HdI84r__tiI65f2vhZN1g.png",
+            width=Decimal(140),
+            height=Decimal(103),
+        )
+    )
+
+    # Appends
+    page_layout.add(_build_statment_header())
+    page_layout.add(_build_billing_table(cli))
+    page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
+    
+
+
+    with open(f"../../invoices/{cli}.pdf", 'wb') as pdf_handler:
+        PDF.dumps(pdf_handler, pdf)
+    return pdf
