@@ -179,12 +179,19 @@ router.post('/client/:id/makestatement', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname; = req.body.clientname;
+    const clientname = req.body.clientname;
 
     console.log(start + "   " + end);
     
-    child_process.spawn("python", [""])
+    let process = spawn("python", ["../Python/tests/src/bin/main.py", req.params.id, start, end])
     
+    process.stdout.on('data', function(data){
+
+        res.send(data);
+        console.log('py response : \n', data);
+
+    })
+
     res.redirect('/user/dashboard');
 
 })
