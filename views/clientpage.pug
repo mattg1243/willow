@@ -2,7 +2,6 @@ extends layout
 
 block content 
 
-    i.fas.fa-user-edit.fa-4x#clientIcon
     h1(style="font-family: 'Fire Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         

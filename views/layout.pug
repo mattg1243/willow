@@ -14,15 +14,17 @@ html
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name='viewport' content='width=device-width', initial-scale=1)
     body.d-flex.flex-column
-      
-      nav.navbar.navbar-expand-lg.navbar-light.shadow-1-strong
+
+      nav.navbar.navbar-expand-lg.navbar-light.shadow-1
           .container-fluid.text-white 
-            a.navbar-brand(href='/' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: white !important;") EZ
             if (!loggedIn)
+              a.navbar-brand(href='/user/login' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: blue !important;") 
+                i.material-icons menu 
               a.nav-link(href='#')
               a.nav-link(href='/user/login') Login
             else
-              a.nav-link(href='/user/dashboard') Dashboard 
+              a.navbar-brand(href='/user/dashboard' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: blue !important;") 
+                i.material-icons menu
               a.nav-link(href='/user/logout')  Log Out
       
       main  

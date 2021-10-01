@@ -1,15 +1,15 @@
 extends layout 
 
 block content 
-    .container-xxl.d-flex.flex-column#loginCont(style="align-content: center;")
+    .container-xxl#loginCont(style="align-content: center;")
         form(action='login' method='post')
 
-            .form-outline.mb-4
+            .form-outline.mb-5
                 input.form-control(type="text", name="username" requried)
                 label.form-label Username
-            .form-outline.mb-4
+            .form-outline.mb-5
                 input.form-control(type="password", name="password" required)
                 label.form-label Password 
-            .form-outline.mb-4.d-inline-flex.justify-content-center.gap-5
+            .form-outline.mb-5.d-inline-flex.justify-content-center.gap-5
                 input(type="submit", value="Log In" class="btn btn-primary center")
                 a(href="/user/register" type="button", class="btn btn-secondary center") Register
