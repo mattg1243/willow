@@ -4,6 +4,7 @@ var Client = require('../models/client-schema')
 var Event = require('../models/event-schema')
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
+var spawn = require("child_process").spawn;
 var mongoose = require('mongoose');
 var moment = require('moment')
 const { route } = require('.');
@@ -173,6 +174,20 @@ router.get('/logout', function(req, res) {
     res.redirect('/');
 })
 
+
+router.post('/client/:id/makestatement', function (req, res){
+
+    const start = req.body.startdate;
+    const end = req.body.enddate;
+    const clientname; = req.body.clientname;
+
+    console.log(start + "   " + end);
+    
+    child_process.spawn("python", [""])
+    
+    res.redirect('/user/dashboard');
+
+})
 
 
 
