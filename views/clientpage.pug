@@ -2,7 +2,7 @@ extends layout
 
 block content 
 
-    h1(style="font-family: 'Fire Sans', sans-serif") #{client['fname'] + ' ' + client['lname']}
+    h1(style="font-family: 'Fire Sans', sans-serif" name="clientname") #{client['fname'] + ' ' + client['lname']}
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
@@ -36,7 +36,7 @@ block content
 
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
         button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#exampleModal") Add Event
-        button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button') Create Statement
+        button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal") Create Statement
     
     #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
@@ -103,3 +103,21 @@ block content
                         .modal-footer.d-flex.justify-content-center 
                             input.btn.btn-primary(type="submit" value="Create Event")
 
+
+    #statementModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h2#exampleModalLabel.modal-title(style="font-size: 2em;") Statement Details
+                    button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
+
+                .modal-body.text-center.mb-1
+                    form(action= `${client._id}/makestatement` method="post")
+                        .md-form.mb-5.d-inline-flex.justify-content-center.gap-5
+                            label.sr-only Start Date 
+                            input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
+                            label.sr-only End Date 
+                            input.form-control#datePicker(type="date" step=0.1 name="enddate" placeholder="Date" required)
+                        
+                        .modal-footer.d-flex.justify-content-center 
+                            input.btn.btn-primary(type="submit" value="Download")
