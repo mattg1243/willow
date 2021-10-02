@@ -6,7 +6,8 @@ var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 var spawn = require("child_process").spawn;
 var mongoose = require('mongoose');
-var moment = require('moment')
+var moment = require('moment');
+var fs = require('fs');
 let {PythonShell} = require('python-shell')
 const { route } = require('.');
 
@@ -195,23 +196,18 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     })
 
-    const pdf = '/Python/test/invoices/Ethan.pdf';
-    res.download(pdf, 'statement.pdf');
-
-    /*
-    let process = spawn("python3", ["../Python/tests/src/bin/main.py", req.params.id, start, end])
-    
-    process.stdout.on('data', function(data){
-
-        console.log('py response : \n', data);
-
-    })
-    */
-
-    res.redirect('/user/dashboard');
+    res.redirect('/user/client/:id/makestatement/download');
 
 })
 
+router.get('/client/:id/makestatement/download', function (req, res) {
 
+    const pdf = '/Python/tests/invoices/Ethan.pdf';
+    
+    res.setHeader("Content-Type", "attachment; statement.pdf")
+    res.download(pdf)
+    res.redirect('/user/dashboard');    
+
+})
 
 module.exports = router;
