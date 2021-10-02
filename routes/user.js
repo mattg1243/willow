@@ -180,7 +180,7 @@ router.post('/client/:id/makestatement', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.body.clientname;
+    const clientname = req.body.clientname;     // not actually giving me the client in proper format
 
     let options = {
         mode: "text",
