@@ -27,6 +27,7 @@
     "express-session": "^1.17.2",
     "favicon": "^0.0.2",
     "flash": "^1.1.0",
+    "fs": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "jquery": "^3.6.0",
     "materialize-css": "^1.0.0-rc.2",
