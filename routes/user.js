@@ -184,7 +184,7 @@ router.post('/client/:id/makestatement', function (req, res){
 
     let options = {
         mode: "text",
-        args: [req.params.id, start, end]
+        args: [req.params.id, start, end, clientname]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
@@ -195,6 +195,8 @@ router.post('/client/:id/makestatement', function (req, res){
 
     })
 
+    const pdf = '../Python/test/invoices/Ethan.pdf';
+    res.download(pdf, 'statement.pdf');
 
     /*
     let process = spawn("python3", ["../Python/tests/src/bin/main.py", req.params.id, start, end])
