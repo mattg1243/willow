@@ -7,6 +7,7 @@ var connectEnsureLogin = require('connect-ensure-login');
 var spawn = require("child_process").spawn;
 var mongoose = require('mongoose');
 var moment = require('moment')
+var pyshell = require('python-shell')
 const { route } = require('.');
 
 router.get('/register', function(req, res, next) {
@@ -177,17 +178,25 @@ router.get('/logout', function(req, res) {
 
 router.post('/client/:id/makestatement', function (req, res){
 
+    var pyshell = require('python-shell')
+
     const start = req.body.startdate;
     const end = req.body.enddate;
     const clientname = req.body.clientname;
 
-    console.log(start + "   " + end);
+    let options = {
+        mode: 'text',
+        args: [req.params.id, start, end]
+    }
+
+    pyshell.run()
+
+
     
-    let process = spawn("python", ["../Python/tests/src/bin/main.py", req.params.id, start, end])
+    let process = spawn("python3", ["../Python/tests/src/bin/main.py", req.params.id, start, end])
     
     process.stdout.on('data', function(data){
 
-        res.send(data);
         console.log('py response : \n', data);
 
     })
