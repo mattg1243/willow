@@ -225,6 +225,9 @@ def _build_billing_table(name):
 
 def _description_table(session, dates, durations, hourly, amounts, balance):
     
+    length_of_events = len(hourly)
+    total = calc_amounts(amounts, length_of_events)
+
     descrip_table = Table(number_of_rows=15, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "HOURLY RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
@@ -241,7 +244,7 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
 
     # This loop can be improved
     count = 0
-    length_of_events = len(hourly)
+   
     while(count < length_of_events):
         hourly_rate = str(hourly[count])
         balance = Decimal(balance)
@@ -258,12 +261,7 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
         count += 1
 
 
-    # Optionally add some empty rows to have a fixed number of rows for styling purposes
-    #for row_number in range(9, 18):
-        #c = even_color if row_number % 2 == 0 else odd_color
-        #for _ in range(0, 11):
-            #descrip_table.add(TableCell(Paragraph(" "), background_color=c))
-    print(count)
+  # print(count)
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
     if(count < 15):
@@ -272,12 +270,10 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
             while(col_count < 6):
                 descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
                 col_count += 1
-        pass
+                if(col_count == 5 and row_number == 14):
+                    descrip_table.add(Paragraph('Total Due Today: %s' % total))
+                    break
             
-
-   # descrip_table.add(Paragraph(" "))
-   # descrip_table.add(Paragraph(" "))
-   # descrip_table.add(Paragraph(" "))
     descrip_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     descrip_table.no_borders()
     return descrip_table
@@ -312,14 +308,11 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
         ),
     )
     
-
     # Appends
     page_layout.add(_build_statment_header())
     page_layout.add(_build_billing_table(cli))
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
     
-
-
     with open(f"../../invoices/{cli}.pdf", 'wb') as pdf_handler:
         PDF.dumps(pdf_handler, pdf)
     return pdf
