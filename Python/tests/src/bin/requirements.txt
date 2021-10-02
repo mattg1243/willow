@@ -1,0 +1,5 @@
+borb
+bson
+pymongo
+dnspython
+prettyprint
