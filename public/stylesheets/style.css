@@ -84,6 +84,17 @@ img {
   padding: 20px;
 }
 
+#loginCont {
+
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+}
+
 #eventTable {
   text-align: center;
   vertical-align: middle;
