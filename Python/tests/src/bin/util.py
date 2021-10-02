@@ -59,7 +59,7 @@ def _verify_object(clientID, ID):
 
 
 # Defines Record Handling Methods
-def _record_handling(all_records, clientID):
+def _record_handling(all_records, clientID, clientNAME):
         # initialize buffers
         # ------------------
         IDs = []
@@ -113,7 +113,7 @@ def _record_handling(all_records, clientID):
         print("Total values after Decimal object summing: \n")
         print(type(total))
         print(total , '\n')
-        generate("Ethan", dates, types, durations, rates, amounts, 2000)
+        generate(clientNAME, dates, types, durations, rates, amounts, 2000)
 
 
 # Debug 

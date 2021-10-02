@@ -6,6 +6,8 @@ from bson import ObjectId
 # Main Script
 if __name__ == '__main__':
     # Target Client
+    CLIENT_NAME = str(sys.argv[4])
+
     try:
         CLIENT_ID = ObjectId(sys.argv[1])
     # Target Client Error Handling
@@ -37,7 +39,7 @@ if __name__ == '__main__':
 
     # Handles Records Obtained
     try:
-        _record_handling(data_fetched, CLIENT_ID)
+        _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
     # Record Handle Error Handling
     except Exception as _generator_error_handler:
         print('Error generating statements: %s' % _generator_error_handler)
