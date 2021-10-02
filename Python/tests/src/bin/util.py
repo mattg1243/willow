@@ -313,6 +313,6 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_build_billing_table(cli))
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
     
-    with open(f"../../invoices/{cli}.pdf", 'wb') as pdf_handler:
+    with open(f"Python/tests/invoices/{cli}.pdf", 'wb') as pdf_handler:
         PDF.dumps(pdf_handler, pdf)
     return pdf
