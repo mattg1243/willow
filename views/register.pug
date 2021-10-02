@@ -3,26 +3,26 @@ extends layout
 
 block content 
 
-    .container-xl.shadow-2-strong.container-xl.shadow-2-strong#loginCont(style="align-content: center;")
+    .container-xxl#loginCont(style="align-content: center;")
         form(action="register/newuser", method="post" style="font-family: 'Encode Sans', monospace;")
-            div(class="mb-3") 
-                label First Name 
-                input(type="text", name="fname" class="form-control")
-            div(class="mb-3") 
-                label Last Name 
-                input(type="text", name="lname" class="form-control")
-            div(class="mb-3") 
-                label Username
-                input(type="text", name="username" class="form-control")
-            div(class="mb-3") 
-                label Email 
-                input(type="text", name="email" class="form-control")
+            .form-outline.mb-5 
+                input.form-control(type="text", name="fname")
+                label.form-label First Name 
+            .form-outline.mb-5 
+                input.form-control(type="text", name="lname")
+                label.form-label Last Name 
+            .form-outline.mb-5  
+                input.form-control(type="text", name="username")
+                label.form-label Username
+            .form-outline.mb-5   
+                input.form-control(type="text", name="email")
+                label.form-label Email
 
-            div(class="mb-3") 
-                label Password 
-                input(type="password", name="password" class="form-control")
+            .form-outline.mb-5   
+                input.form-control(type="password", name="password")
+                label.form-label Password
 
-            div(class="mb-3") 
+            .form-outline.mb-5  
                 input(type="submit", value="Register" class="btn btn-secondary center")
 
-        
+    

@@ -112,7 +112,7 @@ block content
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form(action= `${client._id}/makestatement` method="post")
+                    form(action= `${client._id}/makestatement/${client.fname}/${client.lname}` method="post")
                         .md-form.mb-5.d-inline-flex.justify-content-center.gap-5
                             label.sr-only Start Date 
                             input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)

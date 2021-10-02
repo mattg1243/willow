@@ -176,12 +176,12 @@ router.get('/logout', function(req, res) {
 })
 
 
-router.post('/client/:id/makestatement', function (req, res){
+router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.body.clientname;     // not actually giving me the client in proper format
-
+    const clientname = req.params.fname + " " + req.params.lname;     // not actually giving me the client in proper format
+    console.log(clientname)
     let options = {
         mode: "text",
         args: [req.params.id, start, end, clientname]
@@ -195,7 +195,7 @@ router.post('/client/:id/makestatement', function (req, res){
 
     })
 
-    const pdf = '../Python/test/invoices/Ethan.pdf';
+    const pdf = '/Python/test/invoices/Ethan.pdf';
     res.download(pdf, 'statement.pdf');
 
     /*
