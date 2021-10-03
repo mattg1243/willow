@@ -40,8 +40,9 @@ if __name__ == '__main__':
 
     # Handles Records Obtained
     try:
-        pdf = _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
-        print(pdf)
+        encoded_pdf = _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
+        os.system(encoded_pdf)
+        #print(pdf)
     # Record Handle Error Handling
     except Exception as _generator_error_handler:
         print('Error generating statements: %s' % _generator_error_handler)
