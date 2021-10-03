@@ -99,21 +99,22 @@ def _record_handling(all_records, clientID, clientNAME):
                 print('Exception thrown appending data fetched to buffers %s' % _data_appending_error_handler)
 
         length_amounts = len(amounts)
-        debug_print(IDs, dates, types, rates, amounts, durations)
+        #debug_print(IDs, dates, types, rates, amounts, durations)
 
 
         # Convert list of amounts to working Decimal values
         amounts = convert_from_d28(amounts, length_amounts)
     
-        print("Amounts after conversion method: \n")
-        print(type(amounts[0]))
-        print(amounts, '\n')
+        #print("Amounts after conversion method: \n")
+        #print(type(amounts[0]))
+       # print(amounts, '\n')
         
         total = calc_amounts(amounts, length_amounts)
-        print("Total values after Decimal object summing: \n")
-        print(type(total))
-        print(total , '\n')
-        generate(clientNAME, dates, types, durations, rates, amounts, 2000)
+       # print("Total values after Decimal object summing: \n")
+       # print(type(total))
+       # print(total , '\n')
+        pdf = generate(clientNAME, dates, types, durations, rates, amounts, 2000)
+        return pdf
 
 
 # Debug 
@@ -313,6 +314,6 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_build_billing_table(cli))
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
     
-    with open(f"Python/tests/invoices/{cli}.pdf", 'wb') as pdf_handler:
+    with open(f"../../invoices/{cli}.pdf", 'wb') as pdf_handler:
         PDF.dumps(pdf_handler, pdf)
     return pdf
