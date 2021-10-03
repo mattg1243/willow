@@ -204,8 +204,8 @@ router.get('/client/:id/makestatement/download', function (req, res) {
 
     const pdf = '/Python/tests/invoices/Ethan.pdf';
     
-    res.setHeader("Content-Type", "attachment; statement.pdf")
-    res.download(pdf)
+    // res.setHeader("Content-Type", "attachment; statement.pdf")
+    //res.download(pdf)
     res.redirect('/user/dashboard');    
 
 })
