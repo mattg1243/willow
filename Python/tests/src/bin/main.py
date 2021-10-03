@@ -3,7 +3,6 @@ import datetime
 from util import _set_crit, _mongo_cluster, _mongo_client, _record_handling, Document
 from bson import ObjectId
 import os
-import base64
 
 # Main Script
 if __name__ == '__main__':
@@ -42,8 +41,7 @@ if __name__ == '__main__':
     # Handles Records Obtained
     try:
         pdf = _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
-        values = pdf.values()
-        os.system(values)
+        print(pdf)
     # Record Handle Error Handling
     except Exception as _generator_error_handler:
         print('Error generating statements: %s' % _generator_error_handler)
