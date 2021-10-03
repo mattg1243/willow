@@ -181,7 +181,7 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.params.fname + " " + req.params.lname;     // not actually giving me the client in proper format
+    const clientname = req.params.fname + " " + req.params.lname;
     console.log(clientname)
     let options = {
         mode: "text",
@@ -192,6 +192,14 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
         if (err) return console.error(err)
 
+        console.log("++++++++++++++++++++++++++++++++++ \n" + result)
+    
+        const pdfText = $.base64.decode(result.trim(result));
+        console.log(pdfText);
+        window.open("Python/tests/invoices/Ethan.pdf");
+
+
+        
         console.log(result)
 
     })
@@ -202,9 +210,9 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
 router.get('/client/:id/makestatement/download', function (req, res) {
 
-    const pdf = '/Python/tests/invoices/Ethan.pdf';
+
     
-    // res.setHeader("Content-Type", "attachment; statement.pdf")
+    //res.setHeader("Content-Type", "attachment; statement.pdf")
     //res.download(pdf)
     res.redirect('/user/dashboard');    
 
