@@ -119,5 +119,6 @@ block content
                             label.form-label End Date
                             input.form-control#datePicker(type="date" step=0.1 name="enddate" placeholder="Date" required)
                         
-                        .modal-footer.d-flex.justify-content-center 
-                            input.btn.btn-primary(type="submit" value="Download" href="/users/dashboard")
+                        .modal-footer.d-flex.flex-column.justify-content-center 
+                            input.btn.btn-primary#downloadBtn(type="submit" value="Download")
+                            i.material-icons(style="display: none;") done

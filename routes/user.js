@@ -173,7 +173,7 @@ router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), functi
 
 router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect('/user/login');
 })
 
 
@@ -196,19 +196,25 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
         
         console.log(result)
 
+        res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
+
     })
 
-    res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
+    //res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
 })
 
 router.get('/client/:id/makestatement/download/:clientname/:start/:end', function (req, res) {
 
-    res.download(`/app/public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+    res.set({
+        'Location': "/users/dashboard"
+    });
+
+    res.download(`public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
 
         if (err) return console.error(err);
 
-        fs.unlink(`/app/public/invoices/${req.params.clientname}.pdf`, function (err) {
+        fs.unlink(`public/invoices/${req.params.clientname}.pdf`, function (err) {
             
             if (err) return console.error(err)
 

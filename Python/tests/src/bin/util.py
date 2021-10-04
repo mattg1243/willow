@@ -325,5 +325,5 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     str_pdf = str(pdf)
    # bin_pdf = ''.join(format(ord(i), '08b' ) for i in str_pdf)
 
-    with open(f'/app/public/invoices/{cli}.pdf', 'wb') as pdf_file:
+    with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)

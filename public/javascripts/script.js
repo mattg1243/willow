@@ -63,3 +63,18 @@ $('#addEvent').on('click', function() {
 $('.eventRow').on('click', function() {
     window.location = $(this).data('href');
 })
+
+/* download button redirect to dashboard 
+$('#downloadBtn').on('click', () => {
+
+    window.location.href = '/user/dashboard';
+
+});
+*/
+
+$('#downloadBtn').on('click', function() {
+
+    setTimeout(function() {$('#statementModal').modal('hide');}, 4000);
+
+  });
+  
