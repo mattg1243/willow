@@ -47,9 +47,13 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/user/l
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
     
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
-    Client.find({ ownerID: req.user['_id'] }, 'fname lname', function(err, clients) {
+    Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
+        
+        if (err) return console.error(err);
+        
         console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients})
+        
     });
 })
 

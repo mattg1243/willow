@@ -7,7 +7,7 @@ block content
     .list-group.list-group-flush#clientList
         each c in clients 
             a.list-group-item(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
-                p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname
+                    p(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname + '        ' + '$' + c.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addClientCont
         button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type="button" data-mdb-toggle="modal" data-mdb-target="#addClientModal") New Client
 
