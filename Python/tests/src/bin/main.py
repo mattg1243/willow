@@ -37,12 +37,12 @@ if __name__ == '__main__':
     except Exception as _mongo_error_handler:
         print('Error connecting to MongoDB: %s' % _mongo_error_handler)
     
-
     # Handles Records Obtained
     try:
-        encoded_pdf = _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
-        os.system(encoded_pdf)
-        #print(pdf)
+        _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
+
+        
+
     # Record Handle Error Handling
     except Exception as _generator_error_handler:
         print('Error generating statements: %s' % _generator_error_handler)
