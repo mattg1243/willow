@@ -204,11 +204,11 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
 router.get('/client/:id/makestatement/download/:clientname/:start/:end', function (req, res) {
 
-    res.download(`public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+    res.download(`/app/public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
 
         if (err) return console.error(err);
 
-        fs.unlink(`public/invoices/${req.params.clientname}.pdf`, function (err) {
+        fs.unlink(`/app/public/invoices/${req.params.clientname}.pdf`, function (err) {
             
             if (err) return console.error(err)
 
