@@ -193,28 +193,27 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
         if (err) return console.error(err)
 
         console.log("++++++++++++++++++++++++++++++++++ \n" + result)
-    
-        const pdfText = $.base64.decode(result.trim(result));
-        console.log(pdfText);
-        window.open("Python/tests/invoices/Ethan.pdf");
-
-
         
         console.log(result)
 
     })
 
-    res.redirect('/user/client/:id/makestatement/download');
+    res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
 })
 
-router.get('/client/:id/makestatement/download', function (req, res) {
+router.get('/client/:id/makestatement/download/:clientname/:start/:end', function (req, res) {
 
+    res.download(`public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
 
-    
-    //res.setHeader("Content-Type", "attachment; statement.pdf")
-    //res.download(pdf)
-    res.redirect('/user/dashboard');    
+        if (err) return console.error(err);
+
+        fs.unlink(`public/invoices/${req.params.clientname}.pdf`, function (err) {
+            
+            if (err) return console.error(err)
+
+        });
+    })
 
 })
 
