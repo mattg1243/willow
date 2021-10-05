@@ -35,18 +35,18 @@ block content
 
 
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
-        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#exampleModal") Add Event
+        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal") Add Event
         button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal") Create Statement
     
-    #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    #eventModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='eventModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
                 .modal-header
-                    h2#exampleModalLabel.modal-title(style="font-size: 2em;") Event Details
+                    h2#eventModalLabel.modal-title(style="font-size: 2em;") Event Details
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form(action=`${client._id}/addsession` method="post")
+                    form.needs-validation#eventForm(action=`${client._id}/addsession` method="post" name="eventForm")
                         .md-form.mb-5
                             label.form-label Date 
                             input.form-control#datePicker(type="date" step=0.1 name="date" placeholder="Date" required)
