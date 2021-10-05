@@ -30,6 +30,7 @@
     "fs": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "jquery": "^3.6.0",
+    "jquery-validation": "^1.19.3",
     "moment": "^2.29.1",
     "momentjs": "^2.0.0",
     "mongo": "^0.1.0",
