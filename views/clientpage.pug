@@ -6,22 +6,23 @@ block content
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table.table-hover(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
-        table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
+    .container(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
+        table.table.table-hover.align-middle#eventTable(height=200 style="table-layout: fixed;")
             thead
-
+                
                 if events.length == 0
                     tr(height=200) 
                         th(style="text-align: center;") No events logged for this client 
                 else
                     tr(height=50)
+                        tbody
                         th(scope="col") Date 
                         th(scope="col") Type 
                         th(scope="col") Time  
                         th(scope="col") Amount
 
                         
-                    
+                    tbody
                     each e in events 
                         tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
                             td= moment(e.date).format("MM/DD/YYYY")
@@ -35,24 +36,25 @@ block content
 
 
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
-        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#exampleModal") Add Event
+        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal") Add Event
         button.btn.btn-secondary.shadow-2-strong#makeStatement(type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal") Create Statement
     
-    #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    #eventModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='eventModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
                 .modal-header
-                    h2#exampleModalLabel.modal-title(style="font-size: 2em;") Event Details
+                    h2#eventModalLabel.modal-title(style="font-size: 2em;") Event Details
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form(action=`${client._id}/addsession` method="post")
+                    form.needs-validation#eventForm(action=`${client._id}/addsession` method="post" name="eventForm")
                         .md-form.mb-5
-                            label.sr-only Date 
+                            label.form-label Date 
                             input.form-control#datePicker(type="date" step=0.1 name="date" placeholder="Date" required)
                         .md-form.mb-5 
+                            label.form-label Event Type 
                             select.form-select#eventTypeSelector(name="type" required) Type
-                                option(value='') Type...
+                                option(value='') Select...
                                 option(value='1:1 Meeting') 1:1 Meeting   
                                 option(value='3 Way Meeting') 3 Way Meeting  
                                 option(value='4 Way Meeting') 4 Way Meeting  
@@ -69,7 +71,7 @@ block content
                                 option(value='Travel Time') Travel Time                     
                         .md-form.mb-5.d-inline-flex.justify-content-center#timeField(style="display: none;")
                             select.form-select.form-control#hrsField(name="hours" style="display: none;")
-                                option(value='') hr
+                                option(value=0) 0 hr 
                                 option(value=1) 1 hr
                                 option(value=2) 2 hr
                                 option(value=3) 3 hr
@@ -82,7 +84,6 @@ block content
                                 option(value=10) 10 hr
                                 option(value=0) 0 hr
                             select.form-select.form-control#minField(name="minutes" style="display: none;") 
-                                option(value='') mins
                                 option(value=0) 0 mins
                                 option(value=0.1) 1-6 mins
                                 option(value=0.2) 7-12 mins
@@ -94,11 +95,11 @@ block content
                                 option(value=0.8) 43-48 mins
                                 option(value=0.9) 49-54 mins
                         .md-form.mb-5#rateField(style="display: none;")
-                            label.sr-only Rate 
-                            input.form-control(type="number" name="rate" placeholder="Rate")
+                            label.form-label Rate 
+                            input.form-control(type="number" name="rate")
                         .md-form.mb-5#amountField(style="display: none;") 
-                            label.sr-only Amount 
-                            input.form-control(type="text" name="amount" placeholder="Amount")
+                            label.form-label Amount 
+                            input.form-control(type="text" name="amount" placeholder="$")
 
                         .modal-footer.d-flex.justify-content-center 
                             input.btn.btn-primary(type="submit" value="Create Event")
@@ -113,11 +114,12 @@ block content
 
                 .modal-body.text-center.mb-1
                     form(action= `${client._id}/makestatement/${client.fname}/${client.lname}` method="post")
-                        .md-form.mb-5.d-inline-flex.justify-content-center.gap-5
-                            label.sr-only Start Date 
+                        .md-form.mb-5.d-flex.flex-column.justify-content-center.align-items-center.gap-2
+                            label.form-label Start Date
                             input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
-                            label.sr-only End Date 
+                            label.form-label End Date
                             input.form-control#datePicker(type="date" step=0.1 name="enddate" placeholder="Date" required)
                         
-                        .modal-footer.d-flex.justify-content-center 
-                            input.btn.btn-primary(type="submit" value="Download")
+                        .modal-footer.d-flex.flex-column.justify-content-center 
+                            input.btn.btn-primary#downloadBtn(type="submit" value="Download")
+                            i.material-icons(style="display: none;") done

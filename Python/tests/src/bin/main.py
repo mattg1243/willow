@@ -6,8 +6,6 @@ from bson import ObjectId
 # Main Script
 if __name__ == '__main__':
     # Target Client
-    CLIENT_NAME = str(sys.argv[4])
-
     try:
         CLIENT_ID = ObjectId(sys.argv[1])
     # Target Client Error Handling
@@ -17,7 +15,8 @@ if __name__ == '__main__':
     try:
         FROM = datetime.datetime.strptime(sys.argv[2], '%Y-%m-%d')
         TO = datetime.datetime.strptime(sys.argv[3], '%Y-%m-%d')
-    # Date Range Error Handling
+        CLIENT_NAME = str(sys.argv[4])
+    # Date Range and client name Error Handling
     except Exception as date_error_handle:
         print('Error parsing date range: %s' % date_error_handle)
     # Target Critical
@@ -27,7 +26,8 @@ if __name__ == '__main__':
         # Initialize Cluster
         cluster = _mongo_cluster()
         client = _mongo_client(cluster)
-        # Set Instance
+        # Set Instance for statements
+        # events
         db = client.maindb
         events_col = db.events
         # Access Collection and Pull All Crtical Data
@@ -36,10 +36,10 @@ if __name__ == '__main__':
     except Exception as _mongo_error_handler:
         print('Error connecting to MongoDB: %s' % _mongo_error_handler)
     
-
     # Handles Records Obtained
     try:
         _record_handling(data_fetched, CLIENT_ID, CLIENT_NAME)
+
     # Record Handle Error Handling
     except Exception as _generator_error_handler:
         print('Error generating statements: %s' % _generator_error_handler)
