@@ -304,13 +304,5 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
 
 
-    # Testing: write pdf file before binary conversion
-    #with open('../../binary_invoice_test/bintest.pdf', 'wb') as pdf_file:
-        #PDF.dumps(pdf_file, pdf)
-
-
-    str_pdf = str(pdf)
-   # bin_pdf = ''.join(format(ord(i), '08b' ) for i in str_pdf)
-
-    with open(f'/public/invoices/{cli}.pdf', 'wb') as pdf_file:
+    with open(f'/app/public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
