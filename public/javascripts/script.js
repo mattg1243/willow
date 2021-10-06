@@ -46,7 +46,7 @@ $('.client-row').on('click', function(){
 
 // making events row on the table clickeable for editing
 $('.eventRow').on('click', function() {
-    window.location = $(this).data('href');
+   window.location = $(this).data('href');
 })
 
 // makes the statement modal disappear after 3 seconds
