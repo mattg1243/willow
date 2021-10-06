@@ -223,7 +223,6 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
             TableCell(
                 Paragraph(h, horizontal_alignment=Alignment.LEFT, font_color=X11Color("White"), font_size=10, font="Helvetica"),
                 background_color=HexColor("000000"),
-                padding_top=Decimal(10)
             )
         )
         
