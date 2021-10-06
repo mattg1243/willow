@@ -16,6 +16,13 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
+from logger import _set_log_params
+
+
+
+# Defines logging params
+logger = _set_log_params()
+
 
 
 # Defines Mongo Cluster
@@ -118,8 +125,7 @@ def _record_handling(all_records, clientID, clientNAME):
        # print("Total values after Decimal object summing: \n")
        # print(type(total))
        # print(total , '\n')
-        pdf = generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
-        return pdf
+        generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
 
 
 # Debug 
