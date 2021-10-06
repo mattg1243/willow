@@ -16,12 +16,7 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
-from logger import _set_log_params
 
-
-
-# Defines logging params
-logger = _set_log_params()
 
 
 
@@ -312,5 +307,10 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
 
 
+    # Local path 
+    """with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
+        PDF.dumps(pdf_file, pdf)"""
+    
+    # Heroku path
     with open(f'/app/public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
