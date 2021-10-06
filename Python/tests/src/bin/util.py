@@ -306,5 +306,5 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
 
 
-    with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
+    with open(f'/app/public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
