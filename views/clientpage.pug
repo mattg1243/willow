@@ -6,22 +6,23 @@ block content
     p1 Balance: $ #{client.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         
     
-    .table.table-hover(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
-        table.table.align-middle#eventTable(height=200 style="table-layout: fixed;")
+    .container(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
+        table.table.table-hover.align-middle#eventTable(height=200 style="table-layout: fixed;")
             thead
-
+                
                 if events.length == 0
                     tr(height=200) 
                         th(style="text-align: center;") No events logged for this client 
                 else
                     tr(height=50)
+                        tbody
                         th(scope="col") Date 
                         th(scope="col") Type 
                         th(scope="col") Time  
                         th(scope="col") Amount
 
                         
-                    
+                    tbody
                     each e in events 
                         tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
                             td= moment(e.date).format("MM/DD/YYYY")
