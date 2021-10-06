@@ -32,6 +32,7 @@ app.set('view engine', 'pug');
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
 app.use('/images', express.static(path.join(__dirname, 'public/images')))
+app.use('/invoices', express.static(path.join(__dirname, 'public/invoices')))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(session({
@@ -64,11 +65,6 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
-
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public/scripts/materialize.min.js'))
-})
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

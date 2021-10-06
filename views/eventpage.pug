@@ -13,7 +13,7 @@ block content
                 img(src='/images/Conversation _Monochromatic.svg' alt='meeting')
             else    
                 img(src="/images/Team meeting_Monochromatic.svg", alt="team meeting")
-    .container.d-flex.flex-column#eventPageHeader
+    .container.d-flex.flex-column.justify-content-center#eventPageHeader
         h1 #{event[0].type}
         h5= moment(event[0].date).format("MM/DD/YYYY")
     .container#eventPageBody    

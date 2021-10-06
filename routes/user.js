@@ -47,9 +47,13 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/user/l
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
     
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
-    Client.find({ ownerID: req.user['_id'] }, 'fname lname', function(err, clients) {
+    Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
+        
+        if (err) return console.error(err);
+        
         console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients})
+
     });
 })
 
@@ -113,9 +117,16 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
     
      }
 
+    Client.findOne({ _id: req.params.id }, function(err, client) {
 
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: amount });
-    event.save(function(err, event) {
+        if (err) return console.error(err);
+
+        console.log(client)
+        const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
+        console.log("\n--balance--\n" + newBalance);
+
+        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
+        event.save(function(err, event) {
 
         if (err) return console.error(err);
 
@@ -131,8 +142,9 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         console.log('Event added')
 
         res.redirect(`/user/client/${req.params.id}`)
-        
-    })
+
+    })})
+
 })
 
 router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
@@ -173,7 +185,7 @@ router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), functi
 
 router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect('/user/login');
 })
 
 
@@ -181,7 +193,7 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.params.fname + " " + req.params.lname;     // not actually giving me the client in proper format
+    const clientname = req.params.fname + " " + req.params.lname;
     console.log(clientname)
     let options = {
         mode: "text",
@@ -192,21 +204,36 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
         if (err) return console.error(err)
 
+        console.log("++++++++++++++++++++++++++++++++++ \n" + result)
+        
         console.log(result)
+
+        res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
     })
 
-    res.redirect('/user/client/:id/makestatement/download');
+    //res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
 })
 
-router.get('/client/:id/makestatement/download', function (req, res) {
+router.get('/client/:id/makestatement/download/:clientname/:start/:end', function (req, res) {
 
-    const pdf = '/Python/tests/invoices/Ethan.pdf';
-    
-    // res.setHeader("Content-Type", "attachment; statement.pdf")
-    //res.download(pdf)
-    res.redirect('/user/dashboard');    
+    res.set({
+        'Location': "/users/dashboard"
+    });
+
+    res.download(`/app/public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+
+        if (err) return console.error(err);
+
+        
+        // delete the pdf from the server after download
+        fs.unlink(`/app/public/invoices/${req.params.clientname}.pdf`, function (err) {
+            
+            if (err) return console.error(err)
+
+        });
+    })
 
 })
 
