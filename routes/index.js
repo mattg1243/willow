@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
 
   if (req.isAuthenticated) {
