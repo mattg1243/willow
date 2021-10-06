@@ -35,7 +35,7 @@ if __name__ == '__main__':
         db = client.maindb
         events_col = db.events
         # Access Collection and Pull All Crtical Data
-        data_fetched = events_col.find(critical)
+        data_fetched = events_col.find(critical).sort('date', 1)
     # Mongo Connection Error Handling
     except Exception as _mongo_error_handler:
         print('Error connecting to MongoDB: %s' % _mongo_error_handler)
