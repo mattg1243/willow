@@ -53,7 +53,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res)
         
         console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients})
-        
+
     });
 })
 
@@ -117,9 +117,16 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
     
      }
 
+    Client.findOne({ _id: req.params.id }, function(err, client) {
 
-    const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: amount });
-    event.save(function(err, event) {
+        if (err) return console.error(err);
+
+        console.log(client)
+        const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
+        console.log("\n--balance--\n" + newBalance);
+
+        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: amount, newBalance: newBalance });
+        event.save(function(err, event) {
 
         if (err) return console.error(err);
 
@@ -135,8 +142,9 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         console.log('Event added')
 
         res.redirect(`/user/client/${req.params.id}`)
-        
-    })
+
+    })})
+
 })
 
 router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
