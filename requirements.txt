@@ -3,3 +3,4 @@ bson
 pymongo
 dnspython
 prettyprint
+python-dotenv
