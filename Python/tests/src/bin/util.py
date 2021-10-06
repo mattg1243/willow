@@ -16,13 +16,15 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
+import os
+from dotenv import load_dotenv
 
-
-
+# Load .env
+load_dotenv(dotenv_path='Python/tests/src/bin/cluster.env')
 
 # Defines Mongo Cluster
 def _mongo_cluster():
-    cluster = "mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?w=majority"
+    cluster = os.getenv("CLUSTER")
     return cluster
 
 # Defines Mongo Client Instance
