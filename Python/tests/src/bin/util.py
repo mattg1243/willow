@@ -263,7 +263,6 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
         descrip_table.add(TableCell(Paragraph("$ " + balance), background_color=even_color))
         count += 1
 
-
   # print(count)
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
