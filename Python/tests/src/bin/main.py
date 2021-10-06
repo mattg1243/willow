@@ -4,6 +4,7 @@ from bson import ObjectId
 from util import _set_crit, _mongo_cluster, _mongo_client, _record_handling
 from logger import _set_log_params
 
+
 # Defines logging params
 logger = _set_log_params()
 
@@ -34,8 +35,8 @@ if __name__ == '__main__':
         # events
         db = client.maindb
         events_col = db.events
-        # Access Collection and Pull All Crtical Data
-        data_fetched = events_col.find(critical)
+        # Access Collection and Pull All Crtical Data, sorting it by date in ascending order
+        data_fetched = events_col.find(critical).sort("date", 1)
     # Mongo Connection Error Handling
     except Exception as _mongo_error_handler:
         print('Error connecting to MongoDB: %s' % _mongo_error_handler)

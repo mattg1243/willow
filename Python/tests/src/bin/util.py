@@ -18,8 +18,6 @@ from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
 
 
-
-
 # Defines Mongo Cluster
 def _mongo_cluster():
     cluster = "mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?w=majority"
@@ -62,7 +60,7 @@ def _verify_object(clientID, ID):
 
 
 # Defines Record Handling Methods
-def _record_handling(all_records, clientID, clientNAME):
+def _record_handling(data_fetched, clientID, clientNAME):
         # initialize buffers
         # ------------------
         IDs = []
@@ -87,9 +85,11 @@ def _record_handling(all_records, clientID, clientNAME):
 
         counter = 0
 
+
         # Loop through data gathered
         # Verify ObjectIds
-        for row in all_records:
+        
+        for row in data_fetched:
             try:
                 _verify_object(clientID, row['clientID'])
             except Exception as _verify_objectID_error_handler:
@@ -112,14 +112,6 @@ def _record_handling(all_records, clientID, clientNAME):
         # Convert list of amounts to working Decimal values
         amounts = convert_from_d28(amounts, length_amounts)
     
-        #print("Amounts after conversion method: \n")
-        #print(type(amounts[0]))
-       # print(amounts, '\n')
-        
-        total = calc_amounts(amounts, length_amounts)
-       # print("Total values after Decimal object summing: \n")
-       # print(type(total))
-       # print(total , '\n')
         generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
 
 
@@ -221,7 +213,6 @@ def _build_billing_table(name):
 def _description_table(session, dates, durations, hourly, amounts, new_balance):
     
     length_of_events = len(hourly)
-    total = calc_amounts(amounts, length_of_events)
 
     descrip_table = Table(number_of_rows=15, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
