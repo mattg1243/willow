@@ -37,6 +37,13 @@ $('#eventTypeSelector').on('change', function(){
    }
 });
 
+// makes client rows clickable 
+$('.client-row').on('click', function(){
+
+    window.location = $(this).data('href');
+
+})
+
 // making events row on the table clickeable for editing
 $('.eventRow').on('click', function() {
     window.location = $(this).data('href');
