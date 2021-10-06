@@ -1,6 +1,6 @@
 import sys
 import datetime
-from util import _set_crit, _mongo_cluster, _mongo_client, _record_handling, Document
+from util import _set_crit, _mongo_cluster, _mongo_client, _record_handling
 from bson import ObjectId
 
 # Main Script

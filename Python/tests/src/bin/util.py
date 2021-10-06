@@ -16,8 +16,7 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
-# b64
-import binascii
+
 
 # Defines Mongo Cluster
 def _mongo_cluster():
@@ -81,6 +80,9 @@ def _record_handling(all_records, clientID, clientNAME):
         # holds all amounts
         amounts = []
 
+        # holds new balance
+        new_balance = []
+
         counter = 0
 
         # Loop through data gathered
@@ -96,6 +98,7 @@ def _record_handling(all_records, clientID, clientNAME):
                 durations.append(row['duration'])
                 rates.append(row['rate'])
                 amounts.append(row['amount'])
+                new_balance.append(row['newBalance'])
                 counter += 1
             except Exception as _data_appending_error_handler:
                 print('Exception thrown appending data fetched to buffers %s' % _data_appending_error_handler)
@@ -115,7 +118,7 @@ def _record_handling(all_records, clientID, clientNAME):
        # print("Total values after Decimal object summing: \n")
        # print(type(total))
        # print(total , '\n')
-        pdf = generate(clientNAME, dates, types, durations, rates, amounts, 2000)
+        pdf = generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
         return pdf
 
 
@@ -140,18 +143,7 @@ def debug_print(IDs, DATES, TYPES, RATES, AMOUNTS, DURATIONS):
     pprint(DURATIONS)
     print('\n')
 
-#TODO: Refine and test this function: For now, we're doing balance calculation in
-# record handling loop, ideally should define a function that can adjust balance
-# more dynamically
-# 
-# This function adjusts balance, audit it thourghouly
-def _adjust_balance(start_balance, amounts):
-    start_balance = Decimal(start_balance)
-    new_balance = start_balance
-    for x in amounts:
-        new_balance += amounts[x]
-    return new_balance
-        
+
 
 # STATEMENT GENERATION
 def skele():
@@ -195,7 +187,6 @@ def _build_statment_header():
 
     return header
 
-
 def _build_billing_table(name):
     # Client's name
     NAME = name
@@ -226,7 +217,7 @@ def _build_billing_table(name):
     return b_table
 
 
-def _description_table(session, dates, durations, hourly, amounts, balance):
+def _description_table(session, dates, durations, hourly, amounts, new_balance):
     
     length_of_events = len(hourly)
     total = calc_amounts(amounts, length_of_events)
@@ -250,10 +241,8 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
    
     while(count < length_of_events):
         hourly_rate = str(hourly[count])
-        balance = Decimal(balance)
-        balance += amounts[count]
         amount = str(amounts[count])
-        balance = str(balance)
+        balance = str(new_balance[count])
         date = datetime.strftime(dates[count], "%m-%d-%y")
         descrip_table.add(TableCell(Paragraph(date), background_color=even_color))
         descrip_table.add(TableCell(Paragraph(str(session[count])), background_color=even_color))
@@ -279,7 +268,6 @@ def _description_table(session, dates, durations, hourly, amounts, balance):
     descrip_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     descrip_table.no_borders()
     return descrip_table
-
 
 
 def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
@@ -324,5 +312,5 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     str_pdf = str(pdf)
    # bin_pdf = ''.join(format(ord(i), '08b' ) for i in str_pdf)
 
-    with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
+    with open(f'/public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
