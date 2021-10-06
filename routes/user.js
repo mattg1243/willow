@@ -226,6 +226,8 @@ router.get('/client/:id/makestatement/download/:clientname/:start/:end', functio
 
         if (err) return console.error(err);
 
+        
+        // delete the pdf from the server after download
         fs.unlink(`/app/public/invoices/${req.params.clientname}.pdf`, function (err) {
             
             if (err) return console.error(err)
