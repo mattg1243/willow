@@ -223,13 +223,15 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
     total = calc_amounts(amounts, length_of_events)
 
     descrip_table = Table(number_of_rows=15, number_of_columns=6)
-    for h in ["DATE", "TYPE", "DURATION", "HOURLY RATE", "AMOUNT", "BALANCE"]:
+    for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
-                Paragraph(h, font_color=X11Color("White")),
+                Paragraph(h, horizontal_alignment=Alignment.LEFT, font_color=X11Color("White"), font_size=10, font="Helvetica"),
                 background_color=HexColor("000000"),
+                padding_top=Decimal(10)
             )
         )
+        
 
     # black
     odd_color = HexColor("BBBBBB")
@@ -262,7 +264,7 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
                 descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
                 col_count += 1
                 if(col_count == 5 and row_number == 14):
-                    descrip_table.add(Paragraph('Total Due Today: %s' % total))
+                    descrip_table.add(Paragraph('Running Balance: %s' % balance))
                     break
             
     descrip_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
@@ -304,5 +306,5 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(_description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE))
 
 
-    with open(f'/app/public/invoices/{cli}.pdf', 'wb') as pdf_file:
+    with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
