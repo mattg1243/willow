@@ -4,11 +4,15 @@ block content
 
 
     h3 Clients
-    table.table.table-hover#clientList
-        each c in clients 
-            tr.list-group-item.client-row(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" href=`client/${c._id}` class="collection-item")
-                td(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname 
-                td #{'$' + c.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}        
+    
+    .container(style="padding-top: 20px; padding-bottom: 20px; min-height: 50vh;")
+        table.table.table-hover.align-middle#clientList
+            thead  
+                tbody    
+                    each c in clients 
+                        tr.client-row(style="font-family: 'Fira Sans', sans-serif, font-weight: light;" scope="row" data-href=`client/${c._id}` class="collection-item")
+                            td(style="font-family: 'Open Sans', sans-serif;")= c.fname + ' ' + c.lname 
+                            td #{'$' + c.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}        
     .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addClientCont
         button.btn.shadow-1-strong(style="color: #0d6efd; width: 50%; display: flex; justify-content: center;" type="button" data-mdb-toggle="modal" data-mdb-target="#addClientModal") New Client
 

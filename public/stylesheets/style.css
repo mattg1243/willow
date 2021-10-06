@@ -95,29 +95,19 @@ img {
 
 }
 
-#eventTable {
+#eventTable #clientList{
+  
   text-align: center;
   vertical-align: middle;
   font-size: .75rem;
   padding-top: 30px;
+  table-layout: fixed;
 
 }
 
 td {
   white-space: nowrap;
 }
-
-
-#clientList {
-  display: block;
-  text-align: center;
-  justify-content: center;
-  padding: 10px;
-  min-height: 70vh;
-  width: 70%;
-}
-
-
 
 .nav-link {
   font-size: .75rem;
