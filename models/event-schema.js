@@ -12,8 +12,7 @@ const EventSchema = new Schema({
     rate: {type: Number, required: false, maxLength: 10},
     amount: {type: mongoose.Schema.Types.Decimal128, required: false,
             get: v => new mongoose.Types.Decimal128(v.toString())},
-    newBalance: {type: mongoose.Schema.Types.Decimal128, required: true,
-            get: v => new mongoose.Types.Decimal128(v.toString())} // logs the balance of the client before this event was added
+    newBalance: {type: mongoose.Schema.Types.Decimal128, required: true}
 })
 
 module.exports = mongoose.model('EventModel', EventSchema, 'events');
