@@ -64,7 +64,7 @@ def _verify_object(clientID, ID):
 
 
 # Defines Record Handling Methods
-def _record_handling(all_records, clientID, clientNAME):
+def _record_handling(data_fetched, clientID, clientNAME):
         # initialize buffers
         # ------------------
         IDs = []
@@ -91,7 +91,7 @@ def _record_handling(all_records, clientID, clientNAME):
 
         # Loop through data gathered
         # Verify ObjectIds
-        for row in all_records:
+        for row in data_fetched:
             try:
                 _verify_object(clientID, row['clientID'])
             except Exception as _verify_objectID_error_handler:
@@ -114,14 +114,6 @@ def _record_handling(all_records, clientID, clientNAME):
         # Convert list of amounts to working Decimal values
         amounts = convert_from_d28(amounts, length_amounts)
     
-        #print("Amounts after conversion method: \n")
-        #print(type(amounts[0]))
-       # print(amounts, '\n')
-        
-        total = calc_amounts(amounts, length_amounts)
-       # print("Total values after Decimal object summing: \n")
-       # print(type(total))
-       # print(total , '\n')
         generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
 
 
