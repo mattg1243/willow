@@ -49,6 +49,12 @@ $('.eventRow').on('click', function() {
    window.location = $(this).data('href');
 })
 
+// register button redirect to sign up page
+$('#registerBtn').on('click', function() {
+    window.location = $(this).data('href');
+ })
+ 
+
 // makes the statement modal disappear after 3 seconds
 $('#downloadBtn').on('click', function() {
 

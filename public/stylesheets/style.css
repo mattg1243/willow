@@ -1,5 +1,5 @@
-h1, h2 {
-  font-family: 'Fire Sans', sans-serif;
+h1, h2, p {
+
   margin: .5em auto;
 
 }
@@ -8,14 +8,12 @@ h3 {
   display: block;
   text-align: center;
   font-size: 2rem;
-  padding: 2rem;
-  margin-top: 3rem;
 }
 
 body {
   width: 100%;
   min-height: 100vh;
-  font-family: 'Encode Sans', monospace;
+  font-family: 'Quicksand', sans-serif;
 }
 
 
@@ -23,10 +21,9 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   width: 100%;
-  padding: 20px;
-  margin: 12px auto;
+  padding: 1.5rem;
   height: 80vh;
 }
 
@@ -38,7 +35,9 @@ main {
 }
 
 .navbar-brand {
-  height: 2em;
+  height: 3em;
+  padding: 0;
+  margin: 0;
 }
 
 .nav-link {
@@ -99,8 +98,7 @@ img {
   
   text-align: center;
   vertical-align: middle;
-  font-size: .75rem;
-  padding-top: 30px;
+  font-size: 1rem;
   table-layout: fixed;
 
 }
@@ -138,10 +136,15 @@ td {
 #addEventCont, #addClientCont {
   display: flex;
   justify-content: center;
-
   color: #0d6efd;
   margin-bottom: 1rem;
   font-size: 1rem;
+}
+
+#eventFloat {
+
+  padding-top: 1rem;
+
 }
 
 #eventPageHeader {
