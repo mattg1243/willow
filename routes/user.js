@@ -44,7 +44,7 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/user/l
     res.redirect('/user/dashboard');
 })
 
-router.get('/dashboard', connectEnsureLogin.ensureLoggedIn(), function(req, res) { 
+router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), function(req, res) { 
     
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
     Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
