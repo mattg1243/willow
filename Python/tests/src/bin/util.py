@@ -215,9 +215,7 @@ def _build_billing_table(name):
 def _description_table(session, dates, durations, hourly, amounts, new_balance):
     
     length_of_events = len(hourly)
-    total = calc_amounts(amounts, length_of_events)
-
-    descrip_table = Table(number_of_rows=15, number_of_columns=6)
+    descrip_table = Table(number_of_rows=20, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -251,13 +249,13 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
   # print(count)
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    if(count < 15):
-        for row_number in range(count+1, 15):
+    if(count < 20):
+        for row_number in range(count+1, 20):
             col_count = 0
             while(col_count < 6):
                 descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
                 col_count += 1
-                if(col_count == 5 and row_number == 14):
+                if(col_count == 5 and row_number == 19):
                     descrip_table.add(Paragraph('Running Balance: %s' % balance))
                     break
             
@@ -289,8 +287,8 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     #     this url changes or stops operating
     page_layout.add(Image(
             "https://miro.medium.com/max/1400/1*6HdI84r__tiI65f2vhZN1g.png",
-            width=Decimal(140),
-            height=Decimal(103),
+            width=Decimal(108),
+            height=Decimal(64),
         ),
     )
     
