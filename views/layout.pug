@@ -7,6 +7,7 @@ html
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css")
     link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amatic+SC&family=Caveat&family=Fira+Sans&family=Indie+Flower&family=Open+Sans:wght@300&family=PT+Sans&family=PT+Sans+Narrow&family=Permanent+Marker&family=Slabo+27px&display=swap")
+    link(href="https://fonts.googleapis.com/css?family=Quicksand:300,regular,500,600,700" rel="stylesheet")
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css")
     link(rel="stylesheet" href="/stylesheets/style.css")
@@ -16,16 +17,18 @@ html
     body.d-flex.flex-column
 
       nav.navbar.navbar-expand-lg.navbar-light.shadow-1
-          .container-fluid.text-white 
+          .container-fluid.d-inline-flex.text-white 
             if (!loggedIn)
-              a.navbar-brand(href='/user/login' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: blue !important;") 
+              a.navlink(href='/user/login' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: blue !important;") 
                 i.material-icons menu 
-              a.nav-link(href='#')
               a.nav-link(href='/user/login') Login
             else
               a.navbar-brand(href='/user/dashboard' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: blue !important;") 
-                i.material-icons home
-              a.nav-link(href='/user/logout')  Log Out
+                i.fas.fa-home
+              a.navbar-brand(href="#")
+                img#moneyTree(src="/images/money_tree.svg" height="50" alt="money tree" loading="lazy")
+              a.navbar-brand(href='/user/logout' style="color: blue !important;")
+                i.fas.fa-sign-out-alt
       
       main  
         block content

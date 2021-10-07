@@ -1,17 +1,8 @@
 extends layout 
 
 block content 
-    
-    ul.background 
-        li 
-        li 
-        li 
-        li 
-        li 
-        li 
-        li 
-        
 
+    img(src="/images/money_tree.svg", alt="", srcset="")
     .container-xxl#loginCont(style="align-content: center;")
         form(action='' method='post')
 
@@ -23,4 +14,4 @@ block content
                 label.form-label Password 
             .form-outline.mb-5.d-inline-flex.justify-content-center.gap-5
                 input(type="submit", value="Log In" class="btn btn-primary center")
-                a(href="/user/register" type="button", class="btn btn-secondary center") Register
+                button.btn.btn-secondary.center#registerBtn(data-href="/user/register" class="btn btn-secondary center") Register

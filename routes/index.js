@@ -3,7 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
 
   if (req.isAuthenticated) {
     res.redirect('user/dashboard')
