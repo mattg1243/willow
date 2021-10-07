@@ -215,7 +215,7 @@ def _build_billing_table(name):
 def _description_table(session, dates, durations, hourly, amounts, new_balance):
     
     length_of_events = len(hourly)
-    descrip_table = Table(number_of_rows=20, number_of_columns=6)
+    descrip_table = Table(number_of_rows=15, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -249,13 +249,13 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
   # print(count)
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    if(count < 20):
-        for row_number in range(count+1, 20):
+    if(count < 15):
+        for row_number in range(count+1, 15):
             col_count = 0
             while(col_count < 6):
                 descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
                 col_count += 1
-                if(col_count == 5 and row_number == 19):
+                if(col_count == 5 and row_number == 14):
                     descrip_table.add(Paragraph('Running Balance: %s' % balance))
                     break
             
