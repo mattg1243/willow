@@ -98,4 +98,25 @@ $("#eventForm").validate({
     })
 });
 
-jQuery.va
+
+// parse the duration field back into hours and minutes for the event editing page
+let duration = $('#ghostDivEventInfo').attr('value');
+let hrVal = Math.floor(duration)
+let minVal = (duration - hrVal).toFixed(1)
+
+console.log(hrVal + "  " + minVal)
+
+$(`#hrsFieldEdit option[value=${hrVal}]`).attr('selected', 'selected')
+$(`#minFieldEdit option[value=${minVal * 10}]`).attr('selected', 'selected') // need to be sure to divide by 10 on edit post
+
+$('#hrsFieldEdit').on('click', function() {
+
+    $(`#hrsFieldEdit option[value=${hrVal}]`).attr('selected', false)
+
+})
+
+$('#minFieldEdit').on('click', function() {
+
+    $(`#minFieldEdit option[value=${minVal * 10}]`).attr('selected', false)
+
+})
