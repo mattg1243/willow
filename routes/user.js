@@ -41,7 +41,7 @@ router.get('/login', function(req, res, next) {
 
 
 router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
-    console.log(req.user);
+    console.log(req.user.fname + " " + req.user.fname + " has logged in");
     res.redirect('/user/dashboard');
 })
 
@@ -60,7 +60,6 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), funct
 router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
-    console.log(newClient);
     newClient.save(function(err, client) {
        
         if (err) return console.error(err);
@@ -91,8 +90,6 @@ router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res
            
             if (err) return console.error(err);
     
-            console.log(client)
-            console.log(events)
             res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
         })
     })
@@ -121,7 +118,6 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
         if (err) return console.error(err);
 
-        console.log(client)
         const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
         console.log("\n--balance--\n" + newBalance);
 
@@ -138,7 +134,6 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         
         })
 
-        console.log(event)
         console.log('Event added')
 
         res.redirect(`/user/client/${req.params.id}`)
