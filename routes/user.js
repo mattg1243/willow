@@ -10,6 +10,7 @@ var moment = require('moment');
 var fs = require('fs');
 let {PythonShell} = require('python-shell')
 const { route } = require('.');
+const { update } = require('../models/user-model');
 
 router.get('/register', function(req, res, next) {
   
@@ -40,7 +41,7 @@ router.get('/login', function(req, res, next) {
 
 
 router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
-    console.log(req.user);
+    console.log(req.user.fname + " " + req.user.fname + " has logged in");
     res.redirect('/user/dashboard');
 })
 
@@ -51,7 +52,6 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), funct
         
         if (err) return console.error(err);
         
-        console.log(clients); // clients is an array of the doc objects
         res.render('dashboard', { fname: req.user['fname'], clients: clients})
 
     });
@@ -60,7 +60,6 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), funct
 router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
-    console.log(newClient);
     newClient.save(function(err, client) {
        
         if (err) return console.error(err);
@@ -91,8 +90,6 @@ router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res
            
             if (err) return console.error(err);
     
-            console.log(client)
-            console.log(events)
             res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
         })
     })
@@ -121,7 +118,6 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
         if (err) return console.error(err);
 
-        console.log(client)
         const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
         console.log("\n--balance--\n" + newBalance);
 
@@ -130,7 +126,7 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
         if (err) return console.error(err);
 
-        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }}, function(err, result) {
+        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }, $push: { sessions: event._id } }, function(err, result) {
             
         if (err) console.error(err);
 
@@ -138,7 +134,6 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         
         })
 
-        console.log(event)
         console.log('Event added')
 
         res.redirect(`/user/client/${req.params.id}`)
@@ -148,8 +143,6 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 })
 
 router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
-
-    // need to go and change the amounts inc in the balance to be either positive or negative to be able to undo them
 
     Event.findByIdAndDelete(req.params.eventid, function (err, event) {
 
@@ -169,9 +162,9 @@ router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn
 
 })
 
-router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
+router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
 
-    Event.find({_id: req.params.eventid}, function(err, event) {
+    Event.findOne({_id: req.params.eventid}, function(err, event) {
         
         if (err) return console.error(err);
         
@@ -181,6 +174,53 @@ router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), functi
  
 
 })
+
+router.post('/client/event/:eventid', async function(req, res) {
+   
+        let hrs = parseFloat(req.body.hours)
+        let mins = parseFloat(req.body.minutes)
+        let duration = hrs + (mins / 10)
+        let rate = req.body.rate
+        let amount = -(duration * rate)
+        let balance = 0
+        let clientID = ''
+    // these all need be ASYNC, not working because everything is trying to execute at once 
+    // for this function, thinking of passing it an object with all required params which is a lot... might not need it tho if called in this scope
+    // need to add support for refund and retainer types
+    console.log("duration = " + duration)
+        
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount }, function (err, docs) {
+
+        if (err) return console.error(err)
+
+        clientID = docs.clientID
+        console.log(docs.clientID)
+
+        //find all events that belong to this client so the new balance can be calculated
+
+        Event.find({ clientID: docs.clientID }, function (err, docs) {
+
+            if (err) return console.error(err)
+
+            console.log(docs)
+
+            for (let i = 0; i < docs.length; i++) {
+                balance += parseFloat(docs[i].amount.toString())
+                console.log(balance.toFixed(2))
+            }
+
+            Client.findOneAndUpdate({ _id: clientID }, { balance: balance }, function (err, client) {
+         
+                if (err) return console.error(err)
+        
+                console.log("---balance updated---")
+        
+            })
+        })
+        res.redirect(`/user/dashboard`)
+    })
+})
+
 
 
 router.get('/logout', function(req, res) {
