@@ -167,7 +167,7 @@ router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn
 
 })
 
-router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
+router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
 
     Event.findOne({_id: req.params.eventid}, function(err, event) {
         
@@ -180,19 +180,21 @@ router.get('/client/event/:eventid', connectEnsureLogin.ensureLoggedIn(), functi
 
 })
 
-router.post('/client/event/:eventid', function (req, res) {
+router.post('/client/event/:eventid', async function(req, res) {
    
-    let hrs = parseFloat(req.body.hours)
-    let mins = parseFloat(req.body.minutes)
-    let duration = hrs + (mins / 10)
-    let rate = req.body.rate
-    let amount = -(duration * rate)
-    let balance = 0
-    let clientID = ''
+        let hrs = parseFloat(req.body.hours)
+        let mins = parseFloat(req.body.minutes)
+        let duration = hrs + (mins / 10)
+        let rate = req.body.rate
+        let amount = -(duration * rate)
+        let balance = 0
+        let clientID = ''
     // these all need be ASYNC, not working because everything is trying to execute at once 
+    // for this function, thinking of passing it an object with all required params which is a lot... might not need it tho if called in this scope
     // need to add support for refund and retainer types
     console.log("duration = " + duration)
-    Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount }, function (err, docs) {
+        
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount }, function (err, docs) {
 
         if (err) return console.error(err)
 
@@ -212,20 +214,16 @@ router.post('/client/event/:eventid', function (req, res) {
                 console.log(balance.toFixed(2))
             }
 
-    
-
+            Client.findOneAndUpdate({ _id: clientID }, { balance: balance }, function (err, client) {
+         
+                if (err) return console.error(err)
+        
+                console.log("---balance updated---")
+        
+            })
         })
         res.redirect(`/user/dashboard`)
     })
-
-    Client.findOneAndUpdate({ _id: clientID }, { balance: balance }, function (err, client) {
-         
-        if (err) return console.error(err)
-
-        console.log("---balance updated---")
-
-    })
-
 })
 
 
