@@ -3,63 +3,64 @@ extends layout
 block content   
     
     .container#eventImg
-            if (event[0].type == 'Emails')
+            if (event.type == 'Emails')
                 img(src="/images/New Message_Monochromatic.svg", alt="email")
-            else if (event[0].type == 'Notes' || event[0].type == 'Intention Statment' || event[0].type == 'Parenting Plan')
+            else if (event.type == 'Notes' || event.type == 'Intention Statment' || event.type == 'Parenting Plan')
                 img(src="/images/Notes_Monochromatic.svg", alt="notes")
-            else if (event[0].type == 'Retainer' || event[0].type == 'Refund')
+            else if (event.type == 'Retainer' || event.type == 'Refund')
                 img(src="/images/Card Payment_Monochromatic.svg", alt="payment")
-            else if (event[0].type == '1:1 Meeting')
+            else if (event.type == '1:1 Meeting')
                 img(src='/images/Conversation _Monochromatic.svg' alt='meeting')
             else    
                 img(src="/images/Team meeting_Monochromatic.svg", alt="team meeting")
     .container.d-flex.flex-column.justify-content-center#eventPageHeader
-        h1 #{event[0].type}
-        h5= moment(event[0].date).format("MM/DD/YYYY")
+        h1 #{event.type}
+        h5 #{moment(event.date).format("MM/DD/YYYY")}
     .container#eventPageBody    
-        .md-form.mb-5.d-inline-flex.justify-content-center
-            if (event[0].type == 'Retainer' || event[0].type == 'Refund')
-                .md-form.mb-5#amountField 
-                    label Amount 
-                    input.form-control(type="text" name="amount" placeholder=`${event[0].amount}`)
-                    label.sr-only Amount
-            else    
-                p2 Time:
-                    .md-form.mb-5
-                        select.form-select.form-control#hrsField(name="hours" placeholder=`${event[0].duration}`)
-                            option(value='') hr
-                            option(value=1) 1 hr
-                            option(value=2) 2 hr
-                            option(value=3) 3 hr
-                            option(value=4) 4 hr
-                            option(value=5) 5 hr
-                            option(value=6) 6 hr
-                            option(value=7) 7 hr
-                            option(value=8) 8 hr
-                            option(value=9) 9 hr
-                            option(value=10) 10 hr
-                            option(value=0) 0 hr
-                        select.form-select.form-control#minField(name="minutes")
-                            option(value='') mins
-                            option(value=0) 0 mins
-                            option(value=0.1) 1-6 mins
-                            option(value=0.2) 7-12 mins
-                            option(value=0.3) 13-18 mins 
-                            option(value=0.4) 19-24 mins
-                            option(value=0.5) 25-30 mins
-                            option(value=0.6) 31-36 mins
-                            option(value=0.7) 37-42 mins
-                            option(value=0.8) 43-48 mins
-                            option(value=0.9) 49-54 mins
-                    .md-form.mb-5#rateField
-                        label Rate 
-                        input.form-control(type="number" name="rate" placeholder=`${event[0].rate}`)
-                    .md-form.mb-5#commentsField 
-                        label Comments 
-                        input.form-control(type="text" name="comments" placeholder="Not currently working")
-        
+        form.d-flex.flex-column.justify-content-center(action=`${event._id}` method="post")
+            .md-form.mb-5.d-inline-flex.justify-content-center
+                if (event.type == 'Retainer' || event.type == 'Refund')
+                    .md-form.mb-5#amountField 
+                        label Amount 
+                        input.form-control(type="text" name="amount" value=`${event.amount}`)
+                        label.sr-only Amount
+                else    
+                    p2 Time:
+                        .md-form.mb-5
+                            select.form-select.form-control#hrsFieldEdit(name="hours")
+                                option(value='') hr
+                                option(value=1) 1 hr
+                                option(value=2) 2 hr
+                                option(value=3) 3 hr
+                                option(value=4) 4 hr
+                                option(value=5) 5 hr
+                                option(value=6) 6 hr
+                                option(value=7) 7 hr
+                                option(value=8) 8 hr
+                                option(value=9) 9 hr
+                                option(value=10) 10 hr
+                                option(value=0) 0 hr
+                            select.form-select.form-control#minFieldEdit(name="minutes")
+                                option(value='') mins
+                                option(value=0) 0 mins
+                                option(value=1) 1-6 mins
+                                option(value=2) 7-12 mins
+                                option(value=3) 13-18 mins 
+                                option(value=4) 19-24 mins
+                                option(value=5) 25-30 mins
+                                option(value=6) 31-36 mins
+                                option(value=7) 37-42 mins
+                                option(value=8) 43-48 mins
+                                option(value=9) 49-54 mins
+                        .md-form.mb-5#rateField
+                            label Rate 
+                            input.form-control(type="number" name="rate" value=`${event.rate}`)
+                        .md-form.mb-5#commentsField 
+                            label Comments 
+                            input.form-control(type="text" name="comments" placeholder="Not currently working")
+                        .md-form.d-flex.justify-content-center.gap-5 
+                            input.btn.btn-primary(type="submit" value="Save Changes")
 
-    .container.d-inline-flex.justify-content-center.gap-5.fixed-bottom#addEventCont
-        button.btn.btn-primary.shadow-2-strong#addEvent(style="color: #0d6efd; display: flex; justify-content: center;") Save Changes
-        a.btn.btn-secondary.shadow-2-strong#makeStatement(type='button' href=`/user/client/${event[0].clientID}/deleteevent/${event[0]._id}`) Delete Event
+    #ghostDivEventInfo(value=`${event.duration}`)
+
     

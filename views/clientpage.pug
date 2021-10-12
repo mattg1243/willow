@@ -30,7 +30,7 @@ block content
                                 td= e.duration 
                             else   
                                 td - 
-                            td= '$ ' + `${e['amount'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                            td= '$ ' + `${parseFloat(e['amount'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
 
         .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important;")#eventFloat 
             button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal")
