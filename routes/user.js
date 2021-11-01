@@ -121,7 +121,7 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
         console.log("\n--balance--\n" + newBalance);
 
-        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
+        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, detail: req.body.detail, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
         event.save(function(err, event) {
 
         if (err) return console.error(err);
