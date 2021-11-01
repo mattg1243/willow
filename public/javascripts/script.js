@@ -4,15 +4,18 @@
 $('#eventTypeSelector').on('change', function(){
     var selection = $(this).val();
 
-    const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting', 'Team Meeting']
-    const miscTypes = ['Emails', 'Intention Statement', 'Notes', 'Parenting Plan', 'Phone Call', 'Travel Time']
+    // New event types : Meeting, Email, Phone Call, General, Retainer, Refund
 
-    if (meetingTypes.includes(selection) || miscTypes.includes(selection)){
+    const chargeTypes = ['Meeting', 'Email', 'Phone Call', 'General']
+
+    // should show for everything but Retainer / Refund 
+    if (chargeTypes.includes(selection)){
         $("#amountField").hide()
         $("#amountField").val(0)
         $("#hrsField").show()
         $("#minField").show()
         $("#rateField").show()
+        $("#detailField").show()
     } else if (selection == 'Retainer' || selection == 'Refund') {
 
         $("#hrsField").hide()
@@ -22,7 +25,15 @@ $('#eventTypeSelector').on('change', function(){
         $("#minField").val(0)
         $("#rateField").val(0)
         $("#amountField").show()
+        $("#detailField").hide()
 
+    } else if(selection == 'Other') {
+        $("#amountField").show()
+        $("#amountField").val(0)
+        $("#hrsField").show()
+        $("#minField").show()
+        $("#rateField").show()
+        $("#detailField").show()
     }
 
     else {
@@ -34,6 +45,7 @@ $('#eventTypeSelector').on('change', function(){
         $("#minField").val(0) 
         $("#rateField").val(0) 
         $("#amountField").val(0) 
+        $("#detailField").hide()
    }
 });
 

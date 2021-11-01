@@ -55,20 +55,15 @@ block content
                             label.form-label Event Type 
                             select.form-select#eventTypeSelector(name="type" required) Type
                                 option(value='') Select...
-                                option(value='1:1 Meeting') 1:1 Meeting   
-                                option(value='3 Way Meeting') 3 Way Meeting  
-                                option(value='4 Way Meeting') 4 Way Meeting  
-                                option(value='5 Way Meeting') 5 Way Meeting  
-                                option(value='6 Way Meeting') 6 Way Meeting  
-                                option(value='Emails') Emails               
-                                option(value='Intention Statement') Intention Statement   
-                                option(value='Notes') Notes
-                                option(value='Parenting Plan') Parenting Plan 
-                                option(value='Phone Call') Phone Call
+                                option(value='Meeting') Meeting     
+                                option(value='Email') Email               
+                                option(value='Phone Call') Phone Call   
+                                option(value='General') General
                                 option(value='Refund') Refund
-                                option(value='Retainer') Retainer
-                                option(value='Team Meeting') Team Meeting
-                                option(value='Travel Time') Travel Time                     
+                                option(value='Retainer') Retainer    
+                        .md-form.mb-5#detailField(style="display: none;")
+                            label.form-label Detail
+                            input.form-control(type="text" name="detail")                
                         .md-form.mb-5.d-inline-flex.justify-content-center#timeField(style="display: none;")
                             select.form-select.form-control#hrsField(name="hours" style="display: none;")
                                 option(value=0) 0 hr 
