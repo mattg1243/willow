@@ -28,10 +28,10 @@ router.post('/register/newuser', function(req, res, next) {
         if (err) {
             console.log('Error while registering user : ', err);
             return next(err);
+        } else {
+            console.log('User registered');
+            res.redirect('/');
         }
-
-        console.log('User registered');
-        res.redirect('/');
     })
 })
 
