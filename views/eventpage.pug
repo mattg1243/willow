@@ -16,6 +16,7 @@ block content
     .container.d-flex.flex-column.justify-content-center#eventPageHeader
         h1 #{event.type}
         h5 #{moment(event.date).format("MM/DD/YYYY")}
+        h5 #{event.detail}
     .container#eventPageBody    
         form.d-flex.flex-column.justify-content-center(action=`${event._id}` method="post")
             .md-form.mb-5.d-inline-flex.justify-content-center
