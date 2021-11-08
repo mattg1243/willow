@@ -13,6 +13,11 @@ const UserSchema = new Schema({
     fname: {type: String, required: true, maxLength: 100},
     lname: {type: String, required: true, maxLength: 100},
     email: {type: String, required: true, maxLength: 100},
+    phone: {type: String, required: false, maxLength: 100},
+    street: {type: String, required: false},
+    city: {type: String, required: false},
+    state: {type: String, required: false, maxLength: 2},
+    zip: {type: String, required: false, maxLength: 5},
     clients: [{type: mongoose.Schema.Types.ObjectId, ref: 'Client'}]
 
 })
