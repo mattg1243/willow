@@ -252,11 +252,31 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.params.fname + " " + req.params.lname;
-    console.log(clientname)
+    let userArg, userInfo;
+    
+    User.findOne({ _id: req.user.id }, function (err, user) {
+
+        if (err) return console.error(err)
+
+            userInfo = {  
+
+            clientname: req.params.fname + " " + req.params.lname,
+            billingAdd: user.street + ", " + user.city + ", " + user.state + " " + user.zip,
+            mailingAdd: "", // this isnt handled client side yet 
+            phone: user.phone
+
+        }
+
+        console.log(userInfo.billingAdd)
+
+    })
+    // need to add promises to control when these things happen
+    userArg = JSON.stringify(userInfo)
+
+    console.log(userInfo.billingAdd)
     let options = {
         mode: "text",
-        args: [req.params.id, start, end, clientname]
+        args: [req.params.id, start, end, userArg]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
