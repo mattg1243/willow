@@ -86,12 +86,13 @@ router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res
         
         if (err) return console.error(err)
 
-        Event.find({ clientID: req.params.id }, function(err, events) {
+        Event.find({ clientID: req.params.id },  function(err, events) {
            
             if (err) return console.error(err);
     
             res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
-        })
+            
+        }).sort({ date: 1 })
     })
 });
 
