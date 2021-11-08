@@ -24,9 +24,9 @@ block content
                     tbody
                     each e in events 
                         tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
-                            td= moment(e.date).format("MM/DD/YYYY")
+                            td= moment.utc(e.date).format("MM/DD/YYYY")
                             td= e.type
-                            if (meetings.includes(e.type) || misc.includes(e.type))
+                            if (e.duration != 0)
                                 td= e.duration 
                             else   
                                 td - 
