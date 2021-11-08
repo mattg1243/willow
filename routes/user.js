@@ -57,6 +57,25 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), funct
     });
 })
 
+router.get('/preferences', function (req, res) {
+
+    res.render('preferences', { user: req.user });
+
+})
+
+router.post("/update-info/:id", function(req, res) {
+
+    User.findOneAndUpdate({ _id: req.params.id }, { phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
+
+        if (err) return console.error(err)
+
+        console.log("Info updated : \n" + info)
+        res.redirect('/');
+
+    })
+
+})
+
 router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
