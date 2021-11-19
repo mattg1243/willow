@@ -57,6 +57,25 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), funct
     });
 })
 
+router.get('/preferences', function (req, res) {
+
+    res.render('preferences', { user: req.user });
+
+})
+
+router.post("/update-info/:id", function(req, res) {
+
+    User.findOneAndUpdate({ _id: req.params.id }, { phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
+
+        if (err) return console.error(err)
+
+        console.log("Info updated : \n" + info)
+        res.redirect('/');
+
+    })
+
+})
+
 router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
     const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
@@ -122,7 +141,7 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
         const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
         console.log("\n--balance--\n" + newBalance);
 
-        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
+        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, detail: req.body.detail, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
         event.save(function(err, event) {
 
         if (err) return console.error(err);
@@ -234,11 +253,23 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    const clientname = req.params.fname + " " + req.params.lname;
-    console.log(clientname)
+    let userArg;
+    
+    let userInfo = {  
+
+        clientname: req.params.fname + " " + req.params.lname,
+        billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        mailingAdd: "", // this isnt handled client side yet 
+        phone: req.user.phone
+
+    };
+
+    userArg = JSON.stringify(userInfo)
+
+    console.log(userArg)
     let options = {
         mode: "text",
-        args: [req.params.id, start, end, clientname]
+        args: [req.params.id, start, end, userArg]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
