@@ -1,0 +1,77 @@
+extends layout 
+
+block content 
+
+    h3 Contact info 
+        p This info is only used in the header section of your statements
+
+    
+    .md-form.mb-5.d-inline-flex.justify-content-center.gap-3 
+        .form-outline.mb-5   
+            select.form-select State(required)                    
+                option(value='') State
+                option(value='AL') AL
+                option(value='AK') AK
+                option(value='AR') AR
+                option(value='AZ') AZ
+                option(value='CA') CA
+                option(value='CO') CO
+                option(value='CT') CT
+                option(value='DC') DC
+                option(value='DE') DE
+                option(value='FL') FL
+                option(value='GA') GA
+                option(value='HI') HI
+                option(value='IA') IA
+                option(value='ID') ID
+                option(value='IL') IL
+                option(value='IN') IN
+                option(value='KS') KS
+                option(value='KY') KY
+                option(value='LA') LA
+                option(value='MA') MA
+                option(value='MD') MD
+                option(value='ME') ME
+                option(value='MI') MI
+                option(value='MN') MN
+                option(value='MO') MO
+                option(value='MS') MS
+                option(value='MT') MT
+                option(value='NC') NC
+                option(value='NE') NE
+                option(value='NH') NH
+                option(value='NJ') NJ
+                option(value='NM') NM
+                option(value='NV') NV
+                option(value='NY') NY
+                option(value='ND') ND
+                option(value='OH') OH
+                option(value='OK') OK
+                option(value='OR') OR
+                option(value='PA') PA
+                option(value='RI') RI
+                option(value='SC') SC
+                option(value='SD') SD
+                option(value='TN') TN
+                option(value='TX') TX
+                option(value='UT') UT
+                option(value='VT') VT
+                option(value='VA') VA
+                option(value='WA') WA
+                option(value='WI') WI
+                option(value='WV') WV
+                option(value='WY') WY
+
+        .form-outline.mb-5    
+            input.form-control(type="text", name="street")
+            label.form-label Street
+        .form-outline.mb-5    
+            input.form-control(type="text", name="state")
+            label.form-label City
+        .form-outline.mb-5    
+            input.form-control(type="text", name="zip")
+            label.form-label Zip Code   
+
+    .form-outline.mb-5
+        label.form-label Phone #
+        input.form-control(type="phone", name="phone")
