@@ -135,3 +135,19 @@ $('#minFieldEdit').on('click', function() {
 })
 
 $(`#eventTypeEdit option[value=${typeVal}]`).attr('selected','selected')
+
+$('#eventTypeEdit').on('change', function() {
+
+    var selection = $(this).val();
+
+    if (selection !== 'Retainer' && selection !== 'Refund') {
+        $('#hrsFieldEdit').hide();
+        $('#minFieldEdit').hide();
+        $('#amountFieldEdit').show()
+    } else {
+        $('#hrsFieldEdit').show();
+        $('#minFieldEdit').show();
+        $('#amountFieldEdit').hide();
+    }
+
+})
