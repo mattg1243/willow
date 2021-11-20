@@ -22,7 +22,7 @@ block content
             .md-form.mb-5.d-inline-flex.justify-content-center
                 .md-form.mb-5#amountField 
                     label Type 
-                    select.form-select#eventTypeSelector(name="type") Type
+                    select.form-select#eventTypeEdit(name="type") Type
                             option(value='') Select...
                             option(value='Meeting') Meeting     
                             option(value='Email') Email               
@@ -34,7 +34,7 @@ block content
                     input.form-control(type="text" name="amount" value=`${event.amount}`)  
                     p2 Time:
                         .md-form.mb-5
-                            select.form-select.form-control#hrsField(name="hours")
+                            select.form-select.form-control#hrsFieldEdit(name="hours")
                                 option(value='') hr
                                 option(value=1) 1 hr
                                 option(value=2) 2 hr
@@ -47,7 +47,7 @@ block content
                                 option(value=9) 9 hr
                                 option(value=10) 10 hr
                                 option(value=0) 0 hr
-                            select.form-select.form-control#minField(name="minutes")
+                            select.form-select.form-control#minFieldEdit(name="minutes")
                                 option(value='') mins
                                 option(value=0) 0 mins
                                 option(value=1) 1-6 mins
@@ -68,6 +68,7 @@ block content
                         .md-form.d-flex.justify-content-center.gap-5 
                             input.btn.btn-primary(type="submit" value="Save Changes")
 
-    #ghostDivEventInfo(value=`${event.duration}`)
+    #ghostDivDurationInfo(value=`${event.duration}`)
+    #ghostDivTypeInfo(value=`${event.type}`)
 
     
