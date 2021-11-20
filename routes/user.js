@@ -210,7 +210,7 @@ router.post('/client/event/:eventid', async function(req, res) {
     // need to add support for refund and retainer types
     console.log("duration = " + duration)
         
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
         if (err) return console.error(err)
 
@@ -238,7 +238,7 @@ router.post('/client/event/:eventid', async function(req, res) {
         
             })
         })
-        res.redirect(`/user/dashboard`)
+        res.redirect(`/user/client/${clientID}`)
     })
 })
 
