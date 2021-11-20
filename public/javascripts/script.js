@@ -141,13 +141,11 @@ $('#eventTypeEdit').on('change', function() {
     var selection = $(this).val();
 
     if (selection !== 'Retainer' && selection !== 'Refund') {
-        $('#hrsFieldEdit').hide();
-        $('#minFieldEdit').hide();
-        $('#amountFieldEdit').show()
+        $('#timeFieldsEdit').show();
+        $('#amountFieldEdit').hide()
     } else {
-        $('#hrsFieldEdit').show();
-        $('#minFieldEdit').show();
-        $('#amountFieldEdit').hide();
+        $('#timeFieldsEdit').hide();
+        $('#amountFieldEdit').show();
     }
 
 })
