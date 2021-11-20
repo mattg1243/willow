@@ -32,7 +32,7 @@ block content
                                 td - 
                             td= '$ ' + `${parseFloat(e['amount'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
 
-        .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important;")#eventFloat 
+        .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important; padding: 1rem;")#eventFloat 
             button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal")
                 i.fas.fa-plus.fa-2x(style="color: white;")
             button.btn.btn-lg.btn-floating.shadow-2-strong#makeStatement(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal")
@@ -108,7 +108,7 @@ block content
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form(action= `${client._id}/makestatement/${client.fname}/${client.lname}` method="post")
+                    form(action= `${client.id}/makestatement/${client.fname}/${client.lname}` method="post")
                         .md-form.mb-5.d-flex.flex-column.justify-content-center.align-items-center.gap-2
                             label.form-label Start Date
                             input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
