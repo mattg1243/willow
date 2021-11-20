@@ -11,6 +11,7 @@ h3 {
 }
 
 body {
+  
   width: 100%;
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
@@ -21,7 +22,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   padding: 1.5rem;
   height: 80vh;
@@ -35,7 +36,7 @@ main {
 }
 
 .navbar-brand {
-  height: 3em;
+  height: 2em;
   padding: 0;
   margin: 0;
 }
@@ -165,10 +166,9 @@ td {
 #eventImg {
   display: flex;
   justify-content: center;
-  align-items: top;
+  align-items: center;
   max-height: 20vh;
   margin: 2rem;
-  padding-top: 2rem;
 }
 
 
