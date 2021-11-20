@@ -202,6 +202,7 @@ router.post('/client/event/:eventid', async function(req, res) {
         let duration = hrs + (mins / 10)
         let rate = req.body.rate
         let amount = -(duration * rate)
+        let detail = req.body.detail
         let balance = 0
         let clientID = ''
     // these all need be ASYNC, not working because everything is trying to execute at once 
@@ -209,7 +210,7 @@ router.post('/client/event/:eventid', async function(req, res) {
     // need to add support for refund and retainer types
     console.log("duration = " + duration)
         
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount }, function (err, docs) {
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
         if (err) return console.error(err)
 

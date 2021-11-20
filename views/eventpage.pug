@@ -20,15 +20,21 @@ block content
     .container#eventPageBody    
         form.d-flex.flex-column.justify-content-center(action=`${event._id}` method="post")
             .md-form.mb-5.d-inline-flex.justify-content-center
-                if (event.type == 'Retainer' || event.type == 'Refund')
-                    .md-form.mb-5#amountField 
-                        label Amount 
-                        input.form-control(type="text" name="amount" value=`${event.amount}`)
-                        label.sr-only Amount
-                else    
+                .md-form.mb-5#amountField 
+                    label Type 
+                    select.form-select#eventTypeSelector(name="type") Type
+                            option(value='') Select...
+                            option(value='Meeting') Meeting     
+                            option(value='Email') Email               
+                            option(value='Phone Call') Phone Call   
+                            option(value='General') General
+                            option(value='Refund') Refund
+                            option(value='Retainer') Retainer
+                    label Amount 
+                    input.form-control(type="text" name="amount" value=`${event.amount}`)  
                     p2 Time:
                         .md-form.mb-5
-                            select.form-select.form-control#hrsFieldEdit(name="hours")
+                            select.form-select.form-control#hrsField(name="hours")
                                 option(value='') hr
                                 option(value=1) 1 hr
                                 option(value=2) 2 hr
@@ -41,7 +47,7 @@ block content
                                 option(value=9) 9 hr
                                 option(value=10) 10 hr
                                 option(value=0) 0 hr
-                            select.form-select.form-control#minFieldEdit(name="minutes")
+                            select.form-select.form-control#minField(name="minutes")
                                 option(value='') mins
                                 option(value=0) 0 mins
                                 option(value=1) 1-6 mins
@@ -57,8 +63,8 @@ block content
                             label Rate 
                             input.form-control(type="number" name="rate" value=`${event.rate}`)
                         .md-form.mb-5#commentsField 
-                            label Comments 
-                            input.form-control(type="text" name="comments" placeholder="Not currently working")
+                            label Details 
+                            input.form-control(type="text" name="detail" value=`${event.detail}`) 
                         .md-form.d-flex.justify-content-center.gap-5 
                             input.btn.btn-primary(type="submit" value="Save Changes")
 
