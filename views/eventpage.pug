@@ -30,7 +30,7 @@ block content
                             option(value='Refund') Refund
                             option(value='Retainer') Retainer
                     label Amount 
-                    input.form-control(type="text" name="amount" value=`${event.amount}`)  
+                    input.form-control#amountFieldEdit(type="text" name="amount" value=`${event.amount}`)  
                     p2 Time:
                         .md-form.mb-5
                             select.form-select.form-control#hrsFieldEdit(name="hours")
