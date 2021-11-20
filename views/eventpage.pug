@@ -66,6 +66,7 @@ block content
                             input.form-control(type="text" name="detail" value=`${event.detail}`) 
                         .md-form.d-flex.justify-content-center.gap-5 
                             input.btn.btn-primary(type="submit" value="Save Changes")
+                            a.btn.btn-danger(href=`/user/deleteevent/${event.clientID}/${event._id}`) Delete Event
 
     #ghostDivDurationInfo(value=`${event.duration}`)
     #ghostDivTypeInfo(value=`${event.type}`)
