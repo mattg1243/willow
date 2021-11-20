@@ -162,12 +162,12 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
 })
 
-router.get('/client/:id/deleteevent/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
+router.get('/deleteevent/:id/:eventid', connectEnsureLogin.ensureLoggedIn(), function (req, res) {
+
 
     Event.findByIdAndDelete(req.params.eventid, function (err, event) {
 
         if (err) return console.error(err);
-    
 
         Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: - parseInt(event.amount.toString()) }}, function(err, result) {
                 
