@@ -112,9 +112,10 @@ $("#eventForm").validate({
 
 
 // parse the duration field back into hours and minutes for the event editing page
-let duration = $('#ghostDivEventInfo').attr('value');
+let duration = $('#ghostDivDurationInfo').attr('value');
 let hrVal = Math.floor(duration)
 let minVal = (duration - hrVal).toFixed(1)
+let typeVal = $('#ghostDivTypeInfo').attr('value');
 
 console.log(hrVal + "  " + minVal)
 
@@ -132,3 +133,5 @@ $('#minFieldEdit').on('click', function() {
     $(`#minFieldEdit option[value=${minVal * 10}]`).attr('selected', false)
 
 })
+
+$(`#eventTypeEdit option[value=${typeVal}]`).attr('selected','selected')
