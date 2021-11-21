@@ -24,7 +24,7 @@ block content
                     tbody
                     each e in events 
                         tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
-                            td= moment.utc(e.date).format("MM/DD/YYYY")
+                            td= moment.utc(e.date).format("MM/DD/YY")
                             td= e.type
                             if (e.duration != 0)
                                 td= e.duration 
@@ -33,9 +33,9 @@ block content
                             td= '$ ' + `${parseFloat(e['amount'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
 
         .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important; padding: 1rem;")#eventFloat 
-            button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal")
+            button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #03b126 !important; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#eventModal")
                 i.fas.fa-plus.fa-2x(style="color: white;")
-            button.btn.btn-lg.btn-floating.shadow-2-strong#makeStatement(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal")
+            button.btn.btn-lg.btn-floating.shadow-2-strong#makeStatement(style="background-color: #03b126 !important; display: flex; justify-content: center;" type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal")
                 i.fas.fa-file-invoice-dollar.fa-2x(style="color: white;")
 
     

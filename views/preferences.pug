@@ -5,7 +5,7 @@ block content
     h1 Preferences 
     p Contact Info 
         form(action=`update-info/${user._id}` method='post')
-            .md-form.mb-5.d-inline-flex.justify-content-center.gap-3 
+            .md-form.d-flex-column.justify-content-center.gap-3
                 .form-outline.mb-5
                     input.form-control(type="state" name="state")
                     label.form-label State
@@ -15,14 +15,12 @@ block content
                 .form-outline.mb-5    
                     input.form-control(type="city", name="city")
                     label.form-label City
-            .md-form.mb-5.d-inline-flex.justify-content-center.gap-3
                 .form-outline.mb-5    
                     input.form-control(type="zip", name="zip")
                     label.form-label Zip Code   
                 .form-outline.mb-5
+                    input.form-control(type="tel", name="phone")
                     label.form-label Phone #
-                    input.form-control(type="phone", name="phone")
-            
-            input.btn.btn-primary(type="submit" value="Save Info")
-    
-    a.btn.btn-secondary(href="/user/logout") Logout
+                .md-form.d-inline-flex.gap-5 
+                    input.btn.btn-primary(type="submit" value="Save Info")
+                    a.btn.btn-secondary(href="/user/logout") Logout
