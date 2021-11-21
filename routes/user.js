@@ -254,25 +254,35 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    let userArg;
+    let userJSON, userInfo, options, eventsArr, eventsJSON;
     
-    let userInfo = {  
+    Event.find({ clientID: req.params.id }, function (err, events) {
 
-        clientname: req.params.fname + " " + req.params.lname,
-        billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
-        mailingAdd: "", // this isnt handled client side yet 
-        phone: req.user.phone
+        if (err) return console.error(err);
 
-    };
+        eventsArr = events
 
-    userArg = JSON.stringify(userInfo)
+        userInfo = {  
 
-    console.log(userArg)
-    let options = {
+            clientname: req.params.fname + " " + req.params.lname,
+            billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+            mailingAdd: "", // this isnt handled client side yet 
+            phone: req.user.phone
+    
+        };
+
+        userJSON = JSON.stringify(userInfo, null, 4)
+        eventsJSON = JSON.stringify(events, null, 4)
+        console.log(userJSON)
+        console.log(eventsJSON)
+        fs.writeFile("events.json", JSON.stringify(events, null, 4))
+        
+        options = {
         mode: "text",
-        args: [req.params.id, start, end, userArg]
-    }
+        args: [req.params.id, start, end, userJSON, eventsJSON]
 
+    }})
+    
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
 
         if (err) return console.error(err)
