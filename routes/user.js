@@ -275,7 +275,6 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
         eventsJSON = JSON.stringify(events, null, 4)
         console.log(userJSON)
         console.log(eventsJSON)
-        fs.writeFile("events.json", JSON.stringify(events, null, 4))
         
         options = {
         mode: "text",

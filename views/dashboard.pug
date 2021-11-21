@@ -3,7 +3,7 @@ extends layout
 block content 
 
 
-    h3 Clients
+    h1 Clients
     
     .container(style="padding-top: 20px; padding-bottom: 20px; min-height: 30vh;")
         table.table.table-hover.align-middle#clientList
@@ -14,7 +14,7 @@ block content
                             td= c.fname + ' ' + c.lname 
                             td #{'$' + parseFloat(c.balance.toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}        
     .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important;")#eventFloat 
-            button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #0d6efd; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#addClientModal")
+            button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #03b126 !important; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#addClientModal")
                 i.fas.fa-plus.fa-2x(style="color: white;")
 
 

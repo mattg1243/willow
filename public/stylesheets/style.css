@@ -22,10 +22,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
   padding: 1.5rem;
   height: 80vh;
+}
+
+nav {
+  margin-bottom: 1rem;
 }
 
 .navbar {
@@ -42,7 +46,7 @@ main {
 }
 
 .nav-link {
-  color: blue !important;
+  color: #03b126 !important;
 }
 
 .form .form-outline {
@@ -72,6 +76,10 @@ footer {
 img {
   max-width: 100%;
   max-height: 100%;
+}
+
+willowGreen {
+  color: #03b126;
 }
 
 #welcomePage {
@@ -122,6 +130,10 @@ td {
   padding: 7px;
 }
 
+#willowCursive {
+  font-family: 'Pacifico', cursive;
+  color: #03b126;
+}
 
 #addEvent {
   background-color: #fff;
