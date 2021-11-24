@@ -278,7 +278,7 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
         
         options = {
         mode: "text",
-        args: [req.params.id, start, end, userJSON, eventsJSON]
+        args: [start, end, userJSON, eventsJSON]
 
     }})
     
