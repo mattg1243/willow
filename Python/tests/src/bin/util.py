@@ -245,13 +245,11 @@ def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(
         _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
     )
-    """
     # Local path
     with open(f'{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
-    """
    
-    # Heroku path
+   
+    """# Heroku path
     with open(f"/app/public/invoices/{cli}.pdf", "wb") as pdf_file:
-        PDF.dumps(pdf_file, pdf)
-    
+        PDF.dumps(pdf_file, pdf) """
