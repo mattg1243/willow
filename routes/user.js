@@ -260,7 +260,7 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
     let userInfo = {  
 
         clientname: req.params.fname + " " + req.params.lname,
-        billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        billingAdd: req.user.street ? req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip : "",
         mailingAdd: "", // this isnt handled client side yet 
         phone: req.user.phone
 
