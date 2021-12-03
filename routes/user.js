@@ -282,7 +282,7 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
         
         console.log(result)
 
-        res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
+        res.redirect(`/user/client/${req.params.id}/makestatement/download/${userInfo.clientname}/${start}/${end}`);
 
     })
 
