@@ -251,40 +251,29 @@ router.get('/logout', function(req, res) {
 })
 
 
-router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
+router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    let userJSON, userInfo, options, eventsArr, eventsJSON;
+    let userArg;
     
-    Event.find({ clientID: req.params.id }, function (err, events) {
+    let userInfo = {  
 
-        if (err) return console.error(err);
+        clientname: req.params.fname + " " + req.params.lname,
+        billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        mailingAdd: "", // this isnt handled client side yet 
+        phone: req.user.phone
 
-        eventsArr = events
+    };
 
-        userInfo = {  
+    userArg = JSON.stringify(userInfo)
 
-            clientname: req.params.fname + " " + req.params.lname,
-            billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
-            mailingAdd: "", // this isnt handled client side yet 
-            phone: req.user.phone
-    
-        };
-
-        userJSON = JSON.stringify(userInfo, null, 4)
-        eventsJSON = JSON.stringify(events, null, 4)
-        fs.writeFile("userinfo.json", userJSON, (err) => { if (err) console.log(err); console.log("userJSON saved") })
-        fs.writeFile("eventsinfo.json", eventsJSON, (err) => { if (err) console.log(err); console.log("eventsJSON saved") })
-        console.log(userJSON)
-        console.log(eventsJSON)
-        
-        options = {
+    console.log(userArg)
+    let options = {
         mode: "text",
-        args: [start, end, userJSON, eventsJSON]
+        args: [start, end, userArg, req.body.events]
+    }
 
-    }})
-    
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
 
         if (err) return console.error(err)
@@ -297,15 +286,13 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
     })
 
+
     //res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
 })
 
 router.get('/client/:id/makestatement/download/:clientname/:start/:end', function (req, res) {
 
-    res.set({
-        'Location': "/users/dashboard"
-    });
 
     res.download(`public/invoices/${req.params.clientname}.pdf`, `${req.params.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
 
