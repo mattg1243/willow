@@ -246,7 +246,7 @@ def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
         _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
     )
     # Local path
-    with open(f'{cli}.pdf', 'wb') as pdf_file:
+    with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
    
    
