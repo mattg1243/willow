@@ -17,6 +17,7 @@ def header_grab():
 
 def load():
     data = json.loads(sys.argv[4])
+    data = data['events']
     return data
 
 def parse_dates(data):
