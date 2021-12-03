@@ -3,7 +3,7 @@ extends layout
 block content 
 
     h1(name="clientname") #{client['fname'] + ' ' + client['lname']}
-    p1 Balance: $ #{parseFloat(client.balance.toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+    h4 Balance: $ #{parseFloat(client.balance.toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 
     .container(style="min-height: 50vh;")
         table.table.table-hover.align-middle#eventTable(height=200 style="table-layout: fixed;")
