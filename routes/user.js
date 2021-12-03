@@ -267,11 +267,12 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
     };
 
     userArg = JSON.stringify(userInfo)
+    eventsArg = req.body.events
 
     console.log(userArg)
     let options = {
         mode: "text",
-        args: [start, end, userArg, req.body.events]
+        args: [start, end, userArg, eventsArg]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
