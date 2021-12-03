@@ -4,7 +4,7 @@ from digest import get_from, get_to, load, header_grab, parse_dates, parse_types
 from digest import parse_rates, parse_amounts, parse_balances
 
 # Defines logging params
-#logger = _set_log_params()
+logger = _set_log_params()
 
 # Main Script
 if __name__ == "__main__":
