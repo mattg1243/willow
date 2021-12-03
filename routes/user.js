@@ -255,53 +255,37 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
 
     const start = req.body.startdate;
     const end = req.body.enddate;
-    let userJSON, userInfo, options, eventsArr, eventsJSON;
+    let userArg;
     
+    let userInfo = {  
 
-        Event.find({ clientID: req.params.id }, function (err, events) {
+        clientname: req.params.fname + " " + req.params.lname,
+        billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        mailingAdd: "", // this isnt handled client side yet 
+        phone: req.user.phone
 
-            if (err) return console.error(err);
-    
-            eventsArr = events
-    
-            userInfo = {  
-    
-                clientname: req.params.fname + " " + req.params.lname,
-                billingAdd: req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip,
-                mailingAdd: "", // this isnt handled client side yet 
-                phone: req.user.phone
+    };
+
+    userArg = JSON.stringify(userInfo)
+
+    console.log(userArg)
+    let options = {
+        mode: "text",
+        args: [req.params.id, start, end, userArg]
+    }
+
+    PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
+
+        if (err) return console.error(err)
+
+        console.log("++++++++++++++++++++++++++++++++++ \n" + result)
         
-            };
-    
-            userJSON = JSON.stringify(userInfo, null, 4)
-            eventsJSON = JSON.stringify(events, null, 4)
-            fs.writeFile("userinfo.json", userJSON, (err) => { if (err) console.log(err); console.log("userJSON saved") })
-            fs.writeFile("eventsinfo.json", eventsJSON, (err) => { if (err) console.log(err); console.log("eventsJSON saved") })
-            
-            options = {
-            mode: "text",
-            args: [start, end, userJSON, eventsJSON]
-        }
-    
-         
-    
+        console.log(result)
 
-    }).then(() => {
-        
-        PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
+        res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
-            if (err) return console.error(err)
-    
-            console.log("++++++++++++++++++++++++++++++++++ \n" + result)
-            
-            console.log(result)
-    
-            res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
-    
-        })}).catch(err => console.error(err))
+    })
 
-    
-   
 
     //res.redirect(`/user/client/${req.params.id}/makestatement/download/${clientname}/${start}/${end}`);
 
