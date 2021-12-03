@@ -271,7 +271,7 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
     console.log(userArg)
     let options = {
         mode: "text",
-        args: [req.params.id, start, end, userArg]
+        args: [start, end, userArg, req.body.events]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
