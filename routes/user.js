@@ -24,6 +24,7 @@ router.post('/register/newuser', function(req, res, next) {
     
     console.log(req.body);
     
+    if (req.body.password == req.body.passwordConfirm) {
     User.register(new User({ username: req.body.username, fname: req.body.fname, lname: req.body.lname, email: req.body.email}), req.body.password, function(err) {
         if (err) {
             console.log('Error while registering user : ', err);
@@ -32,7 +33,7 @@ router.post('/register/newuser', function(req, res, next) {
             console.log('User registered');
             res.redirect('/');
         }
-    })
+    })} else { res.redirect('/user/register'); }
 })
 
 router.get('/login', function(req, res, next) {
