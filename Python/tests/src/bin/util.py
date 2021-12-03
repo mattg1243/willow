@@ -310,8 +310,8 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
     return descrip_table
 
 
-def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
-    cli = CLIENT
+def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
+    cli = NAME
     dates = DATES
     types = TYPES
     dur = DURATIONS
@@ -346,9 +346,11 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     )
 
     # Local path
-    """with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
-        PDF.dumps(pdf_file, pdf)"""
+    with open(f'{cli}.pdf', 'wb') as pdf_file:
+        PDF.dumps(pdf_file, pdf)
 
+    """
     # Heroku path
     with open(f"/app/public/invoices/{cli}.pdf", "wb") as pdf_file:
         PDF.dumps(pdf_file, pdf)
+    """
