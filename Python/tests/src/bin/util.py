@@ -1,9 +1,7 @@
 # General
 import random
-import pymongo
 from decimal import Decimal
 from pprint import pprint
-from bson import ObjectId
 from datetime import datetime
 
 # For PDF Handling
@@ -19,31 +17,6 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
-import os
-from dotenv import load_dotenv
-
-# Load .env
-load_dotenv(dotenv_path="Python/tests/src/bin/cluster.env")
-
-# Defines Mongo Cluster
-def _mongo_cluster():
-    cluster = os.getenv("CLUSTER")
-    return cluster
-
-
-# Defines Mongo Client Instance
-def _mongo_client(cluster):
-    client = pymongo.MongoClient(cluster, document_class=dict)
-    return client
-
-
-# Defines Instance Criteria
-def _set_crit(clientID, FROM, TO):
-    criteria = {
-        "clientID": ObjectId(clientID),
-        "$and": [{"date": {"$gte": FROM, "$lte": TO}}],
-    }
-    return criteria
 
 
 # Converts to Decimal from Decimal128
@@ -64,72 +37,6 @@ def calc_amounts(amounts, length_amounts):
         total += amounts[x]
         x += 1
     return total
-
-
-# Verify ObjectIDs match system arguments
-def _verify_object(clientID, ID):
-    verified = False if ObjectId(ID) != ObjectId(clientID) else True
-    return verified
-
-
-# Defines Record Handling Methods
-def _record_handling(data_fetched, clientID, clientNAME):
-    # initialize buffers
-    # ------------------
-    IDs = []
-
-    # holds all dates
-    dates = []
-
-    # holds all types
-    types = []
-
-    # holds all durations
-    durations = []
-
-    # holds all rates
-    rates = []
-
-    # holds all amounts
-    amounts = []
-
-    # holds new balance
-    new_balance = []
-
-    counter = 0
-
-    # Loop through data gathered
-    # Verify ObjectIds
-    for row in data_fetched:
-        try:
-            _verify_object(clientID, row["clientID"])
-        except Exception as _verify_objectID_error_handler:
-            print(
-                "Exception thrown verifying Clients ObjectId %s"
-                % _verify_objectID_error_handler
-            )
-        try:
-            dates.append(row["date"])
-            types.append(row["type"])
-            durations.append(row["duration"])
-            rates.append(row["rate"])
-            amounts.append(row["amount"])
-            new_balance.append(row["newBalance"])
-            counter += 1
-        except Exception as _data_appending_error_handler:
-            print(
-                "Exception thrown appending data fetched to buffers %s"
-                % _data_appending_error_handler
-            )
-
-    length_amounts = len(amounts)
-    # debug_print(IDs, dates, types, rates, amounts, durations)
-
-    # Convert list of amounts to working Decimal values
-    amounts = convert_from_d28(amounts, length_amounts)
-
-    generate(clientNAME, dates, types, durations, rates, amounts, new_balance)
-
 
 # Debug
 def debug_print(IDs, DATES, TYPES, RATES, AMOUNTS, DURATIONS):
@@ -310,15 +217,9 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
     return descrip_table
 
 
-def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
-    cli = CLIENT
-    dates = DATES
-    types = TYPES
-    dur = DURATIONS
-    rates = RATES
-    amounts = AMOUNTS
-
-    now = datetime.now()
+def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
+    cli = NAME
+ 
 
     pdf = Document()
     page = Page()
@@ -344,11 +245,11 @@ def generate(CLIENT, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     page_layout.add(
         _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
     )
-
     # Local path
-    """with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
-        PDF.dumps(pdf_file, pdf)"""
-
-    # Heroku path
-    with open(f"/app/public/invoices/{cli}.pdf", "wb") as pdf_file:
+    with open(f'{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
+   
+   
+    """# Heroku path
+    with open(f"/app/public/invoices/{cli}.pdf", "wb") as pdf_file:
+        PDF.dumps(pdf_file, pdf) """
