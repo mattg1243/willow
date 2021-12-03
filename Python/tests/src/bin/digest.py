@@ -4,6 +4,7 @@ from pprint import pprint
 from datetime import datetime as dt
 
 def get_from():
+    print(sys.argv[0])
     FROM = dt.strptime(sys.argv[1], "%Y-%m-%d")
     return FROM
 def get_to():
