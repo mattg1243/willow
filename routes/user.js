@@ -274,6 +274,8 @@ router.post('/client/:id/makestatement/:fname/:lname', function (req, res){
 
         userJSON = JSON.stringify(userInfo, null, 4)
         eventsJSON = JSON.stringify(events, null, 4)
+        fs.writeFile("userinfo.json", userJSON, (err) => { if (err) console.log(err); console.log("userJSON saved") })
+        fs.writeFile("eventsinfo.json", eventsJSON, (err) => { if (err) console.log(err); console.log("eventsJSON saved") })
         console.log(userJSON)
         console.log(eventsJSON)
         
