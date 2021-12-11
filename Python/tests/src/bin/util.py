@@ -84,6 +84,7 @@ def _build_billing_table(name):
         Paragraph(
             "BILL TO",
             background_color=HexColor("FFFFFF"),
+            font="Helvetica-Bold",
             font_color=X11Color("Black"),
         )
     )
@@ -192,9 +193,10 @@ def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, M
     # Add image
     page_layout.add(
         Image(
-            "https://miro.medium.com/max/1400/1*6HdI84r__tiI65f2vhZN1g.png",
+            "https://atlas-content-cdn.pixelsquid.com/stock-images/willow-tree-exDE6X1-600.jpg",
             width=Decimal(108),
-            height=Decimal(64),
+            height=Decimal(82),
+            margin_left=Decimal(177.5)
         ),
     )
 
