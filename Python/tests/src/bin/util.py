@@ -149,7 +149,7 @@ def _build_billing_table(name):
 def _description_table(session, dates, durations, hourly, amounts, new_balance):
 
     length_of_events = len(hourly)
-    descrip_table = Table(number_of_rows=15, number_of_columns=6)
+    descrip_table = Table(number_of_rows=18, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -164,8 +164,6 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
             )
         )
 
-    # black
-    odd_color = HexColor("BBBBBB")
     # white
     even_color = HexColor("FFFFFF")
 
@@ -198,28 +196,27 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
     # print(count)
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    if count < 15:
-        for row_number in range(count + 1, 15):
+    if count < 18:
+        for row_number in range(count + 1, 18):
             col_count = 0
             while col_count < 6:
                 descrip_table.add(
                     TableCell(Paragraph(" "), background_color=even_color)
                 )
                 col_count += 1
-                if col_count == 5 and row_number == 14:
+                if col_count == 5 and row_number == 18:
                     descrip_table.add(Paragraph("Running Balance: %s" % balance))
                     break
 
     descrip_table.set_padding_on_all_cells(
-        Decimal(2), Decimal(2), Decimal(2), Decimal(2)
+        Decimal(6), Decimal(6), Decimal(6), Decimal(6)
     )
     descrip_table.no_borders()
     return descrip_table
 
 
-def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
+def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
     cli = NAME
- 
 
     pdf = Document()
     page = Page()
@@ -242,9 +239,26 @@ def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     # Appends
     page_layout.add(_build_statment_header())
     page_layout.add(_build_billing_table(cli))
-    page_layout.add(
-        _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
-    )
+    if(not MULTIPAGE):
+        page_layout.add(
+            _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+        )
+    else:
+        # Add 17 events to page 1
+        page_layout.add(
+            _description_table(TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+        )
+        # Create a second page
+        page2 = Page()
+        pdf.append_page(page2)
+        page2_layout = SingleColumnLayout(page2)
+        page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
+        # Add the rest of the events
+        page2_layout.add(
+            _description_table(TYPES[16:], DATES[16:], DURATIONS[16:], RATES[16:], AMOUNTS[16:], BALANCE[16:])
+        )
+        
+        
     # Local path
     with open(f'public/invoices/{cli}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
@@ -253,3 +267,5 @@ def generate(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE):
     """# Heroku path
     with open(f"/app/public/invoices/{cli}.pdf", "wb") as pdf_file:
         PDF.dumps(pdf_file, pdf) """
+        
+    
