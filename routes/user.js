@@ -266,13 +266,15 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
 
     };
 
-    userArg = JSON.stringify(userInfo)
-    eventsArg = req.body.events
+    userArg = JSON.stringify(userInfo);
+    eventsArg = JSON.parse(req.body.events);
+    eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.ldate).getTime())
 
-    console.log(userArg)
+    console.log(userArg);
+    console.log(eventsArg.events);
     let options = {
         mode: "text",
-        args: [start, end, userArg, eventsArg]
+        args: [start, end, userArg, JSON.stringify(eventsArg)]
     }
 
     PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
