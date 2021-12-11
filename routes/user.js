@@ -268,7 +268,9 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
 
     userArg = JSON.stringify(userInfo);
     eventsArg = JSON.parse(req.body.events);
+    // sort the events and filter out the ones we dont need
     eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.ldate).getTime())
+    eventsArg.events = eventsArg.events.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
 
     console.log(userArg);
     console.log(eventsArg.events);
