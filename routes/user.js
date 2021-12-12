@@ -279,7 +279,7 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
         args: [start, end, userArg, JSON.stringify(eventsArg)]
     }
 
-    PythonShell.run("Python/tests/src/bin/main.py", options, (err, result) => {
+    PythonShell.run("Python/src/main.py", options, (err, result) => {
 
         if (err) return console.error(err)
 
