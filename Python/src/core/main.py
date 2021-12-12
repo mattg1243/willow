@@ -2,9 +2,10 @@ from util import generate_statement
 from logger import _set_log_params
 from digest import get_from, get_to, load, header_grab, parse_dates, parse_types, parse_durations
 from digest import parse_rates, parse_amounts, parse_balances, check_multipage, find_running_balance
+from qrgen import generate_qr
 
-# Defines logging params
-#logger = _set_log_params()
+
+logger = _set_log_params()
 
 # Main Script
 if __name__ == "__main__":
@@ -40,4 +41,6 @@ if __name__ == "__main__":
     
     # Generate the statement
     generate_statement(header['clientname'], dates, types, durations, rates, amounts, newBalances, multipage)
-  
+    
+    # Generate QR Code facing Willow home page for now...
+    generate_qr()
