@@ -7,7 +7,7 @@ def _set_log_params():
     # Set log level to debug
     logger.setLevel(logging.DEBUG)
     # Create file handle for writing to
-    file_handle = logging.FileHandler("Python/tests/logs/statements.log")
+    file_handle = logging.FileHandler("Python/logs/statements.log")
     file_handle.setLevel(logging.DEBUG)
     # Create console handle
     console_handle = logging.StreamHandler()
