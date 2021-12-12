@@ -1,3 +1,4 @@
 node_modules
-Python/src/__pycache__
+Python/src/core/__pycache__
 .env
+.DS_Store
