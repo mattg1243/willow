@@ -104,6 +104,11 @@ def _build_billing_table(name):
     b_table.no_borders()
     return b_table
 
+def std_event(event):
+    if(event == 'Retainer' or event == 'Refund'):
+        return False
+    else:
+        return True
 
 def _description_table(session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
@@ -133,6 +138,9 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
         amount = str(amounts[iter])         # The length_of_events variable will always refer to how many events are being passed in the current fn call
         balance = str(new_balance[iter])
         
+        # Check For Non-Standard Events
+        standard = std_event(session[iter])
+        
         # Format Datetime Objects
         date = datetime.strftime(dates[iter], "%m-%d-%y")
         
@@ -143,13 +151,19 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
             TableCell(Paragraph(str(session[iter])), background_color=even_color)
         )
         # Add Event Duration
-        descrip_table.add(
-            TableCell(Paragraph(str(durations[iter])), background_color=even_color)
-        )
+        if(not standard):
+            descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
+        else:
+            descrip_table.add(
+                TableCell(Paragraph(str(durations[iter])), background_color=even_color)
+            )
         # Add Event Rate
-        descrip_table.add(
-            TableCell(Paragraph("$ " + hourly_rate), background_color=even_color)
-        )
+        if(not standard):
+            descrip_table.add(TableCell(Paragraph(" "), background_color=even_color))
+        else:
+            descrip_table.add(
+                TableCell(Paragraph("$ " + hourly_rate), background_color=even_color)
+            )
         # Add Event Cost
         descrip_table.add(
             TableCell(Paragraph("$ " + amount), background_color=even_color)
