@@ -11,6 +11,7 @@ var fs = require('fs');
 let {PythonShell} = require('python-shell')
 const { route } = require('.');
 const { update } = require('../models/user-model');
+const helpers = require('./helpers/helpers')
 
 router.get('/register', function(req, res, next) {
   
@@ -139,21 +140,13 @@ router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), funct
 
         if (err) return console.error(err);
 
-        const newBalance = parseFloat(client.balance.toString()) + parseFloat(amount);
-        console.log("\n--balance--\n" + newBalance);
-
-        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, detail: req.body.detail, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: newBalance.toFixed(2) });
+        const event = new Event({ clientID: req.params.id, date: req.body.date, type: req.body.type, detail: req.body.detail, duration: time, rate: req.body.rate, amount: parseFloat(amount).toFixed(2), newBalance: 0 });
+        // saving event to db
         event.save(function(err, event) {
 
         if (err) return console.error(err);
 
-        Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: amount }, $push: { sessions: event._id } }, function(err, result) {
-            
-        if (err) console.error(err);
-
-        else console.log(result);
-        
-        })
+        helpers.recalcBalance(req.params.id);
 
         console.log('Event added')
 
@@ -202,43 +195,18 @@ router.post('/client/event/:eventid', async function(req, res) {
         let mins = parseFloat(req.body.minutes)
         let duration = hrs + (mins / 10)
         let rate = req.body.rate
-        let amount = -(duration * rate)
+        let amount = req.body.type != "Retainer" ? -(duration * rate): req.body.amount;
         let detail = req.body.detail
-        let balance = 0
         let clientID = ''
-    // these all need be ASYNC, not working because everything is trying to execute at once 
-    // for this function, thinking of passing it an object with all required params which is a lot... might not need it tho if called in this scope
-    // need to add support for refund and retainer types
-    console.log("duration = " + duration)
         
         Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
         if (err) return console.error(err)
 
         clientID = docs.clientID
-        console.log(docs.clientID)
-
         //find all events that belong to this client so the new balance can be calculated
+        helpers.recalcBalance(clientID);
 
-        Event.find({ clientID: docs.clientID }, function (err, docs) {
-
-            if (err) return console.error(err)
-
-            console.log(docs)
-
-            for (let i = 0; i < docs.length; i++) {
-                balance += parseFloat(docs[i].amount.toString())
-                console.log(balance.toFixed(2))
-            }
-
-            Client.findOneAndUpdate({ _id: clientID }, { balance: balance }, function (err, client) {
-         
-                if (err) return console.error(err)
-        
-                console.log("---balance updated---")
-        
-            })
-        })
         res.redirect(`/user/client/${clientID}`)
     })
 })
@@ -269,7 +237,7 @@ router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
     userArg = JSON.stringify(userInfo);
     eventsArg = JSON.parse(req.body.events);
     // sort the events and filter out the ones we dont need
-    eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.ldate).getTime())
+    eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     eventsArg.events = eventsArg.events.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
 
     console.log(userArg);
