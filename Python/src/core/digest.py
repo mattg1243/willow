@@ -55,3 +55,13 @@ def parse_balances(data):
     for i in range(0, len(data)):
         newBalances.append(data[i]['newBalance']['$numberDecimal'])
     return newBalances
+
+def find_running_balance(balances):
+    running_balance = balances[len(balances)-1]
+    return running_balance
+
+def check_multipage(dates):
+    if(len(dates) > 17):
+        return True
+    else:
+        return False
