@@ -4,8 +4,9 @@ block content
 
     img(src="/images/money_tree.svg", alt="", srcset="")
     .container-xxl#loginCont(style="align-content: center;")
-        form(action='' method='post')
-
+        if errs 
+            p errs 
+        form(action='' method='post')   
             .form-outline.mb-5
                 input.form-control(type="text", name="username" requried)
                 label.form-label Username
