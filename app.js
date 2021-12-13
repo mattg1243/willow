@@ -2,12 +2,14 @@ var createError = require('http-errors');
 var express = require('express');
 var session = require('express-session');
 var path = require('path');
+var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo');
 var passport = require('./node_modules/passport')
 var LocalStrategy = require('./node_modules/passport-local');
+var bcrypt = require('bcryptjs')
 var User = require('./models/user-model')
 require('dotenv').config();
 
@@ -42,13 +44,19 @@ app.use(session({
   cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
   store: mongoStore.create({ mongoUrl: process.env.DB_URL }),
 }));
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.errs = req.flash("error");
+  res.locals.infos = req.flash("info");
+  next();
+});
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
