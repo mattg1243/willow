@@ -1,6 +1,5 @@
 borb
-bson
-pymongo
-dnspython
 prettyprint
-python-dotenv
+json
+sys
+datetime
