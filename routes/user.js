@@ -4,6 +4,7 @@ var Client = require('../models/client-schema')
 var Event = require('../models/event-schema')
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
+var flash = require('connect-flash');
 var spawn = require("child_process").spawn;
 var mongoose = require('mongoose');
 var moment = require('moment');
@@ -39,13 +40,17 @@ router.post('/register/newuser', function(req, res, next) {
 
 router.get('/login', function(req, res, next) {
     res.render('login');
+    console.log(req.flash("error"))
 })
 
 
-router.post('/login', passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: false }), function(req, res) {
-    console.log(req.user.fname + " " + req.user.fname + " has logged in");
-    res.redirect('/user/dashboard');
-})
+router.post('/login', passport.authenticate('local', {
+        failureFlash: true,
+        failureRedirect: "/user/login", 
+    }), (req, res) => {
+        console.log(req.user.fname + " " + req.user.fname + " has logged in");
+        res.redirect('/user/dashboard'); }   
+)
 
 router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), function(req, res) { 
     
