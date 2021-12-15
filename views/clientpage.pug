@@ -54,7 +54,7 @@ block content
                                 option(value='Meeting') Meeting     
                                 option(value='Email') Email               
                                 option(value='Phone Call') Phone Call   
-                                option(value='General') General
+                                option(value='Other') Other
                                 option(value='Refund') Refund
                                 option(value='Retainer') Retainer    
                         .md-form.mb-5#detailField(style="display: none;")
@@ -103,9 +103,16 @@ block content
                     h2#exampleModalLabel.modal-title(style="font-size: 2em;") Statement Details
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
-                .modal-body.text-center.mb-1
+                .modal-body.text-center.mb-1(style="padding-top: 2rem;")
                     form(action= `/client/${client.id}/makestatement/${client.fname}/${client.lname}` method="post")
-                        .md-form.mb-5.d-flex.flex-column.justify-content-center.align-items-center.gap-2
+                        .md-form.mb-5.d-flex.flex-column.justify-content-center.align-items-center.gap-3
+                            .form-check 
+                                input.form-check-input(type="radio" name="currentRadio" id="currentMonthRadio" value="currentMonth")
+                                label.form-check-label(for="currentMonthRadio") Current Month
+                            .form-check 
+                                input.form-check-input(type="radio" name="currentRadio" id="currentYearRadio" value="currentYear")
+                                label.form-check-label(for="currentYearRadio") Current Year
+                            p - or -
                             label.form-label Start Date
                             input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
                             label.form-label End Date
