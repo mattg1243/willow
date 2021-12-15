@@ -19,7 +19,7 @@ const renderDashboard = (req, res) => {
         
         if (err) return console.error(err);
         
-        res.render('dashboard', { fname: req.user['fname'], clients: clients})
+        res.render('dashboard', { clients: clients})
 
     });
 }
@@ -55,7 +55,7 @@ const addNewClient = (req, res) => {
     })
 }
 
-module.exports = registerUser;
-module.exports = renderDashboard;
-module.exports = updateUserInfo;
-module.exports = addNewClient;
+module.exports.registerUser = registerUser;
+module.exports.renderDashboard = renderDashboard;
+module.exports.updateUserInfo = updateUserInfo;
+module.exports.addNewClient = addNewClient;
