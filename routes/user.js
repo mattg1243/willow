@@ -13,6 +13,9 @@ let {PythonShell} = require('python-shell')
 const { route } = require('.');
 const { update } = require('../models/user-model');
 const helpers = require('./helpers/helpers')
+const handlers = require('./handlers/userHandlers');
+const renderDashboard = require('./handlers/userHandlers');
+const addNewClient = require('./handlers/userHandlers');
 
 router.get('/register', function(req, res, next) {
   
@@ -22,72 +25,15 @@ router.get('/register', function(req, res, next) {
 
 
 // register new user to DB
-router.post('/register/newuser', function(req, res, next) {
-    
-    console.log(req.body);
-    
-    if (req.body.password == req.body.passwordConfirm) {
-    User.register(new User({ username: req.body.username, fname: req.body.fname, lname: req.body.lname, email: req.body.email}), req.body.password, function(err) {
-        if (err) {
-            console.log('Error while registering user : ', err);
-            return next(err);
-        } else {
-            console.log('User registered');
-            res.redirect('/');
-        }
-    })} else { res.redirect('/user/register'); }
-})
-
-router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), function(req, res) { 
-    
-    // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
-    Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
-        
-        if (err) return console.error(err);
-        
-        res.render('dashboard', { fname: req.user['fname'], clients: clients})
-
-    });
-})
-
-router.get('/preferences', function (req, res) {
-
-    res.render('preferences', { user: req.user });
-
-})
-
-router.post("/update-info/:id", function(req, res) {
-
-    User.findOneAndUpdate({ _id: req.params.id }, { phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
-
-        if (err) return console.error(err)
-
-        console.log("Info updated : \n" + info)
-        res.redirect('/');
-
-    })
-
-})
-
-router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
-
-    const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
-    newClient.save(function(err, client) {
-       
-        if (err) return console.error(err);
-        
-        console.log(client.fname + ' added as a client to ' + req.user['_id'])
-        User.findOneAndUpdate({ _id: req.user['_id'] }, { $push: { clients: client['_id'] } })
-        .populate('clients').exec(function(err, clients) {
-            
-            if(err) return console.error(err);
-            
-            console.log("Clients added : " + clients)
-        })
-        
-        res.redirect(`/user/client/${client._id}`);
-
-})});
+router.post('/register/newuser', (req, res) => { registerUser(req, res) })
+// render logged in user's dashboard page
+router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), (req, res) => { renderDashboard(req, res) })
+// render user preference page
+router.get('/preferences', function (req, res) { res.render('preferences', { user: req.user }); })
+// update users info from preferences page
+router.post("/update-info/:id", (req, res) => { updateUserInfo(req, res) })
+// add a new client
+router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { addNewClient(req, res) });
 
 router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
