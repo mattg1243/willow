@@ -112,11 +112,11 @@ block content
                             .form-check 
                                 input.form-check-input(type="radio" name="currentRadio" id="currentYearRadio" value="currentYear")
                                 label.form-check-label(for="currentYearRadio") Current Year
-                            p - or -
+                            p --- OR ---
                             label.form-label Start Date
-                            input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
+                            input.form-control#startDatePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
                             label.form-label End Date
-                            input.form-control#datePicker(type="date" step=0.1 name="enddate" placeholder="Date" required)
+                            input.form-control#endDatePicker(type="date" step=0.1 name="enddate" placeholder="Date" required)
                             input#ghostEventDiv(value={events} name="events" style="display: none;")
                         .modal-footer.d-flex.flex-column.justify-content-center 
                             input.btn.btn-primary#downloadBtn(type="submit" value="Download")
