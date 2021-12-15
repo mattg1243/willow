@@ -45,11 +45,6 @@ app.use(session({
   store: mongoStore.create({ mongoUrl: process.env.DB_URL }),
 }));
 app.use(flash());
-app.use((req, res, next) => {
-  res.locals.errs = req.flash("error");
-  res.locals.infos = req.flash("info");
-  next();
-});
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

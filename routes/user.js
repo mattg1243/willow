@@ -39,13 +39,14 @@ router.post('/register/newuser', function(req, res, next) {
 })
 
 router.get('/login', function(req, res, next) {
-    res.render('login');
+
+    res.render('login', { messages: req.flash("error") });
     console.log(req.flash("error"))
 })
 
 
 router.post('/login', passport.authenticate('local', {
-        failureFlash: true,
+        failureFlash: "Invalid Login",
         failureRedirect: "/user/login", 
     }), (req, res) => {
         console.log(req.user.fname + " " + req.user.fname + " has logged in");
