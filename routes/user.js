@@ -38,22 +38,7 @@ router.post('/register/newuser', function(req, res, next) {
     })} else { res.redirect('/user/register'); }
 })
 
-router.get('/login', function(req, res, next) {
-
-    res.render('login', { messages: req.flash("error") });
-    console.log(req.flash("error"))
-})
-
-
-router.post('/login', passport.authenticate('local', {
-        failureFlash: "Invalid Login",
-        failureRedirect: "/user/login", 
-    }), (req, res) => {
-        console.log(req.user.fname + " " + req.user.fname + " has logged in");
-        res.redirect('/user/dashboard'); }   
-)
-
-router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/user/login'), function(req, res) { 
+router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), function(req, res) { 
     
     // res.send(`Welcome ${req.user}! Your session ID is ${req.sessionID} and your session expires in ${req.session.cookie.maxAge}ms<br><br>`)    testing login creds / cookies
     Client.find({ ownerID: req.user['_id'] }, 'fname lname balance', function(err, clients) {
