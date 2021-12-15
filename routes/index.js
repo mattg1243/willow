@@ -6,12 +6,12 @@ var connectEnsureLogin = require('connect-ensure-login');
 router.get('/', function(req, res) {
 
   if (req.isAuthenticated) {
-    res.redirect('user/dashboard')
+    res.redirect('/user/dashboard')
   }
   
   else if (!req.isAuthenticated) {
   
-    res.redirect('user/login')
+    res.redirect('/login')
   
   }
 

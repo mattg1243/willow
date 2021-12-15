@@ -1,21 +1,12 @@
 var router = require('express').Router();
-var User = require('../models/user-model')
 var Client = require('../models/client-schema')
 var Event = require('../models/event-schema')
-var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
-var flash = require('connect-flash');
-var spawn = require("child_process").spawn;
-var mongoose = require('mongoose');
-var moment = require('moment');
 var fs = require('fs');
 let {PythonShell} = require('python-shell')
-const { route } = require('.');
-const { update } = require('../models/user-model');
 const helpers = require('./helpers/helpers')
 const handlers = require('./handlers/userHandlers');
-const renderDashboard = require('./handlers/userHandlers');
-const addNewClient = require('./handlers/userHandlers');
+
 
 router.get('/register', function(req, res, next) {
   
@@ -23,36 +14,18 @@ router.get('/register', function(req, res, next) {
 
 })
 
+router.get('/logout', function(req, res) { req.logout(); res.redirect('/login'); })
 
 // register new user to DB
-router.post('/register/newuser', (req, res) => { registerUser(req, res) })
+router.post('/register/newuser', (req, res) => { handlers.registerUser(req, res) })
 // render logged in user's dashboard page
-router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), (req, res) => { renderDashboard(req, res) })
+router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), (req, res) => { handlers.renderDashboard(req, res) })
 // render user preference page
 router.get('/preferences', function (req, res) { res.render('preferences', { user: req.user }); })
 // update users info from preferences page
-router.post("/update-info/:id", (req, res) => { updateUserInfo(req, res) })
+router.post("/update-info/:id", (req, res) => { handlers.updateUserInfo(req, res) })
 // add a new client
-router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { addNewClient(req, res) });
-
-router.get("/client/:id", connectEnsureLogin.ensureLoggedIn(), function(req, res) {
-
-    const meetingTypes = ['1:1 Meeting', '3 Way Meeting', '4 Way Meeting', '5 Way Meeting', '6 Way Meeting', '7 Way Meeting']
-    const miscTypes = ['Emails', 'Intention Statement', 'Notes', 'Parenting Plan', 'Phone Call', 'Travel Time']
-    
-    Client.findById(req.params.id, function(err, client) {
-        
-        if (err) return console.error(err)
-
-        Event.find({ clientID: req.params.id },  function(err, events) {
-           
-            if (err) return console.error(err);
-    
-            res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
-            
-        }).sort({ date: 1 })
-    })
-});
+router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.addNewClient(req, res) });
 
 router.post('/client/:id/addsession', connectEnsureLogin.ensureLoggedIn(), function(req, res){
 
@@ -147,14 +120,6 @@ router.post('/client/event/:eventid', async function(req, res) {
         res.redirect(`/user/client/${clientID}`)
     })
 })
-
-
-
-router.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/user/login');
-})
-
 
 router.post('/client/:id/makestatement/:fname/:lname', (req, res) => {
 
