@@ -10,7 +10,7 @@ router.post('/', passport.authenticate('local', {
     failureFlash: "Invalid Login",
     failureRedirect: "/login", 
 }), (req, res) => {
-    console.log(req.user.fname + " " + req.user.lname + " has logged in");
+
     res.redirect('/user/dashboard'); }   
 )
 
