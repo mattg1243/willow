@@ -7,8 +7,7 @@ block content
 
     .container(style="min-height: 50vh;")
         table.table.table-hover.align-middle#eventTable(height=200 style="table-layout: fixed;")
-            thead
-                
+            thead 
                 if events.length == 0
                     tr(height=200) 
                         th(style="text-align: center;") No events logged for this client 
@@ -18,12 +17,10 @@ block content
                         th(scope="col") Date 
                         th(scope="col") Type 
                         th(scope="col") Time  
-                        th(scope="col") Amount
-
-                        
+                        th(scope="col") Amount 
                     tbody
                     each e in events 
-                        tr.eventRow(scope="row" height=50, data-href=`event/${e._id}`)
+                        tr.eventRow(scope="row" height=50, data-href=`/client/event/${e._id}`)
                             td= moment.utc(e.date).format("MM/DD/YY")
                             td= e.type
                             if (e.duration != 0)
@@ -38,7 +35,6 @@ block content
             button.btn.btn-lg.btn-floating.shadow-2-strong#makeStatement(style="background-color: #03b126 !important; display: flex; justify-content: center;" type='button' data-mdb-toggle="modal" data-mdb-target="#statementModal")
                 i.fas.fa-file-invoice-dollar.fa-2x(style="color: white;")
 
-    
     #eventModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='eventModalLabel', aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
@@ -47,7 +43,7 @@ block content
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form.needs-validation#eventForm(action=`${client._id}/addsession` method="post" name="eventForm")
+                    form.needs-validation#eventForm(action=`/client/${client._id}/addsession` method="post" name="eventForm")
                         .md-form.mb-5
                             label.form-label Date 
                             input.form-control#datePicker(type="date" step=0.1 name="date" placeholder="Date" required)
@@ -108,7 +104,7 @@ block content
                     button.btn-close(type='button', data-mdb-dismiss='modal', aria-label='Close')
 
                 .modal-body.text-center.mb-1
-                    form(action= `${client.id}/makestatement/${client.fname}/${client.lname}` method="post")
+                    form(action= `/client/${client.id}/makestatement/${client.fname}/${client.lname}` method="post")
                         .md-form.mb-5.d-flex.flex-column.justify-content-center.align-items-center.gap-2
                             label.form-label Start Date
                             input.form-control#datePicker(type="date" step=0.1 name="startdate" placeholder="Date" required)
