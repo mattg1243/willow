@@ -149,3 +149,16 @@ $('#eventTypeEdit').on('change', function() {
     }
 
 })
+
+// statement modal form logic
+const monthRadio = $('#currentMonthRadio');
+const yearRadio = $('#currentYearRadio');
+const startDateSelector = document.getElementsByName('startdate');
+const startdate = $(startDateSelector);
+const endDateSelector = document.getElementsByName('enddate');
+const enddate = $(endDateSelector);
+
+if (monthRadio.checked || yearRadio.checked)) {
+    startdate.prop("disabled", true)
+    enddate.prop("disabled", true)
+}
