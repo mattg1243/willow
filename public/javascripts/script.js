@@ -154,11 +154,45 @@ $('#eventTypeEdit').on('change', function() {
 const monthRadio = $('#currentMonthRadio');
 const yearRadio = $('#currentYearRadio');
 const startDateSelector = document.getElementsByName('startdate');
-const startdate = $(startDateSelector);
 const endDateSelector = document.getElementsByName('enddate');
-const enddate = $(endDateSelector);
 
-if (monthRadio.checked || yearRadio.checked)) {
-    startdate.prop("disabled", true)
-    enddate.prop("disabled", true)
+const disableDateSelectors = () => {
+    $(startDateSelector).attr('disabled', true);
+    $(endDateSelector).attr('disabled', true);
 }
+
+const enableDateSelectors = () => {
+    $(startDateSelector).removeAttr('disabled');
+    $(endDateSelector).removeAttr('disabled');
+}
+
+const disableCurrentRadios = () => {
+    monthRadio.prop('disabled', true);
+    yearRadio.prop('disabled', true);
+}
+
+const enableCurrentRadios = () => {
+    monthRadio.removeAttr('disabled');
+    yearRadio.removeAttr('disabled');
+}
+
+$(startDateSelector).on('click', () => {
+    disableCurrentRadios(); 
+    enableDateSelectors();   
+})
+
+$(endDateSelector).on('click', () => {
+    disableCurrentRadios(); 
+    enableDateSelectors();   
+})
+
+monthRadio.on('click', () => {
+    disableDateSelectors(); 
+    enableCurrentRadios();
+})
+
+yearRadio.on('click', () => {
+    disableDateSelectors(); 
+    enableCurrentRadios();
+})
+  
