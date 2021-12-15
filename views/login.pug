@@ -4,8 +4,6 @@ block content
 
     img(src="/images/money_tree.svg", alt="", srcset="")
     .container-xxl#loginCont(style="align-content: center;")
-        if errs 
-            p errs 
         form(action='' method='post')   
             .form-outline.mb-5
                 input.form-control(type="text", name="username" requried)
@@ -13,6 +11,8 @@ block content
             .form-outline.mb-5
                 input.form-control(type="password", name="password" required)
                 label.form-label Password 
+            if (messages.length > 0)  
+                .alert.alert-danger.d-fle #{messages[0]}
                 
             .form-outline.mb-5.d-inline-flex.justify-content-center.gap-5
                 input(type="submit", value="Log In" class="btn btn-primary center")
