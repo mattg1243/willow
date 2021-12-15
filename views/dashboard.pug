@@ -13,10 +13,10 @@ block content
                 thead  
                     tbody    
                         each c in clients 
-                            tr.client-row(scope="row" data-href=`client/${c._id}` class="collection-item")
+                            tr.client-row(scope="row" data-href=`/client/${c._id}` class="collection-item")
                                 td= c.fname + ' ' + c.lname 
                                 td #{'$' + parseFloat(c.balance.toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}        
-    .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important;")#eventFloat 
+        .container.d-inline-flex.justify-content-center.gap-5(style="justify-content: space-around !important; padding: 1rem;")#eventFloat 
             button.btn.btn-lg.btn-floating.shadow-2-strong#addEvent(style="background-color: #03b126 !important; display: flex; justify-content: center;" type='button', data-mdb-toggle="modal" data-mdb-target="#addClientModal")
                 i.fas.fa-plus.fa-2x(style="color: white;")
 

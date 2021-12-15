@@ -2,74 +2,63 @@ extends layout
 
 block content   
     
-    .container#eventImg
-            if (event.type == 'Emails')
-                img(src="/images/New Message_Monochromatic.svg", alt="email")
-            else if (event.type == 'Notes' || event.type == 'Intention Statment' || event.type == 'Parenting Plan')
-                img(src="/images/Notes_Monochromatic.svg", alt="notes")
-            else if (event.type == 'Retainer' || event.type == 'Refund')
-                img(src="/images/Card Payment_Monochromatic.svg", alt="payment")
-            else if (event.type == '1:1 Meeting')
-                img(src='/images/Conversation _Monochromatic.svg' alt='meeting')
-            else    
-                img(src="/images/Team meeting_Monochromatic.svg", alt="team meeting")
     .container.d-flex.flex-column.justify-content-center#eventPageHeader
         h1 #{event.type}
         h5 #{moment(event.date).format("MM/DD/YYYY")}
         h5 #{event.detail}
-    .container#eventPageBody    
-        form.d-flex.flex-column.justify-content-center(action=`${event._id}` method="post")
-            .md-form.mb-5.d-inline-flex.justify-content-center(style="padding: 1rem;")
-                .md-form.mb-5 
-                    label Type 
-                    select.form-select#eventTypeEdit(name="type") Type
-                            option(value='') Select...
-                            option(value='Meeting') Meeting     
-                            option(value='Email') Email               
-                            option(value='Phone Call') Phone Call   
-                            option(value='General') General
-                            option(value='Refund') Refund
-                            option(value='Retainer') Retainer
-                    .md-form.mb-5#amountFieldEdit
-                        label Amount 
-                        input.form-control#amountFieldEdit(type="text" name="amount" value=`${event.amount}`)  
+        .container#eventPageBody    
+            form.d-flex.flex-column.justify-content-center(action=`${event._id}` method="post")
+                .md-form.mb-5.d-inline-flex.justify-content-center(style="padding: 1rem;")
+                    .md-form.mb-5 
+                        label Type 
+                        select.form-select#eventTypeEdit(name="type") Type
+                                option(value='') Select...
+                                option(value='Meeting') Meeting     
+                                option(value='Email') Email               
+                                option(value='Phone Call') Phone Call   
+                                option(value='General') General
+                                option(value='Refund') Refund
+                                option(value='Retainer') Retainer
+                        .md-form.mb-5#amountFieldEdit
+                            label Amount 
+                            input.form-control#amountFieldEdit(type="text" name="amount" value=`${event.amount}`)  
 
-                    .md-form.mb-5#timeFieldsEdit
-                        p2 Time:
-                        select.form-select.form-control#hrsFieldEdit(name="hours")
-                            option(value='') hr
-                            option(value=1) 1 hr
-                            option(value=2) 2 hr
-                            option(value=3) 3 hr
-                            option(value=4) 4 hr
-                            option(value=5) 5 hr
-                            option(value=6) 6 hr
-                            option(value=7) 7 hr
-                            option(value=8) 8 hr
-                            option(value=9) 9 hr
-                            option(value=10) 10 hr
-                            option(value=0) 0 hr
-                        select.form-select.form-control#minFieldEdit(name="minutes")
-                            option(value='') mins
-                            option(value=0) 0 mins
-                            option(value=1) 1-6 mins
-                            option(value=2) 7-12 mins
-                            option(value=3) 13-18 mins 
-                            option(value=4) 19-24 mins
-                            option(value=5) 25-30 mins
-                            option(value=6) 31-36 mins
-                            option(value=7) 37-42 mins
-                            option(value=8) 43-48 mins
-                            option(value=9) 49-54 mins
-                    .md-form.mb-5#rateField
-                        label Rate 
-                        input.form-control(type="number" name="rate" value=`${event.rate}`)
-                    .md-form.mb-5#commentsField 
-                        label Details 
-                        input.form-control(type="text" name="detail" value=`${event.detail}`) 
-                    .md-form.d-flex.justify-content-center.gap-5 
-                        input.btn.btn-primary(type="submit" value="Save Changes")
-                        a.btn.btn-danger(href=`/user/deleteevent/${event.clientID}/${event._id}`) Delete Event
+                        .md-form.mb-5#timeFieldsEdit
+                            p2 Time:
+                            select.form-select.form-control#hrsFieldEdit(name="hours")
+                                option(value='') hr
+                                option(value=1) 1 hr
+                                option(value=2) 2 hr
+                                option(value=3) 3 hr
+                                option(value=4) 4 hr
+                                option(value=5) 5 hr
+                                option(value=6) 6 hr
+                                option(value=7) 7 hr
+                                option(value=8) 8 hr
+                                option(value=9) 9 hr
+                                option(value=10) 10 hr
+                                option(value=0) 0 hr
+                            select.form-select.form-control#minFieldEdit(name="minutes")
+                                option(value='') mins
+                                option(value=0) 0 mins
+                                option(value=1) 1-6 mins
+                                option(value=2) 7-12 mins
+                                option(value=3) 13-18 mins 
+                                option(value=4) 19-24 mins
+                                option(value=5) 25-30 mins
+                                option(value=6) 31-36 mins
+                                option(value=7) 37-42 mins
+                                option(value=8) 43-48 mins
+                                option(value=9) 49-54 mins
+                        .md-form.mb-5#rateField
+                            label Rate 
+                            input.form-control(type="number" name="rate" value=`${event.rate}`)
+                        .md-form.mb-5#commentsField 
+                            label Details 
+                            input.form-control(type="text" name="detail" value=`${event.detail}`) 
+                        .md-form.d-flex.justify-content-center.gap-5 
+                            input.btn.btn-primary(type="submit" value="Save Changes")
+                            a.btn.btn-danger(href=`/client/deleteevent/${event.clientID}/${event._id}`) Delete Event
 
     #ghostDivDurationInfo(value=`${event.duration}`)
     #ghostDivTypeInfo(value=`${event.type}`)
