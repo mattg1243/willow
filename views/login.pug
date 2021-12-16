@@ -2,8 +2,9 @@ extends layout
 
 block content 
 
-    img(src="/images/money_tree.svg", alt="", srcset="")
-    .container-xxl#loginCont(style="align-content: center;")
+    
+    .container-xxl.d-flex-column.justify-content-center#loginCont(style="align-content: center;")
+        h1.willowCursive(style="font-size: 4rem;") Willow
         form(action='' method='post')   
             .form-outline.mb-5
                 input.form-control(type="text", name="username" requried)
