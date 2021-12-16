@@ -19,19 +19,14 @@ html
     body.d-flex.flex-column
 
       nav.navbar.navbar-expand-lg.navbar-light.shadow-1
-          .container-fluid.d-inline-flex.text-white 
-            if (!loggedIn)
-              a.navbar-brand(style="color: white;") Login
-              a.navbar-brand
-                h3#willowCursive Willow
-              a.nav-link(href='/login') Login
-            else
-              a.navbar-brand(href='/user/dashboard' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: #03b126 !important;") 
-                i.material-icons home
-              a.navbar-brand(href="#")
-                h3#willowCursive Willow
-              a.navbar-brand(href='/user/preferences' style="color: #03b126 !important;")
-                i.material-icons account_circle
+            if (loggedIn)
+              .container-fluid.d-inline-flex.text-white 
+                a.navbar-brand(href='/user/dashboard' style="font-family: 'Indie Flower', cursive; font-size: 2rem; color: #03b126 !important;") 
+                  i.material-icons home
+                a.navbar-brand(href="#")
+                  h3.willowCursive Willow
+                a.navbar-brand(href='/user/preferences' style="color: #03b126 !important;")
+                  i.material-icons account_circle
       
       main  
         block content

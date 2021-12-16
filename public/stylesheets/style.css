@@ -23,7 +23,7 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 1.5rem;
   margin: auto;
   height: 80vh;
@@ -130,7 +130,7 @@ td {
   padding: 7px;
 }
 
-#willowCursive {
+.willowCursive {
   font-family: 'Pacifico', cursive;
   color: #03b126;
 }
