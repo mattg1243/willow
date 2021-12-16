@@ -126,9 +126,25 @@ const renderEventPage = (req, res) => {
 
 const makeStatement = async (req, res) => {
     
-    const start = req.body.startdate;
-    const end = req.body.enddate;
-    
+    let start, end;
+    // just need to format the dates for the args and this should work
+    // handle automatic date selection 
+    if (req.body.currentRadio) {
+        if(req.body.currentRadio == "currentMonth") {
+            let date = new Date();
+            start = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+            end = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+        }
+        else if (req.body.currentRadio == "currentYear") {
+            let date = new Date();
+            start = new Date(date.getFullYear(), 0, 1).toISOString().split('T')[0];
+            end = date.toISOString().split('T')[0];
+        }
+    } else {
+            start = req.body.startdate;
+            end = req.body.enddate;
+    }
+    console.log(start, " ", end)
     let userInfo = {  
 
         clientname: req.params.fname + " " + req.params.lname,
