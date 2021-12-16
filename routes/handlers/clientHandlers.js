@@ -161,8 +161,8 @@ const makeStatement = async (req, res) => {
     // keep only the events between the given range of dates
     eventsArg.events = eventsArg.events.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
 
-    console.log(userArg);
-    console.log(eventsArg.events);
+    console.log("\nUser Args : \n", userArg);
+    console.log("\nEvents Args : \n", eventsArg.events);
 
     let options = {
         mode: "text",
