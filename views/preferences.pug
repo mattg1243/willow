@@ -7,23 +7,23 @@ block content
     form(action=`update-info/${user._id}` method='post')
         .md-form.d-flex-column.justify-content-center.align-content-center.gap-3
             .form-outline.mb-5    
-                input.form-control(type="text", name="nameForHeader")
+                input.form-control(type="text", name="nameForHeader" placeholder=`${user.nameForHeader}`)
                 label.form-label Name
             .form-outline.mb-5    
-                input.form-control(type="street", name="street")
+                input.form-control(type="text", name="street", placeholder=`${user.street}`)
                 label.form-label Street Address
             .form-outline.mb-5    
-                input.form-control(type="city", name="city")
+                input.form-control(type="text", name="city", placeholder=`${user.city}`)
                 label.form-label City
             .md-form.d-inline-flex.gap-3
                 .form-outline.mb-5    
-                    input.form-control(type="state", name="state")
+                    input.form-control(type="text", name="state" placeholder=`${user.state}`)
                     label.form-label State   
                 .form-outline.mb-5    
-                    input.form-control(type="zip", name="zip")
+                    input.form-control(type="text", name="zip" placeholder=`${user.zip}`)
                     label.form-label Zip Code   
             .form-outline.mb-5
-                input.form-control(type="tel", name="phone")
+                input.form-control(type="tel", name="phone" placeholder=`${user.phone}`)
                 label.form-label Phone # 
             .md-form.d-inline-flex.gap-5 
                 input.btn.btn-primary(type="submit" value="Save Info")

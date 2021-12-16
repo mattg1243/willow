@@ -17,7 +17,7 @@ const renderClientPage = async (req, res) => {
            
             if (err) return console.error(err);
     
-            res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes })
+            res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes, messages: req.flash('error') })
             
         }).sort({ date: 1 })
     })
@@ -160,6 +160,12 @@ const makeStatement = async (req, res) => {
     eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     // keep only the events between the given range of dates
     eventsArg.events = eventsArg.events.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    // check for no events in given range
+    if (eventsArg.events.length == 0) {
+        console.log("There are no events in the given range of dates.")
+        req.flash('error', "There are no events in the given range of dates.");
+        return res.redirect(`/client/${req.params.id}`)
+    }
 
     console.log("\nUser Args : \n", userArg);
     console.log("\nEvents Args : \n", eventsArg.events);
@@ -169,17 +175,15 @@ const makeStatement = async (req, res) => {
         args: [start, end, userArg, JSON.stringify(eventsArg)]
     }
 
-    try {
-        PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-            if (err) return console.error(err)
-    
-            console.log("++++++++++++++++++++++++++++++++++ \n")
-            console.log(result)
-    
-            res.redirect(`/client/${req.params.id}/makestatement/download/${userInfo.clientname}/${start}/${end}`);
-    
-        })
-    } catch (err) { throw err;}
+    PythonShell.run("Python/src/core/main.py", options, (err, result) => {
+        if (err) return console.error(err)
+
+        console.log("++++++++++++++++++++++++++++++++++ \n")
+        console.log(result)
+
+        return res.redirect(`/client/${req.params.id}/makestatement/download/${userInfo.clientname}/${start}/${end}`);
+
+    })
 }
 
 const downloadStatement = async (req, res) => {
