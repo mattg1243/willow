@@ -68,6 +68,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
   store: mongoStore.create({ mongoUrl: process.env.DB_URL }),
+  secure: true
 }));
 app.use(flash());
 app.use(express.urlencoded({extended: true}))
