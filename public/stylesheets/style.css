@@ -30,13 +30,6 @@ main {
   width: 90%;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
 .navbar {
   display: flex;
   flex-direction: inline;
