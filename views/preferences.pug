@@ -3,28 +3,28 @@ extends layout
 block content
 
     h1 Preferences 
-    p Contact Info 
-        form(action=`update-info/${user._id}` method='post')
-            .md-form.d-flex-column.justify-content-center.gap-3
+    p Statement Header Info 
+    form(action=`update-info/${user._id}` method='post')
+        .md-form.d-flex-column.justify-content-center.align-content-center.gap-3
+            .form-outline.mb-5    
+                input.form-control(type="text", name="nameForHeader")
+                label.form-label Name
+            .form-outline.mb-5    
+                input.form-control(type="street", name="street")
+                label.form-label Street Address
+            .form-outline.mb-5    
+                input.form-control(type="city", name="city")
+                label.form-label City
+            .md-form.d-inline-flex.gap-3
                 .form-outline.mb-5    
-                    input.form-control(type="street", name="street")
-                    label.form-label Street Address
+                    input.form-control(type="state", name="state")
+                    label.form-label State   
                 .form-outline.mb-5    
-                    input.form-control(type="city", name="city")
-                    label.form-label City
-                .md-form.d-inline-flex.gap-3
-                    .form-outline.mb-5    
-                        input.form-control(type="state", name="state")
-                        label.form-label State   
-                    .form-outline.mb-5    
-                        input.form-control(type="zip", name="zip")
-                        label.form-label Zip Code   
-                .form-outline.mb-5
-                    input.form-control(type="tel", name="phone")
-                    label.form-label Phone #
-                .form-outline.mb-5
-                    input.form-control(type="email", name="email")
-                    label.form-label Email
-                .md-form.d-inline-flex.gap-5 
-                    input.btn.btn-primary(type="submit" value="Save Info")
-                    a.btn.btn-secondary(href="/user/logout") Logout
+                    input.form-control(type="zip", name="zip")
+                    label.form-label Zip Code   
+            .form-outline.mb-5
+                input.form-control(type="tel", name="phone")
+                label.form-label Phone # 
+            .md-form.d-inline-flex.gap-5 
+                input.btn.btn-primary(type="submit" value="Save Info")
+                a.btn.btn-secondary(href="/user/logout") Logout

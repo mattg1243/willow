@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     username: {type: String, required: true, maxLength: 100},
     fname: {type: String, required: true, maxLength: 100},
     lname: {type: String, required: true, maxLength: 100},
+    nameForHeader: {type: String, required: false, maxLength: 100},
     email: {type: String, required: true, maxLength: 100},
     phone: {type: String, required: false, maxLength: 100},
     street: {type: String, required: false},
