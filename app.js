@@ -10,6 +10,7 @@ var mongoStore = require('connect-mongo');
 var passport = require('./node_modules/passport')
 var LocalStrategy = require('./node_modules/passport-local');
 var bcrypt = require('bcryptjs')
+const helmet = require('helmet');
 var User = require('./models/user-model')
 require('dotenv').config();
 
@@ -33,6 +34,9 @@ app.set('view engine', 'pug');
 
 
 // middleware
+app.use(helmet({
+  contentSecurityPolicy: false
+}))
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
 app.use('/images', express.static(path.join(__dirname, 'public/images')))
