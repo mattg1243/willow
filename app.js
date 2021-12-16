@@ -34,8 +34,27 @@ app.set('view engine', 'pug');
 
 
 // middleware
-app.use(helmet({
-  contentSecurityPolicy: false
+app.use(helmet.contentSecurityPolicy({
+  useDefaults: false,
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: [
+      "'self'",
+      "https://code.jquery.com/jquery-3.2.1.slim.min.js",
+      'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js",
+    ],
+    styleSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      "*",
+    ],
+    fontSrc: [
+      "'self'",
+      "*",
+    ]
+  }
 }))
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
