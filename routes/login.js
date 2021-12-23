@@ -4,6 +4,7 @@ const User = require('../models/user-model');
 const Client = require('../models/client-schema');
 const Event = require('../models/event-schema');
 const jwt = require('jsonwebtoken');
+const helpers = require('./helpers/helpers');
 require('dotenv').config();
 
 router.get('/', (req, res) => {
@@ -22,10 +23,8 @@ router.post('/native', passport.authenticate('local'), async (req, res) => {
     console.log(req.body);
     if (req.body.fromMobile == true) { 
         console.log('Mobile login detected');
-        // join username and password for hashing
-        const data = {username: req.body.username, password: req.body.password}
-        // create the token 
-        const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: '3600s' });
+        console.log(req.headers)
+
         // create blank response object to fill with data to send to client
         let response = {
             token: "",
@@ -38,6 +37,8 @@ router.post('/native', passport.authenticate('local'), async (req, res) => {
             if (err) { return console.error(err); }
 
             response.userID = user._id;
+            // create token from the user ID
+            response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
             // then, populate the client array
             Client.find({ ownerID: user._id }, (err, clients) => {
                 if (err) { return console.error(err); }
@@ -59,6 +60,10 @@ router.post('/native', passport.authenticate('local'), async (req, res) => {
             })
         })
     }
+})
+
+router.get('/native/secret', helpers.verifyJWT, (req, res) => {
+    console.log("--- Secret ---")
 })
 
 module.exports = router;
