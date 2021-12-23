@@ -1,6 +1,8 @@
 const User = require("../../models/user-model");
 const Client = require("../../models/client-schema");
 const Event = require("../../models/event-schema");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 function recalcBalance(clientID) {
     
@@ -31,4 +33,29 @@ function recalcBalance(clientID) {
         })
 })}
 
+const verifyJWT = async (req, res, next) => {
+    // extract token from the req header
+    const header = req.headers["authorization"]
+    const token = header.split(' ')[1];
+
+    if (!token) {
+        res.status(401).send("No token found");
+    } else {
+        try {
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if (err) {
+                    res.status(401).send(err);
+                } else {
+                    console.log(decoded);
+                    req.userID = decoded.userID;
+                    next();
+                }
+            });
+        } catch (err) {
+            res.send("Error");
+        }
+    }
+}
+
 module.exports.recalcBalance = recalcBalance;
+module.exports.verifyJWT = verifyJWT;
