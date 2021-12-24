@@ -46,6 +46,8 @@ const updateUserInfo = async (req, res) => {
 }
 
 const addNewClient = async (req, res) => {
+    console.log("Headers: " + req.headers)
+    console.log("Data: " + req.body)
     try {
         const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
         newClient.save(function(err, client) {
@@ -61,7 +63,7 @@ const addNewClient = async (req, res) => {
             console.log("Clients added : " + clients)
         })
         
-        res.redirect(`/user/client/${client._id}`);
+        res.redirect(`/client/${client._id}`);
 
     })
     } catch (err) { throw err ;}
