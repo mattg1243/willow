@@ -3,20 +3,16 @@ import sys
 from pprint import pprint
 from datetime import datetime as dt
 
-def get_from():
-    print(sys.argv[0])
-    FROM = dt.strptime(sys.argv[1], "%Y-%m-%d")
-    return FROM
-def get_to():
-    TO = dt.strptime(sys.argv[2], "%Y-%m-%d")
-    return TO
+def get_provider_info():
+    provider = json.loads(sys.argv[1])
+    return provider
 
-def header_grab():
-    header = json.loads(sys.argv[3])
+def get_client_info():
+    header = json.loads(sys.argv[2])
     return header
 
 def load():
-    data = json.loads(sys.argv[4])
+    data = json.loads(sys.argv[3])
     data = data['events']
     return data
 
