@@ -63,7 +63,9 @@ const addEvent = (req, res) => {
 
         console.log('Event added')
 
-        res.redirect(`/client/${req.params.id}`)
+        if (!req.body.fromMobile) {
+            res.redirect(`/client/${req.params.id}`)
+        }
 
     })})
 }
@@ -145,16 +147,25 @@ const makeStatement = async (req, res) => {
             end = req.body.enddate;
     }
     console.log(start, " ", end)
-    let userInfo = {  
+    
+    let clientInfo = {  
 
         clientname: req.params.fname + " " + req.params.lname,
         billingAdd: req.user.street ? req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip : "",
         mailingAdd: "", // this isnt handled client side yet 
         phone: req.user.phone
-
     };
 
-    let userArg = JSON.stringify(userInfo);
+    let providerInfo = {
+
+        name: req.user.nameForHeader ? req.user.nameForHeader: req.user.fname + " " + req.user.lname,
+        address: req.user.street + " " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        phone: req.user.phone,
+        email: req.user.email,
+    }
+
+    let providerArg = JSON.stringify(providerInfo);
+    let clientArg = JSON.stringify(clientInfo);
     let eventsArg = await JSON.parse(req.body.events);
     // sort the events by date
     eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -167,12 +178,12 @@ const makeStatement = async (req, res) => {
         return res.redirect(`/client/${req.params.id}`)
     }
 
-    console.log("\nUser Args : \n", userArg);
+    console.log("\nUser Args : \n", clientArg);
     console.log("\nEvents Args : \n", eventsArg.events);
 
     let options = {
         mode: "text",
-        args: [start, end, userArg, JSON.stringify(eventsArg)]
+        args: [providerArg, clientArg, JSON.stringify(eventsArg)]
     }
 
     PythonShell.run("Python/src/core/main.py", options, (err, result) => {
@@ -181,7 +192,7 @@ const makeStatement = async (req, res) => {
         console.log("++++++++++++++++++++++++++++++++++ \n")
         console.log(result)
 
-        return res.redirect(`/client/${req.params.id}/makestatement/download/${userInfo.clientname}/${start}/${end}`);
+        return res.redirect(`/client/${req.params.id}/makestatement/download/${providerInfo.clientname}/${start}/${end}`);
 
     })
 }
