@@ -12,6 +12,7 @@ var LocalStrategy = require('./node_modules/passport-local');
 var bcrypt = require('bcryptjs')
 const helmet = require('helmet');
 var User = require('./models/user-model')
+var cors = require('cors');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -61,6 +62,7 @@ app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
 app.use('/images', express.static(path.join(__dirname, 'public/images')))
 app.use('/invoices', express.static(path.join(__dirname, 'public/invoices')))
 app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(session({
   secret: '123456',
