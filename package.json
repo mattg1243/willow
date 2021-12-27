@@ -45,7 +45,8 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.1.0",
     "pug": "^3.0.2",
-    "python-shell": "^3.0.0"
+    "python-shell": "^3.0.0",
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

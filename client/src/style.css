@@ -1,0 +1,169 @@
+h1, h2, h5, p {
+
+  margin: .5em auto;
+
+}
+
+h3 {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+}
+
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+  padding: 2rem;
+  margin: auto;
+  height: 80vh;
+  width: 90%;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: inline;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff
+}
+
+.navbar-brand {
+  height: 2em;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  color: #03b126 !important;
+}
+
+.form .form-outline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+  width: 75%;
+  font-size: 1.5rem;
+}
+
+footer {
+  background-color: white;
+  border-top: .15px solid rgb(174, 174, 174);
+  color: #0752c2 !important 
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+willowGreen {
+  color: #03b126;
+}
+
+#welcomePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70vh;
+  padding: 20px;
+}
+
+#loginCont {
+
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+}
+
+#eventTable #clientList{
+  
+  text-align: center;
+  vertical-align: middle;
+  font-size: 2rem;
+  table-layout: fixed;
+
+}
+
+td {
+  white-space: nowrap;
+}
+
+.nav-link {
+  font-size: .75rem;
+  color: #ffffff;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 7px;
+}
+
+.willowCursive {
+  font-family: 'Pacifico', cursive;
+  color: #03b126;
+  font-size: 7rem;
+}
+
+#addEvent {
+  background-color: #fff;
+  align-items: center;
+}
+
+#makeStatement {
+  background-color: #fff;
+  align-items: center;
+  color: #b23cfd;
+
+}
+#addEventCont, #addClientCont {
+  display: flex;
+  justify-content: center;
+  color: #0d6efd;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+#eventFloat {
+
+  padding-top: 1rem;
+
+}
+
+#eventPageHeader {
+
+  width: 100%;
+  padding: 5px;
+
+}
