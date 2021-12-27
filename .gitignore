@@ -3,3 +3,4 @@
 /.env
 .DS_Store
 /Python/src/core/__pycache__
+node_modules
