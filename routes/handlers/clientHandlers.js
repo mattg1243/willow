@@ -192,7 +192,7 @@ const makeStatement = async (req, res) => {
         console.log("++++++++++++++++++++++++++++++++++ \n")
         console.log(result)
 
-        return res.redirect(`/client/${req.params.id}/makestatement/download/${providerInfo.clientname}/${start}/${end}`);
+        return res.redirect(`/client/${req.params.id}/makestatement/download/${clientInfo.clientname}/${start}/${end}`);
 
     })
 }
