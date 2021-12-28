@@ -34,7 +34,7 @@ def phone_formatter(n):
 # Builds Statement Header
 def _build_statment_header(provider, client):
     # Initialize
-    header = Table(number_of_rows=5, number_of_columns=3)
+    header = Table(number_of_rows=6, number_of_columns=3)
     
     # Format Provider Phone Number
     phone = phone_formatter(provider["phone"])
@@ -67,7 +67,7 @@ def _build_statment_header(provider, client):
     # Provider Address
     header.add(
         Paragraph(
-            provider["address"],
+            provider["address"]["street"],
             horizontal_alignment=Alignment.LEFT
         )
     )
@@ -83,7 +83,14 @@ def _build_statment_header(provider, client):
     now = datetime.now()
     header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
     
+    # Provider City, Zip Code
+    header.add(
+        Paragraph(provider["address"]["cityState"])
+    )
+    
     # Spacing
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
@@ -237,7 +244,8 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
     descrip_table.set_padding_on_all_cells(
         Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
-    descrip_table.no_borders()
+    # descrip_table.no_borders()
+    descrip_table.set_borders_on_all_cells(True, True, True, True)
     return descrip_table
 
 
@@ -259,13 +267,13 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            _description_table(18, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            _description_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
-    # Multi Paged Statement
-    elif(len(DATES) < 48):
+    # Two paged
+    elif(len(DATES) < 52):
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(18, TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -274,12 +282,12 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(32, TYPES[16:], DATES[16:], DURATIONS[16:], RATES[16:], AMOUNTS[16:], BALANCE[16:])
+            _description_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
         )
     else:
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(18, TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -288,7 +296,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(32, TYPES[16:49], DATES[16:49], DURATIONS[16:49], RATES[16:49], AMOUNTS[16:49], BALANCE[16:49])
+            _description_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
         )
         # Create and Initialize Third Page
         page3 = Page()
@@ -297,7 +305,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page3_layout.add(
-            _description_table(32, TYPES[49:], DATES[49:], DURATIONS[49:], RATES[49:], AMOUNTS[49:], BALANCE[49:])
+            _description_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
         )
         
         

@@ -22,6 +22,7 @@ if __name__ == "__main__":
         data = load()
         # Parse dates
         dates = parse_dates(data)
+        print(len(dates))
         # Parse types
         types = parse_types(data)
         # Parse durations
