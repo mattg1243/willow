@@ -220,21 +220,22 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
 
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    if iter < 18:
-        for row_number in range(iter + 1, 18):
+    print(rows, iter)
+    if iter < rows:
+        for row_number in range(iter + 1, rows):
             col_iter = 0
             while col_iter < 6:
                 descrip_table.add(
                     TableCell(Paragraph(" "), background_color=even_color)
                 )
                 col_iter += 1
-                if col_iter == 5 and row_number == 18:
+                if col_iter == 5 and row_number == rows:
                     descrip_table.add(Paragraph("Running Balance: %s" % balance))
                     break
     
     # Set padding on all cells 
     descrip_table.set_padding_on_all_cells(
-        Decimal(6), Decimal(6), Decimal(6), Decimal(6)
+        Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
     descrip_table.no_borders()
     return descrip_table

@@ -50,6 +50,7 @@ if __name__ == "__main__":
    
     # Log Error & Terminate
     except Exception as StatementError:
+        print(StatementError)
         logger.critical("Failed to Generate Statement!: %s" % StatementError)
         exit(0)
     
