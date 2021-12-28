@@ -11,6 +11,7 @@ export default function ClientTable() {
     })
     return (
         <>
+        <h1>ClientTable</h1>
             <Table>
                 <Thead>
                     <Tr>
