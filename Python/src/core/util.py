@@ -164,6 +164,7 @@ def std_event(event):
 def _description_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
     descrip_table = Table(number_of_rows=rows, number_of_columns=6)
+    descrip_table.set_borders_on_all_cells(True, True, True, True)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -245,7 +246,6 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
         Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
     # descrip_table.no_borders()
-    descrip_table.set_borders_on_all_cells(True, True, True, True)
     return descrip_table
 
 
