@@ -29,6 +29,10 @@ main {
   width: 90%;
 }
 
+.regText {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .navbar {
   display: flex;
   flex-direction: inline;
