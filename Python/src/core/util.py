@@ -154,9 +154,9 @@ def std_event(event):
     else:
         return True
 
-def _description_table(session, dates, durations, hourly, amounts, new_balance):
+def _description_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
-    descrip_table = Table(number_of_rows=18, number_of_columns=6)
+    descrip_table = Table(number_of_rows=rows, number_of_columns=6)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -258,13 +258,13 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            _description_table(18, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
     # Multi Paged Statement
-    else:
+    elif(len(DATES) < 48):
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+            _description_table(18, TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -273,8 +273,32 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(TYPES[16:], DATES[16:], DURATIONS[16:], RATES[16:], AMOUNTS[16:], BALANCE[16:])
+            _description_table(32, TYPES[16:], DATES[16:], DURATIONS[16:], RATES[16:], AMOUNTS[16:], BALANCE[16:])
         )
+    else:
+        # Add 16 events to page 1
+        page_layout.add(
+            _description_table(18, TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+        )
+        # Create and Initialize Second Page
+        page2 = Page()
+        pdf.append_page(page2)
+        page2_layout = SingleColumnLayout(page2)
+        page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
+        # Add the rest of the events
+        page2_layout.add(
+            _description_table(32, TYPES[16:49], DATES[16:49], DURATIONS[16:49], RATES[16:49], AMOUNTS[16:49], BALANCE[16:49])
+        )
+        # Create and Initialize Third Page
+        page3 = Page()
+        pdf.append_page(page3)
+        page3_layout = SingleColumnLayout(page3)
+        page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
+        # Add the rest of the events
+        page3_layout.add(
+            _description_table(32, TYPES[49:], DATES[49:], DURATIONS[49:], RATES[49:], AMOUNTS[49:], BALANCE[49:])
+        )
+        
         
         
     # Local path
