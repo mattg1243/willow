@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios"
 import ClientTable from "./ClientTable"
+import Header from "./Header";
 
 export default function Base(props) {
     
@@ -16,6 +17,7 @@ export default function Base(props) {
     })
     return (
         <>
+            <Header />
             <h1>Base Component</h1>
             <ClientTable />
         </>
