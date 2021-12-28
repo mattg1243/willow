@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, VStack, Heading, Text, Table, Thead, Tr, Th, Td } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Header from './Header';
@@ -11,7 +12,33 @@ export default function ClientPage() {
     return (
         <>
             <Header />
-            <h1>{client.fname}</h1>
+            <VStack style={{height: '100%', width: '70%', paddingTop: '1rem'}}>
+                <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
+                <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                <Box maxW='xl' maxH='lg'>
+                    <Table size='lg' style={{marginBottom: '2rem'}}>
+                        <Thead>
+                        <Tr>
+                            <Th>Type</Th>
+                            <Th>Details</Th>
+                            <Th>Time</Th>
+                            <Th>Amount</Th>
+                        </Tr>
+                        </Thead>
+                        {client.sessions.map(event => {
+                            return (
+                                <Tr>
+                                    <Td>{event}</Td>
+                                    <Td>test</Td>
+                                    <Td>test</Td>
+                                    <Td>test</Td>
+                                </Tr>
+                            )})}
+                        
+                    </Table>
+                </Box>
+            </VStack>
+           
         </>
     )
 }
