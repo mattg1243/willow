@@ -11,8 +11,7 @@ export default function ClientTable() {
     })
     return (
         <>
-        <h1>ClientTable</h1>
-            <Table>
+            <Table size='lg' style={{marginBottom: '2rem'}}>
                 <Thead>
                     <Tr>
                         <Th>Client</Th>
@@ -21,7 +20,7 @@ export default function ClientTable() {
                     {clients.map(client => {return (
                         <Tr>
                             <Th>{client.fname + " " + client.lname}</Th>
-                            <Th>${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Th>
+                            <Th isNumeric>${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Th>
                         </Tr>
                     )})}
                 </Thead>
