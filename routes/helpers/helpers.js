@@ -57,55 +57,50 @@ const verifyJWT = async (req, res, next) => {
     }
 }
 
-const getAllData = (res) => {
-    if (req.body.fromMobile == true) { 
-        console.log('Mobile login detected');
-        console.log(req.headers)
-
-        // create blank response object to fill with data to send to client
-        let response = {
-            token: "",
-            user: {
-                id: '',
-                fname: '',
-                lname: '',
-                email: '',
-                nameForHeader: '',
-            },
-            clients: []
-        }
-        // first, get the user from the database
-        // this is only safe because user has already been authed through passport middleware
-        User.findOne({ username: req.body.username }, (err, user) => {
-            if (err) { return console.error(err); }
-            // fill user object with needed data
-            response.user.id = user._id;
-            response.user.fname = user.fname;
-            response.user.lname = user.lname;
-            response.user.email = user.email;
-            response.user.nameForHeader = user.nameForHeader;
-            // create token from the user ID
-            response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
-            // then, populate the client array
-            Client.find({ ownerID: user._id }, (err, clients) => {
-                if (err) { return console.error(err); }
-                
-                response.clients = clients
-
-                // finally, populate the events array for each client in the response variable
-                for (let i = 0; i < response.clients.length; i++ ) {
-                    Event.find({ clientID: response.clients[i] }, (err, events) => {
-                        if (err) { return console.error(err); }
-                       
-                        response.clients[i].sessions = events;
-                    })
-                }
-
-                console.log(response)
-                return response;
-            })
-        })
+const getAllData = (req, res) => {
+    // create blank response object to fill with data to send to client
+    let response = {
+        token: "",
+        user: {
+            id: '',
+            fname: '',
+            lname: '',
+            email: '',
+            nameForHeader: '',
+        },
+        clients: []
     }
+    // first, get the user from the database
+    // this is only safe because user has already been authed through passport middleware
+    User.findOne({ username: req.body.username }, (err, user) => {
+        if (err) { return console.error(err); }
+        // fill user object with needed data
+        response.user.id = user._id;
+        response.user.fname = user.fname;
+        response.user.lname = user.lname;
+        response.user.email = user.email;
+        response.user.nameForHeader = user.nameForHeader;
+        // create token from the user ID
+        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
+        // then, populate the client array
+        Client.find({ ownerID: user._id }, (err, clients) => {
+            if (err) { return console.error(err); }
+            
+            response.clients = clients
+
+            // finally, populate the events array for each client in the response variable
+            for (let i = 0; i < response.clients.length; i++ ) {
+                Event.find({ clientID: response.clients[i] }, (err, events) => {
+                    if (err) { return console.error(err); }
+                    
+                    response.clients[i].sessions = events;
+                })
+            }
+
+            // console.log(response)
+            res.json(response);
+        })
+    })
 }
 
 module.exports.recalcBalance = recalcBalance;
