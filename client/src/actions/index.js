@@ -1,13 +1,6 @@
-export const loginAction = (user) => {
+export const loginAction = (user, clients) => {
     return {
         type: 'login',
-        user: user,
-    }
-}
-
-export const clientsAction = (clients) => {
-    return {
-        type: 'populateClients',
-        clients: clients,
+        payload: user,
     }
 }
