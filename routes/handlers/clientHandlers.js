@@ -151,15 +151,16 @@ const makeStatement = async (req, res) => {
     let clientInfo = {  
 
         clientname: req.params.fname + " " + req.params.lname,
-        billingAdd: req.user.street ? req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip : "",
-        mailingAdd: "", // this isnt handled client side yet 
         phone: req.user.phone
     };
 
     let providerInfo = {
 
         name: req.user.nameForHeader ? req.user.nameForHeader: req.user.fname + " " + req.user.lname,
-        address: req.user.street + " " + req.user.city + ", " + req.user.state + " " + req.user.zip,
+        address: {
+            street: req.user.street ? req.user.street : "",
+            cityState: req.user.city ? req.user.city + ", " + req.user.state  + " " + req.user.zip : ""
+        },
         phone: req.user.phone,
         email: req.user.email,
     }
