@@ -35,7 +35,11 @@ main {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-bottom: 3rem;
+  background-color: #03b126;
+  color: white;
 }
 
 .navbar-brand {
@@ -137,7 +141,6 @@ td {
 .willowCursive {
   font-family: 'Pacifico', cursive;
   color: #03b126;
-  font-size: 7rem;
 }
 
 #addEvent {
