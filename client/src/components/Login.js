@@ -5,8 +5,6 @@ import { Input, Container, VStack, HStack, Button } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import axios from "axios"
 import { loginAction } from "../actions"
-import { clientsAction } from '../actions';
-
 
 export default function Login() {
 // states for text input
@@ -25,8 +23,7 @@ const loginUser = async (username, password) => {
     const response = await axios(configObject).catch(err => {console.error(err);})
     console.log(response.data)
     if (response.data) {
-        dispatch(loginAction(response.data.user))
-        dispatch(clientsAction(response.data.clients));
+        dispatch(loginAction(response.data))
         navigate('/dashboard');
     } else {
         return <h1>err</h1>
