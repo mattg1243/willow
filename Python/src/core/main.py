@@ -14,6 +14,7 @@ if __name__ == "__main__":
     try:
         # Provider info
         prov = get_provider_info()
+        print(f'PROVIDER -> {prov}\n')
         # User info
         header = get_client_info()
         print('USER INFO -> ', header)
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     
     # Generate the statement
     try:
-        generate_statement(header['clientname'], dates, types, durations, rates, amounts, newBalances, multipage)
+        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, multipage)
    
     # Log Error & Terminate
     except Exception as StatementError:

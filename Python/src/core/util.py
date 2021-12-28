@@ -29,41 +29,78 @@ def skele():
 
 
 # Builds Statement Header
-def _build_statment_header():
+def _build_statment_header(provider, client):
     header = Table(number_of_rows=5, number_of_columns=3)
+    
+    # Provider Name
+    header.add(
+        Paragraph(
+            provider["name"], 
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.LEFT
+            
+        )
+    )
+    
+    # Client Name
+    header.add(
+        Paragraph(
+            "Client Name: ",
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.RIGHT
+        )
+    )
+    header.add(
+        Paragraph(
+            client["clientname"]
+        )
+    )
+    
+    # Provider Address
+    header.add(
+        Paragraph(
+            provider["address"],
+            horizontal_alignment=Alignment.LEFT
+        )
+    )
 
-    # Address1
-    header.add(Paragraph("1600 Waverly Road"))
     # Date Issued
     header.add(
         Paragraph(
-            "Date Issued:", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
+            "Statement Date:", 
+            font="Helvetica-Bold", 
+            horizontal_alignment=Alignment.RIGHT
         )
     )
     now = datetime.now()
     header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
-    # City
-    header.add(Paragraph("San Francisco, Ca"))
-    # Invoice ID ---- Serves no purpose for now
-    header.add(
-        Paragraph(
-            "Invoice #", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    header.add(Paragraph("%d" % random.randint(1000, 10000)))
-    # Due Date
-    header.add(Paragraph(" "))
-    header.add(
-        Paragraph(
-            "Due Date", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    header.add(Paragraph("%d/%d/%d" % (now.month + 1, now.day, now.year)))
+    
     # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
+    
+    
+    # Provider Phone
+    header.add(
+        Paragraph(
+            provider["phone"],
+            horizontal_alignment=Alignment.LEFT
+        )
+    )
+    
+    # Spacing
     header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    # Provider Email
+    header.add(
+        Paragraph(
+            provider["email"]
+        )
+    )
+    
+    # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
 
@@ -74,34 +111,33 @@ def _build_statment_header():
     return header
 
 
-def _build_billing_table(name):
-    # Client's name
-    NAME = name
+def _build_billing_table():
 
     # Build Billing Table
     b_table = Table(number_of_rows=3, number_of_columns=2)
+    
+    # Spacing
+    b_table.add(Paragraph(" "))
+    b_table.add(Paragraph(" "))
+    
+    # Activity
     b_table.add(
         Paragraph(
-            "BILL TO",
+            "Activity:",
             background_color=HexColor("FFFFFF"),
             font="Helvetica-Bold",
             font_color=X11Color("Black"),
         )
     )
-    b_table.add(
-        Paragraph(
-            " ",
-            background_color=HexColor("263238"),
-            font_color=X11Color("White"),
-        )
-    )
-    b_table.add(Paragraph(NAME))
+    
+    # Spacing
     b_table.add(Paragraph(" "))
     b_table.add(Paragraph(" "))
     b_table.add(Paragraph(" "))
 
     b_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     b_table.no_borders()
+    
     return b_table
 
 def std_event(event):
@@ -196,7 +232,10 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
     return descrip_table
 
 
-def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+    name = CLIENT['clientname']
+    print(name)
+    
     # Initializing Statement..
     pdf = Document()
     page = Page()
@@ -204,19 +243,9 @@ def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, M
     page_layout = SingleColumnLayout(page)
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
-    # Add image
-    page_layout.add(
-        Image(
-            "https://atlas-content-cdn.pixelsquid.com/stock-images/willow-tree-exDE6X1-600.jpg",
-            width=Decimal(108),
-            height=Decimal(82),
-            margin_left=Decimal(177.5)
-        ),
-    )
-
     # Append Statement Header
-    page_layout.add(_build_statment_header())
-    page_layout.add(_build_billing_table(NAME))
+    page_layout.add(_build_statment_header(PROV, CLIENT))
+    page_layout.add(_build_billing_table())
     
     # If single paged - build single description table 
     if(not MULTIPAGE):
@@ -241,7 +270,7 @@ def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, M
         
         
     # Local path
-    with open(f'public/invoices/{NAME}.pdf', 'wb') as pdf_file:
+    with open(f'public/invoices/{name}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
    
    
