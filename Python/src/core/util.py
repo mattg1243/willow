@@ -27,10 +27,18 @@ def skele():
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
     return pdf
 
+# Phone Number Formatter
+def phone_formatter(n):
+    return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 # Builds Statement Header
 def _build_statment_header(provider, client):
+    # Initialize
     header = Table(number_of_rows=5, number_of_columns=3)
+    
+    # Format Provider Phone Number
+    phone = phone_formatter(provider["phone"])
+    print(phone)
     
     # Provider Name
     header.add(
@@ -84,7 +92,7 @@ def _build_statment_header(provider, client):
     # Provider Phone
     header.add(
         Paragraph(
-            provider["phone"],
+            phone,
             horizontal_alignment=Alignment.LEFT
         )
     )
