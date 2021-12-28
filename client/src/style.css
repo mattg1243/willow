@@ -23,7 +23,6 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  justify-content: space-around;
   padding: 2rem;
   margin: auto;
   height: 80vh;
@@ -56,6 +55,10 @@ main {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.textInput {
+  margin: 1rem;
 }
 
 .list-group {
@@ -97,6 +100,7 @@ willowGreen {
   display: flex;
   flex-direction: column;
   max-width: 70%;
+  height: 100%;
   align-items: center;
   justify-content: center;
   color: white;

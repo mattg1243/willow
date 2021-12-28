@@ -13,19 +13,16 @@ router.get('/', (req, res) => {
 
 router.post('/', passport.authenticate('local', {
     failureFlash: "Invalid Login", 
-}), (req, res) => {
-
-    User.findOne({ username: req.body.username }, (err, user) => {
-        if (err) return console.error(err);
-        res.json(user);
-    })
+}), async (req, res) => {
+    
+    helpers.getAllData(req, res);
 })
 
 router.post('/native', passport.authenticate('local'), async (req, res) => {
     console.log(req.body);
-    const response = getAllData(req);
+    const response = helpers.getAllData(req);
     if (response) {
-        res.json(response);
+        helpers.getAllData(req, res);
     } else {
         console.log(response);
         req.flash('error', "Invalid Login")
