@@ -33,7 +33,7 @@ const loginUser = async (username, password) => {
 return (
     <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <VStack className="loginCont" >
-            <h3 className="willowCursive">Willow</h3>
+            <h3 className="willowCursive" style={{fontSize: '7rem'}}>Willow</h3>
             <Input className="textInput" placeholder="Email" type="email" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
             <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
             <HStack>
