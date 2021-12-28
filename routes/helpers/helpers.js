@@ -58,6 +58,7 @@ const verifyJWT = async (req, res, next) => {
 }
 
 const getAllData = (req, res) => {
+    console.log(req);
     // create blank response object to fill with data to send to client
     let response = {
         token: "",

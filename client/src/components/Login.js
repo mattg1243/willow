@@ -34,8 +34,10 @@ return (
     <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <VStack className="loginCont" >
             <h3 className="willowCursive" style={{fontSize: '7rem'}}>Willow</h3>
-            <Input className="textInput" placeholder="Email" type="email" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
-            <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
+            <VStack style={{width: '20rem'}}>
+                <Input className="textInput" placeholder="Username" type="email" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
+                <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
+            </VStack>
             <HStack>
                 <Button background="#03b126" color="#fff" onClick={() => {loginUser(username, password)}}>Login</Button>
                 <Button background="#63326E" color="#fff">Register</Button>

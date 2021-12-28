@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
 router.post('/', passport.authenticate('local', {
     failureFlash: "Invalid Login", 
 }), async (req, res) => {
-    
     helpers.getAllData(req, res);
 })
 
