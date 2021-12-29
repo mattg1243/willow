@@ -99,7 +99,7 @@ const getAllData = (req, res) => {
             }
 
             // console.log(response)
-            res.json(response);
+            res.send(JSON.stringify(response));
         })
     })
 }
