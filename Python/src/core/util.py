@@ -245,7 +245,7 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
     descrip_table.set_padding_on_all_cells(
         Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
-    # descrip_table.no_borders()
+    descrip_table.no_borders()
     return descrip_table
 
 
