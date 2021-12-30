@@ -29,6 +29,7 @@ export default function Login() {
             }
         }).catch(err => {console.log(err.response)})
     }
+    window.loginUser = loginUser;
 
     return (
         <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
