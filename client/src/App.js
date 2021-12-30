@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import Login from './components/Login';
 import ClientPage from './components/ClientPage';
-import ClientTable from './components/ClientTable';
+import Register from './components/Register';
 import './style.css';
 import { Center, ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -23,6 +22,7 @@ function App() {
           <Router>
             <Routes>
               <Route path='/' element={<Login />} />
+              <Route path='/register' element={<Register />} />
               <Route path='/dashboard' element={<Base />} />
               <Route path='/client/:id' element={<ClientPage />} />
             </Routes>
