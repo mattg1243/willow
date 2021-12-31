@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios"
 import ClientTable from "./ClientTable"
+import AddClientForm from "./AddClientForm";
 import Header from "./Header";
 import { useColorMode } from '@chakra-ui/color-mode'
 
@@ -27,7 +28,12 @@ export default function Dashboard(props) {
             <Box maxW='xl' maxH='lg'>
                 <ClientTable />
                 <HStack style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                    <Button color="white" backgroundColor={isDark? "#63326E" : '#03b126'} onClick={() => { setIsShown(true) }}>Add</Button>
+                    <Button 
+                    color="white" 
+                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}} 
+                    onClick={() => { setIsShown(true) }} >
+                        Add
+                    </Button>
                 </HStack>
                 <Modal motionPreset="slideInBottom" onClose={() => {setIsShown(false)}} isOpen={isShown}>
                     <ModalOverlay />
@@ -35,7 +41,8 @@ export default function Dashboard(props) {
                         <ModalHeader>New Client</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                    </ModalBody>
+                                <AddClientForm setIsShown={setIsShown}/>
+                        </ModalBody>
                     </ModalContent>
                 </Modal>
             </Box>

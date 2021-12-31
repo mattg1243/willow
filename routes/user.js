@@ -8,7 +8,7 @@ const helpers = require('./helpers/helpers');
 // render register page
 router.get('/register', (req, res) => { res.render('register'); })
 // logout user
-router.get('/logout', (req, res) => { req.logout(); res.redirect('/login'); })
+router.get('/logout', (req, res) => { req.logout(); })
 // register new user to DB
 router.post('/register/newuser', (req, res) => { handlers.registerUser(req, res) })
 // render logged in user's dashboard page
@@ -18,7 +18,7 @@ router.get('/preferences', (req, res) => { res.render('preferences', { user: req
 // update users info from preferences page
 router.post("/update-info/:id", connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.updateUserInfo(req, res) })
 // add a new client
-router.post('/dashboard/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.addNewClient(req, res) });
+router.post('/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.addNewClient(req, res) });
 // add new client from mobile app
 
 module.exports = router;

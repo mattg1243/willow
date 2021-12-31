@@ -2,12 +2,12 @@ import Login from './components/Login';
 import ClientPage from './components/ClientPage';
 import Register from './components/Register';
 import './style.css';
-import { Center, ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
-import Base from './components/Base';
+import Dashboard from './components/Dashboard';
 
 const store = createStore(
   rootReducer,
@@ -23,7 +23,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Login />} />
               <Route path='/register' element={<Register />} />
-              <Route path='/dashboard' element={<Base />} />
+              <Route path='/clients' element={<Dashboard />} />
               <Route path='/client/:id' element={<ClientPage />} />
             </Routes>
           </Router>

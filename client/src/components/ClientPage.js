@@ -28,10 +28,10 @@ export default function ClientPage() {
                         {client.sessions.map(event => {
                             return (
                                 <Tr>
-                                    <Td>{event}</Td>
-                                    <Td>test</Td>
-                                    <Td>test</Td>
-                                    <Td>test</Td>
+                                    <Td>{event.type}</Td>
+                                    <Td>{event.details ? event.details : '-'}</Td>
+                                    <Td>{event.duration ? event.duration : '-'}</Td>
+                                    <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                                 </Tr>
                             )})}
                         
