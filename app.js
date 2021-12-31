@@ -1,24 +1,23 @@
-var createError = require('http-errors');
-var express = require('express');
-var session = require('express-session');
-var path = require('path');
-var flash = require('connect-flash');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose');
-var mongoStore = require('connect-mongo');
-var passport = require('./node_modules/passport')
-var LocalStrategy = require('./node_modules/passport-local');
-var bcrypt = require('bcryptjs')
+const createError = require('http-errors');
+const express = require('express');
+const session = require('express-session');
+const path = require('path');
+const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const mongoStore = require('connect-mongo');
+const passport = require('./node_modules/passport')
 const helmet = require('helmet');
-var User = require('./models/user-model')
-var cors = require('cors');
+const User = require('./models/user-model')
+const cors = require('cors');
+
 require('dotenv').config();
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
-var userRouter = require('./routes/user');
-var clientRouter = require('./routes/client');
+const userRouter = require('./routes/user');
+const clientRouter = require('./routes/client');
 
 var app = express();
 app.locals.moment = require('moment');
@@ -79,10 +78,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Passport authentication
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Setting local variables for the front end
 app.use(function(req, res, next) {
 
   res.locals.loggedIn = req.isAuthenticated();
@@ -92,8 +93,7 @@ app.use(function(req, res, next) {
   
 })
 
-// ROUTES:
-
+// Base routes
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
