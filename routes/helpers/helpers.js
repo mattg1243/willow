@@ -25,7 +25,7 @@ function recalcBalance(clientID) {
             // console.log(balance.toFixed(2))
         }
 
-        Client.findOneAndUpdate({ _id: clientID }, { balance: balance }, function (err) {
+        Client.findOneAndUpdate({ _id: clientID }, { balance: balance, sessions: events }, { upsert: true }, function (err) {
      
             if (err) return console.error(err)
     
