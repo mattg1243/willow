@@ -1,6 +1,13 @@
-export const loginAction = (user, clients) => {
+export const loginAction = (user) => {
     return {
         type: 'login',
         payload: user,
+    }
+}
+
+export const getClients = (clients) => {
+    return {
+        type: 'getClients',
+        payload: clients,
     }
 }
