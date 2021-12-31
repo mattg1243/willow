@@ -23,7 +23,7 @@ export default function Login() {
             if (response.data) {
                 console.log(response.data)
                 dispatch(loginAction(response.data))
-                navigate('/dashboard');
+                navigate('/clients');
             } else {
                 return <h1>err</h1>
             }

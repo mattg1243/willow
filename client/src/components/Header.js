@@ -1,12 +1,17 @@
 import React from 'react';
-import { HamburgerIcon, SettingsIcon } from '@chakra-ui/icons'
+import { ColorModeSwitcher } from './ColorModeSwitcher';
+import HamburgerMenu from './Menu';
+import { useColorMode } from '@chakra-ui/color-mode'
 
 export default function Header() {
+    const { colorMode } = useColorMode()
+    const isDark = colorMode === 'dark'
+
     return (
-        <header className="navbar">
-            <HamburgerIcon w={6} h={6} />
+        <header className="navbar" style={{backgroundColor: isDark? "#63326E" : "#03b126"}}>
+            <HamburgerMenu />
             <h3 className="willowCursive" style={{color: 'white', fontSize: '3rem', padding: '.5rem'}}>Willow</h3>
-            <SettingsIcon w={6} h={6} />
+            <ColorModeSwitcher />
         </header>
     )
 }
