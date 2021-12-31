@@ -18,7 +18,7 @@ router.get('/preferences', (req, res) => { res.render('preferences', { user: req
 // update users info from preferences page
 router.post("/update-info/:id", connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.updateUserInfo(req, res) })
 // add a new client
-router.post('/newclient', connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.addNewClient(req, res) });
+router.post('/newclient', helpers.verifyJWT, (req, res) => { handlers.addNewClient(req, res) });
 // add new client from mobile app
 
 module.exports = router;
