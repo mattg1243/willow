@@ -1,5 +1,6 @@
 const User = require('../../models/user-model');
 const Client = require('../../models/client-schema')
+const helpers = require('../helpers/helpers')
 
 const registerUser = async (req, res) => {
     if (req.body.password == req.body.passwordConfirm) {
@@ -74,7 +75,8 @@ const addNewClient = async (req, res) => {
             console.log("Clients added : " + clients)
         })
         
-        res.send('success');
+        // this will be optimized to only send the new clients list
+        helpers.getClients(req, res);
 
     })
     } catch (err) { throw err ;}

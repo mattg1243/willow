@@ -99,6 +99,15 @@ const getAllData = (req, res) => {
     })
 }
 
+const getClients = (req, res) => {
+    Client.find({ ownerID: req.body.user }, (err, clients) => {
+        if (err) return console.error(err);
+
+        res.json(clients);
+    })
+}
+
 module.exports.recalcBalance = recalcBalance;
 module.exports.verifyJWT = verifyJWT;
 module.exports.getAllData = getAllData;
+module.exports.getClients = getClients;
