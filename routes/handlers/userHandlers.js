@@ -5,18 +5,30 @@ const registerUser = async (req, res) => {
     if (req.body.password == req.body.passwordConfirm) {
         
         try {
-            await User.register(new User({ username: req.body.username, fname: req.body.fname, lname: req.body.lname, email: req.body.email}), req.body.password, function(err) {
-                if (err) {
+            await User.register(new User({
+                username: req.body.username, 
+                fname: req.body.fname, 
+                lname: req.body.lname, 
+                email: req.body.email, 
+                nameForHeader: req.body.nameForHeader, 
+                phone: req.body.phone, 
+                street: req.body.street, 
+                city: req.body.city, 
+                state: req.body.state, 
+                zip: req.body.zip}), 
+                req.body.password, function(err) {
+                
+                    if (err) {
                     console.log('Error while registering user : ', err);
-                    return next(err);
+                    return err;
                 } else {
                     console.log('User registered');
-                    res.redirect('/');
+                    res.send("success")
                 }
             })
         } 
         catch(err) { throw err; } 
-    } else { res.redirect('/user/register'); }
+    }
 }
 
 const renderDashboard = async (req, res) => {
@@ -49,13 +61,12 @@ const addNewClient = async (req, res) => {
     console.log("Headers: " + req.headers)
     console.log("Data: " + req.body)
     try {
-        const newClient = new Client({ownerID: req.user['_id'], fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
+        const newClient = new Client({ownerID: req.body.user, fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
         newClient.save(function(err, client) {
        
         if (err) return console.error(err);
         
-        console.log(client.fname + ' added as a client to ' + req.user['_id'])
-        User.findOneAndUpdate({ _id: req.user['_id'] }, { $push: { clients: client['_id'] } })
+        User.findOneAndUpdate({ _id: req.body.user }, { $push: { clients: client['_id'] } })
         .populate('clients').exec(function(err, clients) {
             
             if(err) return console.error(err);
@@ -63,7 +74,7 @@ const addNewClient = async (req, res) => {
             console.log("Clients added : " + clients)
         })
         
-        res.redirect(`/client/${client._id}`);
+        res.send('success');
 
     })
     } catch (err) { throw err ;}
