@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Input, VStack, Stack, Button, Divider  } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { getClients } from "../actions";
 
 export default function AddClientForm(props) {
     // states for input fields
@@ -15,21 +16,26 @@ export default function AddClientForm(props) {
     const isDark = colorMode === 'dark'
     const token = useSelector(state => state.user.token);
     const user = useSelector(state => state.user.user.id);
+    const dispatch = useDispatch();
 
-    const addClient = () => {
+    const addClient = async () => {
         
-        axios.post('http://localhost:3000/user/newclient', {
+        const response = await axios.post('http://localhost:3000/user/newclient', {
             fname: fname,
             lname: lname,
             email: email,
             phonenumber: phone,
             user: user
         },
-        {headers: {
-            'content-type': 'text/json',
-            'Authorization': 'Bearer ' + token}}).then(response => {
-            console.log(response); props.setIsShown()
-        }).catch(err => {console.error(err)})
+        { headers: {
+            Authorization: 'Bearer ' + token}
+        }).then(response => {
+            console.log(response); 
+            props.setIsShown();
+            dispatch(getClients(response.data));
+        }).catch(err => 
+            {console.error(err)
+        })
     }
 
     return (
@@ -38,7 +44,9 @@ export default function AddClientForm(props) {
                 <Divider />
                     <Stack spacing={7} >
                         <Input placeholder="First Name" onChange={(e) => { setFname(e.target.value) }} />
+                        <p>{fname}</p>
                         <Input placeholder="Last Name" onChange={(e) => { setLname(e.target.value) }} />
+                        <p>{lname}</p>
                         <Input placeholder="Email" onChange={(e) => { setEmail(e.target.value) }} />
                         <Input placeholder="Phone Number" onChange={(e) => { setPhone(e.target.value) }} />
                     </Stack>
