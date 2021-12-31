@@ -3,6 +3,7 @@ const Client = require("../../models/client-schema");
 const Event = require("../../models/event-schema");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+require('../../models/event-schema');
 
 function recalcBalance(clientID) {
     
@@ -58,7 +59,6 @@ const verifyJWT = async (req, res, next) => {
 }
 
 const getAllData = (req, res) => {
-    console.log(req);
     // create blank response object to fill with data to send to client
     let response = {
         token: "",
@@ -69,7 +69,7 @@ const getAllData = (req, res) => {
             email: '',
             nameForHeader: '',
         },
-        clients: []
+        clients: [],
     }
     // first, get the user from the database
     // this is only safe because user has already been authed through passport middleware
@@ -88,18 +88,13 @@ const getAllData = (req, res) => {
             if (err) { return console.error(err); }
             
             response.clients = clients
+            // get a list of all IDs to query events and 
+            // populate the events into the clients objects
+            res.json(response);
+        }).populate({ path: 'sessions', model: 'EventModel' }).exec((err, events) => {
+            if (err) { return console.error(err); }
 
-            // finally, populate the events array for each client in the response variable
-            for (let i = 0; i < response.clients.length; i++ ) {
-                Event.find({ clientID: response.clients[i] }, (err, events) => {
-                    if (err) { return console.error(err); }
-                    
-                    response.clients[i].sessions = events;
-                })
-            }
-
-            // console.log(response)
-            res.send(JSON.stringify(response));
+            console.log('Events populated');
         })
     })
 }
