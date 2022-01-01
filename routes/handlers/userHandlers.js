@@ -38,7 +38,7 @@ const renderDashboard = async (req, res) => {
         
             if (err) return console.error(err);
             
-            res.render('dashboard', { clients: clients})
+            // res.render('dashboard', { clients: clients})
     
         });
     }
