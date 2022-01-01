@@ -3,4 +3,4 @@
 .DS_Store
 Python/src/core/__pycache__
 Python/logs/
-client/node_modules
+/client/node_modules
