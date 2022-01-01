@@ -18,6 +18,7 @@ const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
 const clientRouter = require('./routes/client');
+const port = process.env.PORT || 3001;
 
 var app = express();
 app.locals.moment = require('moment');
@@ -28,9 +29,12 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+// render from React build
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+})
+
 
 
 // middleware
@@ -114,5 +118,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port, () => {console.log('listening...')});
 
 module.exports = app;
