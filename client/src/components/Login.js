@@ -16,7 +16,7 @@ export default function Login() {
 
     const loginUser = async () => {
         console.log(username + '\n' + password);
-        axios.post("http://localhost:3000/login", {
+        axios.post("/login", {
             username: username,
             password: password,
         }).then((response) => {

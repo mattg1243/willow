@@ -44,9 +44,7 @@ export default function AddClientForm(props) {
                 <Divider />
                     <Stack spacing={7} >
                         <Input placeholder="First Name" onChange={(e) => { setFname(e.target.value) }} />
-                        <p>{fname}</p>
                         <Input placeholder="Last Name" onChange={(e) => { setLname(e.target.value) }} />
-                        <p>{lname}</p>
                         <Input placeholder="Email" onChange={(e) => { setEmail(e.target.value) }} />
                         <Input placeholder="Phone Number" onChange={(e) => { setPhone(e.target.value) }} />
                     </Stack>
