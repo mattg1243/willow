@@ -35,7 +35,8 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 })
 
-
+// set view engine to satisify error codes
+app.set('view engine', 'jade');
 
 // middleware
 app.use(helmet.contentSecurityPolicy({
@@ -116,7 +117,6 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
 });
 
 app.listen(port, () => {console.log('listening...')});
