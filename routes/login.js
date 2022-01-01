@@ -8,7 +8,7 @@ const helpers = require('./helpers/helpers');
 require('dotenv').config();
 
 router.get('/', (req, res) => {
-    res.render('login', { messages: req.flash('error') })
+    // res.render('login', { messages: req.flash('error') })
 })
 
 router.post('/', passport.authenticate('local', {

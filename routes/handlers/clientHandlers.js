@@ -17,7 +17,7 @@ const renderClientPage = async (req, res) => {
            
             if (err) return console.error(err);
     
-            res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes, messages: req.flash('error') })
+            // res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes, messages: req.flash('error') })
             
         }).sort({ date: 1 })
     })
@@ -120,7 +120,7 @@ const renderEventPage = (req, res) => {
             if (err) return console.error(err);
             
             console.log(event)
-            res.render('eventpage', { event: event });
+            // res.render('eventpage', { event: event });
         });    
     } catch (err) { throw err ; }
 
