@@ -58,7 +58,26 @@ const verifyJWT = async (req, res, next) => {
     }
 }
 
-const getAllData = (req, res) => {
+const fixDB = (clientID) => {
+    // find all events that belong to the client and store the IDs in an array
+    Event.find({ clientID: clientID }, (err, events) =>{
+        if (err) return console.error(err);
+
+        const eventIDs = [];
+        for (let i = 0; i < events.length; i++) {
+            eventIDs.push(events[i]._id);
+        }
+        console.log('Event IDs: \n', eventIDs[0], eventIDs[1])
+        // fill the clients sessions array with the queried IDs
+        Client.findOneAndUpdate({ _id: clientID }, { $set: { sessions: eventIDs }}, (err, client) => {
+            if (err) return console.error(err);
+
+            console.log("New Sessions:\n" + client.sessions);
+        }).clone();
+    })
+}
+
+const getAllData = async(req, res) => {
     // create blank response object to fill with data to send to client
     let response = {
         token: "",
@@ -70,10 +89,11 @@ const getAllData = (req, res) => {
             nameForHeader: '',
         },
         clients: [],
+        events: [],
     }
-    // first, get the user from the database
-    // this is only safe because user has already been authed through passport middleware
-    User.findOne({ username: req.body.username }, (err, user) => {
+    // get the user from the database
+    // this is only safe because user has already been authenticated through passport middleware
+    await User.findOne({ username: req.body.username }, (err, user) => {
         if (err) { return console.error(err); }
         // fill user object with needed data
         response.user.id = user._id;
@@ -88,15 +108,21 @@ const getAllData = (req, res) => {
             if (err) { return console.error(err); }
             
             response.clients = clients
-            // get a list of all IDs to query events and 
-            // populate the events into the clients objects
-            res.json(response);
-        }).populate({ path: 'sessions', model: 'EventModel' }).exec((err, events) => {
-            if (err) { return console.error(err); }
-
-            console.log('Events populated');
+            // create an array of all clients belonging to the user to query events
+            let clientIDs = [];
+            for (let i = 0; i < clients.length; i++) {
+                clientIDs.push(clients[i]._id)
+            }
+            // find all events that belong to the users clients
+            Event.find({ clientID: { $in: clientIDs } }, (err, events) => {
+                if (err) { return console.error(err); }
+                
+                response.events = events;
+                // send the data!
+                res.json(response);
+            })
         })
-    })
+    }).clone();
 }
 
 const getClients = (req, res) => {
@@ -104,10 +130,11 @@ const getClients = (req, res) => {
         if (err) return console.error(err);
 
         res.json(clients);
-    })
+    }).clone();
 }
 
 module.exports.recalcBalance = recalcBalance;
 module.exports.verifyJWT = verifyJWT;
 module.exports.getAllData = getAllData;
 module.exports.getClients = getClients;
+module.exports.fixDB = fixDB;
