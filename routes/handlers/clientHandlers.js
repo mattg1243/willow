@@ -41,12 +41,10 @@ const addEvent = (req, res) => {
     
      }
 
-    Client.findOne({ _id: req.params.id }, (err, client) => {
-
         if (err) return console.error(err);
 
         const event = new Event({ 
-            clientID: req.params.id, 
+            clientID: req.body.clientID, 
             date: req.body.date, 
             type: req.body.type, 
             detail: req.body.detail, 
@@ -56,18 +54,19 @@ const addEvent = (req, res) => {
         });
         // saving event to db
         event.save(function(err, event) {
-
         if (err) return console.error(err);
+
+        Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
+            if (err) return console.error(err);
+
+            console.log(result);
+        })
 
         helpers.recalcBalance(req.params.id);
 
         console.log('Event added')
 
-        if (!req.body.fromMobile) {
-            res.redirect(`/client/${req.params.id}`)
-        }
-
-    })})
+    })
 }
 
 const updateEvent = (req, res) => {
