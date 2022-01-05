@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react';
-import { Box, VStack, Heading, Text, Table, Thead, Tr, Th, Td, Divider } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useColorMode } from '@chakra-ui/color-mode';
 import Header from './Header';
+import AddEventForm from './AddEventForm';
 
 export default function ClientPage() {
     
+    const [isShown, setIsShown] = useState(false);
+
     const { id } = useParams();
     const client = useSelector(state => state.user.clients.find(client => client._id === id));
-    const allEvents = useSelector(state => state.user.events);
-    const events = allEvents.filter(event => event.clientID === id);
+    const events = useSelector(state => state.user.events.filter(event => event.clientID === id));
 
-    useEffect(() => {
-        console.log("All Events:\n", allEvents, "\nClients events:\n", events);
-    })
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
@@ -21,7 +24,6 @@ export default function ClientPage() {
             <VStack style={{height: '100%', width: '70%', paddingTop: '1rem'}}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', padding: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                <Box maxW='xl' maxH='lg'>
                     <Table variant='striped' size='lg' style={{marginBottom: '2rem'}}>
                         <Thead>
                         <Tr>
@@ -31,20 +33,36 @@ export default function ClientPage() {
                             <Th>Amount</Th>
                         </Tr>
                         </Thead>
-                        {events.map(event => {
-                            return (
-                                <Tr>
-                                    <Td>{event.type}</Td>
-                                    <Td>{event.details ? event.details : '-'}</Td>
-                                    <Td>{event.duration ? event.duration : '-'}</Td>
-                                    <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
-                                </Tr>
+                        <Tbody>
+                            {events.map(event => {
+                                return (
+                                    <Tr key={event.id}>
+                                        <Td>{event.type}</Td>
+                                        <Td>{event.details ? event.details : '-'}</Td>
+                                        <Td>{event.duration ? event.duration : '-'}</Td>
+                                        <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
+                                    </Tr>
+                                )}
                             )}
-                        )}
+                        </Tbody>
                     </Table>
-                </Box>
+                    <Modal motionPreset="slideInBottom" onClose={onClose} isOpen={isOpen}>
+                        <ModalOverlay />
+                        <ModalContent pb={5}>
+                            <ModalHeader>New Client</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                    <AddEventForm />
+                            </ModalBody>
+                        </ModalContent>
+                    </Modal>
+                <Button 
+                    variant="outline"
+                    color="white" 
+                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}}
+                    onClick={onOpen}
+                >Add Event</Button>
             </VStack>
-           
         </>
     )
 }
