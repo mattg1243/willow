@@ -1,19 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
 import { HStack, Button, Box, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from "axios"
+import { useSelector } from 'react-redux';
 import ClientTable from "./ClientTable"
 import AddClientForm from "./AddClientForm";
 import Header from "./Header";
-import { useColorMode } from '@chakra-ui/color-mode'
+import { useColorMode } from '@chakra-ui/color-mode';
 
 export default function Dashboard(props) {
 
-    const { colorMode } = useColorMode()
-    const isDark = colorMode === 'dark'
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
     
     const [isShown, setIsShown] = useState(false);
 
