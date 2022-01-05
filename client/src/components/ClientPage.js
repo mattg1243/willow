@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, VStack, Heading, Text, Table, Thead, Tr, Th, Td } from '@chakra-ui/react';
+import { Box, VStack, Heading, Text, Table, Thead, Tr, Th, Td, Divider } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Header from './Header';
