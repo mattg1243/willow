@@ -16,12 +16,7 @@ export default function Dashboard(props) {
     const isDark = colorMode === 'dark'
     
     const [isShown, setIsShown] = useState(false);
-
-    const clients = useSelector((state) => {return state.user.clients});
     
-    useEffect(() => {
-        console.log(clients);
-    })
     return (
         <>
             <Header />
