@@ -24,10 +24,12 @@ const renderClientPage = async (req, res) => {
 }
 
 const addEvent = (req, res) => {
+    console.log("req.body:\n", req.body);
     let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
+    console.log("time:\n", time);
     let amount = 0;
     
-    if (req.body.type == 'Retainer') { // need to do something similar for refund type
+    if (req.body.type == 'Retainer') {
 
         amount = req.body.amount;
 
@@ -49,8 +51,9 @@ const addEvent = (req, res) => {
             type: req.body.type, 
             detail: req.body.detail, 
             duration: time, 
-            rate: req.body.rate, 
-            amount: parseFloat(amount).toFixed(2), newBalance: 0 
+            rate: parseFloat(req.body.rate), 
+            amount: parseFloat(amount).toFixed(2), 
+            newBalance: 0 
         });
         // saving event to db
         event.save(function(err, event) {
@@ -60,13 +63,11 @@ const addEvent = (req, res) => {
             if (err) return console.error(err);
 
             console.log(result);
+            helpers.recalcBalance(req.params.id);
+            helpers.getEvents(req, res);
+            console.log('Event added')
         })
-
-        helpers.recalcBalance(req.params.id);
-
-        console.log('Event added')
-
-    })
+    }).catch(err => console.error(err));
 }
 
 const updateEvent = (req, res) => {
