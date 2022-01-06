@@ -7,6 +7,11 @@ const userReducer = (state =  {}, action) => {
                 ...state,
                 clients: action.payload
             }
+        case 'getEvents':
+            return {
+                ...state,
+                events: action.payload
+            }
         default:
             return {};
     }
