@@ -7,11 +7,10 @@ import {
     Divider,  
     Select
 } from '@chakra-ui/react';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { getEvents } from '../actions';
 /*
 const event = new Event({ 
         clientID: req.body.clientID, 
@@ -33,13 +32,40 @@ export default function AddEventForm(props) {
     const [rate, setRate] = useState(0);
     const [amount, setAmount] = useState(0);
 
+    const token = useSelector(state => state.user.token);
+    const user = useSelector(state => state.user.user.id);
+    const dispatch = useDispatch();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+
+    const saveEvent = async () => {
+        const response = await axios.post(`http://localhost:3000/client/${props.id}/addevent`,
+        {
+            clientID: props.id,
+            date: date,
+            type: type,
+            detail: details,
+            hours: hours,
+            minutes: minutes,
+            rate: rate,
+            amount: parseFloat(amount).toFixed(2), 
+            newBalance: 0
+        },
+        { headers: {
+            Authorization: 'Bearer ' + token}
+        }).then(response => {
+            console.log(response); 
+            dispatch(getEvents(response.data));
+            props.onClose();
+        }).catch(err => {
+            console.error(err)
+        })
+    }
 
     return (
         <>
             <VStack justifyContent='center'>  
-                <DatePicker/>
+                <Input type='date' onChange={(e) => { setDate(e.target.value) }}/>
                 <Select placeholder="Event Type" onChange={(e) => { setType(e.target.value) }}>
                     <option value='Meeting'>Meeting</option>
                     <option value='Email'>Email</option>
@@ -83,6 +109,7 @@ export default function AddEventForm(props) {
                     variant="outline"
                     color="white" 
                     style={{backgroundColor: isDark? "#63326E" : '#03b126', marginTop: '1rem'}}
+                    onClick={() => { saveEvent(); }}
                 >Save</Button>
             </VStack>
         </>
