@@ -15,7 +15,6 @@ export default function Login() {
     const navigate = useNavigate();
 
     const loginUser = async () => {
-        console.log(username + '\n' + password);
         axios.post("/login", {
             username: username,
             password: password,
