@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ export default function ClientPage() {
                     <Table variant='striped' size='lg' style={{marginBottom: '2rem'}}>
                         <Thead>
                         <Tr>
+                            <Th>Date</Th>
                             <Th>Type</Th>
                             <Th>Details</Th>
                             <Th>Time</Th>
@@ -37,6 +39,7 @@ export default function ClientPage() {
                             {events.map(event => {
                                 return (
                                     <Tr key={event.id}>
+                                        <Td>{moment.utc(event.date).format("MM/DD/YY")}</Td>
                                         <Td>{event.type}</Td>
                                         <Td>{event.details ? event.details : '-'}</Td>
                                         <Td>{event.duration ? event.duration : '-'}</Td>
@@ -52,7 +55,7 @@ export default function ClientPage() {
                             <ModalHeader>New Client</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm />
+                                    <AddEventForm id={ id } onClose={onClose}/>
                             </ModalBody>
                         </ModalContent>
                     </Modal>
