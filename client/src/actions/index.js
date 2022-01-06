@@ -11,3 +11,10 @@ export const getClients = (clients) => {
         payload: clients,
     }
 }
+
+export const getEvents = (events) => {
+    return {
+        type: 'getClients',
+        payload: events,
+    }
+}
