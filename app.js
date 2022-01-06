@@ -14,7 +14,6 @@ const cors = require('cors');
 
 require('dotenv').config();
 // check for production or dev env
-let devEnv = process.env.NODE_ENV !== 'production';
 
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
