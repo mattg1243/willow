@@ -10,10 +10,6 @@ export default function ClientTable() {
     const clients = useSelector(state => state.user.clients);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(clients);
-    })
-
     return (
         <>
             <Table size='lg' style={{marginBottom: '2rem'}}>
