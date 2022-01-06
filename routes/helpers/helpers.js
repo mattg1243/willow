@@ -58,25 +58,6 @@ const verifyJWT = async (req, res, next) => {
     }
 }
 
-const fixDB = (clientID) => {
-    // find all events that belong to the client and store the IDs in an array
-    Event.find({ clientID: clientID }, (err, events) =>{
-        if (err) return console.error(err);
-
-        const eventIDs = [];
-        for (let i = 0; i < events.length; i++) {
-            eventIDs.push(events[i]._id);
-        }
-        console.log('Event IDs: \n', eventIDs[0], eventIDs[1])
-        // fill the clients sessions array with the queried IDs
-        Client.findOneAndUpdate({ _id: clientID }, { $set: { sessions: eventIDs }}, (err, client) => {
-            if (err) return console.error(err);
-
-            console.log("New Sessions:\n" + client.sessions);
-        }).clone();
-    })
-}
-
 const getAllData = async(req, res) => {
     // create blank response object to fill with data to send to client
     let response = {
@@ -133,8 +114,16 @@ const getClients = (req, res) => {
     }).clone();
 }
 
+const getEvents = (req, res) => {
+    Event.find({ clientID: req.body.clientID }, (err, events) => {
+        if (err) return console.error(err);
+
+        res.json(events);
+    }).clone();
+}
+
 module.exports.recalcBalance = recalcBalance;
 module.exports.verifyJWT = verifyJWT;
 module.exports.getAllData = getAllData;
 module.exports.getClients = getClients;
-module.exports.fixDB = fixDB;
+module.exports.getEvents = getEvents;
