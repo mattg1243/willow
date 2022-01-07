@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, IconButton } from '@chakra-ui/react';
+import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, IconButton, ModalFooter } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { loginAction } from '../actions';
@@ -13,7 +13,9 @@ import axios from 'axios';
 
 export default function ClientPage() {
     
-    const [isShown, setIsShown] = useState(false);
+    const [addIsShown, setAddIsShown] = useState(false);
+    const [deleteIsShown, setDeleteIsShown] = useState(false);
+    const [toDelete, setToDelete] = useState('');
 
     const { id } = useParams();
     const client = useSelector(state => state.user.clients.find(client => client._id === id));
@@ -68,7 +70,7 @@ export default function ClientPage() {
                                             <IconButton 
                                                 icon={<DeleteIcon />} 
                                                 size="sm" 
-                                                onClick={() => { deleteEvent(event._id) }}
+                                                onClick={() => { setDeleteIsShown(true); setToDelete(event._id) }}
                                             />
                                         </Td>
                                     </Tr>
@@ -76,21 +78,36 @@ export default function ClientPage() {
                             )}
                         </Tbody>
                     </Table>
-                    <Modal motionPreset="slideInBottom" onClose={() => {setIsShown(false)}} isOpen={isShown}>
+                    <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
                             <ModalHeader>New Client</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm id={ id } setIsShown={ setIsShown }/>
+                                    <AddEventForm id={ id } setIsShown={ setAddIsShown }/>
                             </ModalBody>
+                        </ModalContent>
+                    </Modal>
+                    <Modal onClose={() => {setDeleteIsShown(false)}} isOpen={deleteIsShown}>
+                        <ModalOverlay />
+                        <ModalContent pb={5}>
+                            <ModalHeader>Delete Event</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.5rem'}}>
+                                    <h3 style={{fontSize: '1.25em'}}>Are you sure you want to delete this event?</h3>
+                                    <p style={{color: 'red'}}>This cannot be undone</p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button colorScheme='red' mr={3} onClick={() => { deleteEvent(toDelete); setDeleteIsShown(false) }}>Delete</Button>
+                                <Button variant='ghost' onClick={() => { setDeleteIsShown(false); }}>Cancel</Button>
+                            </ModalFooter>
                         </ModalContent>
                     </Modal>
                 <Button 
                     variant="outline"
                     color="white" 
                     style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}}
-                    onClick={() => {setIsShown(true)}}
+                    onClick={() => {setAddIsShown(true)}}
                 >Add Event</Button>
             </VStack>
         </>
