@@ -6,27 +6,31 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import rootReducer from './reducers';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import persistedReducer from './reducers';
 import Dashboard from './components/Dashboard';
 
 const store = createStore(
-  rootReducer,
+  persistedReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
+
+const persistor = persistStore(store);
 
 function App() {
   return (
     <>
       <ChakraProvider>
-      <Provider store={store}>
-          <Router>
-            <Routes>
-              <Route path='/' element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/clients' element={<Dashboard />} />
-              <Route path='/client/:id' element={<ClientPage />} />
-            </Routes>
-          </Router>
+        <Provider store={store}>
+            <Router>
+              <Routes>
+                <Route path='/' element={<Login />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/clients' element={<Dashboard />} />
+                <Route path='/client/:id' element={<ClientPage />} />
+              </Routes>
+            </Router>
         </Provider>
       </ChakraProvider>
     </>

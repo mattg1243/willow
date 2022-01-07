@@ -7,8 +7,12 @@ import { Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 
 export default function ClientTable() {
     
-    const clients = useSelector(state => state.user.clients);
+    const stateStr = window.sessionStorage.getItem('persist:root');
+    const state = JSON.parse(stateStr);
+    const clients = JSON.parse(state.clients);
     const navigate = useNavigate();
+
+    useEffect(() => {console.log(stateStr)});
 
     return (
             <Table size='lg' style={{marginBottom: '2rem'}} variant='striped'>

@@ -53,7 +53,7 @@ export default function HamburgerMenu() {
                 </MenuItem>
             </MenuList>
         </Menu>
-        <QuickStatement statementDrawerOpen={statementDrawerOpen} setStatementDrawerOpen={setStatementDrawerOpen}/>
+        
         </>
     )
 }
