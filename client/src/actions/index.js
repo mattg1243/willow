@@ -14,7 +14,7 @@ export const getClients = (clients) => {
 
 export const getEvents = (events) => {
     return {
-        type: 'getClients',
+        type: 'getEvents',
         payload: events,
     }
 }
