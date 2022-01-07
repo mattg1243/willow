@@ -14,6 +14,12 @@ export default function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const checkStorage = () => {
+        if(window.sessionStorage.getItem('persist:root') != null) {
+            navigate('/clients')
+        }
+    }
+
     const loginUser = async () => {
         axios.post("/login", {
             username: username,
@@ -22,11 +28,11 @@ export default function Login() {
         .then((response) => {
             if (response.data) {
                 dispatch(loginAction(response.data))
+                setTimeout(checkStorage, 1000)
             } else {
                 return <h1>err</h1>
             }
         })
-        .then(() => {navigate('/clients')})
         .catch(err => {console.log(err.response)})
     }
     window.loginUser = loginUser;
