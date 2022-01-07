@@ -23,8 +23,12 @@ export default function HamburgerMenu() {
     
     const { colorMode } = useColorMode()
     const isDark = colorMode === 'dark'
-
     const navigate = useNavigate();
+
+    const logout = () => {
+        window.sessionStorage.removeItem('persist:root');
+        navigate('/');
+    }
 
     useEffect(() => {console.log(statementDrawerOpen)})
 
@@ -48,7 +52,7 @@ export default function HamburgerMenu() {
                 <MenuItem icon={<IoSettingsSharp color={isDark? "white" : "black"}/>} color={isDark? "white" : "black"}>
                     Settings
                 </MenuItem>
-                <MenuItem icon={<BiLogOut color="#EC4E20" />} color={isDark? "white" : "black"}>
+                <MenuItem icon={<BiLogOut color="#EC4E20" />} color={isDark? "white" : "black"} onClick={() => { logout(); }}>
                     Logout
                 </MenuItem>
             </MenuList>
