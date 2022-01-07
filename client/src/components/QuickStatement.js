@@ -23,15 +23,20 @@ import {
 import { useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { AddIcon } from '@chakra-ui/icons'
+import { useEffect } from 'react';
 
-export default function QuickStatement(props) {
+export default async function QuickStatement(props) {
   
   const [autoSelection, setAutoSelection] = useState(false);
   
-  const clients = useSelector(state => state.user.clients);
+  const stateStr = window.sessionStorage.getItem('persist:root');
+  const state = await JSON.parse(stateStr);
+  const clients = state.clients;
 
   const { colorMode } = useColorMode()
   const isDark = colorMode === 'dark'
+
+  useEffect(() => {console.log(stateStr)})
   
   return (
     <>
@@ -67,7 +72,7 @@ export default function QuickStatement(props) {
                   <h3>or</h3>
                 <Divider />
               </HStack>
-              <Stack spacing={4} direction="column    "onClick={() => {setAutoSelection(false)}}>
+              <Stack spacing={4} direction="column"onClick={() => {setAutoSelection(false)}}>
                 <Box>
                     <Text mb="8px">Start Date</Text>
                     <Input type="date" isDisabled={autoSelection ? true: false}/>

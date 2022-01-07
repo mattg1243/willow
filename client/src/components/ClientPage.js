@@ -18,14 +18,18 @@ export default function ClientPage() {
     const [toDelete, setToDelete] = useState('');
 
     const { id } = useParams();
-    const client = useSelector(state => state.user.clients.find(client => client._id === id));
-    const events = useSelector(state => state.user.events.filter(event => event.clientID === id));
-    const token = useSelector(state => state.user.token);
-    const user = useSelector(state => state.user.user);
+    
+    const stateStr = window.sessionStorage.getItem('persist:root');
+    const state = JSON.parse(stateStr);
+    const token = JSON.parse(state.token);
+    const user = JSON.parse(state.user);
+    const clients = JSON.parse(state.clients);
+    const client = clients.find(client => client._id === id);
+    const allEvents = JSON.parse(state.events);
+    const events = allEvents.filter(event => event.clientID === id);
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
 
     const deleteEvent = async (eventID) => {
@@ -38,6 +42,7 @@ export default function ClientPage() {
         }).then((response) => {
             console.log(response);
             dispatch(loginAction(response.data));
+            setInterval(() => {window.location.reload();}, 10);
         }).catch(err => console.error(err));
     }
 
