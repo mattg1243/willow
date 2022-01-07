@@ -21,7 +21,7 @@ export default function Login() {
         }).then((response) => {
             if (response.data) {
                 dispatch(loginAction(response.data))
-                navigate('/clients');
+                setInterval(() => {navigate('/clients')}, 10);
             } else {
                 return <h1>err</h1>
             }
