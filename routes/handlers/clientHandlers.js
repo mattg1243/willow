@@ -23,8 +23,8 @@ const renderClientPage = async (req, res) => {
     })
 }
 
-const addEvent = (req, res) => {
-    console.log("req.body:\n", req.body);
+const addEvent = async (req, res) => {
+    console.log("req:\n", req.body);
     let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
     console.log("time:\n", time);
     let amount = 0;
@@ -39,13 +39,12 @@ const addEvent = (req, res) => {
 
         } else {
 
-        amount = -(time * req.body.rate)
+        amount = -(time * parseFloat(req.body.rate)).toFixed(2)
     
      }
+     console.log("amount:\n", amount)
 
-        if (err) return console.error(err);
-
-        const event = new Event({ 
+        const event = await new Event({ 
             clientID: req.body.clientID, 
             date: req.body.date, 
             type: req.body.type, 
@@ -56,18 +55,18 @@ const addEvent = (req, res) => {
             newBalance: 0 
         });
         // saving event to db
-        event.save(function(err, event) {
+        event.save((err, event) => {
         if (err) return console.error(err);
-
+        console.log(event);
         Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
             if (err) return console.error(err);
 
             console.log(result);
-            helpers.recalcBalance(req.params.id);
-            helpers.getEvents(req, res);
+            helpers.recalcBalance(req.body.clientID);
+            helpers.getAllData(req, res);
             console.log('Event added')
         })
-    }).catch(err => console.error(err));
+    });
 }
 
 const updateEvent = (req, res) => {
@@ -95,26 +94,24 @@ const updateEvent = (req, res) => {
 }
 
 const deleteEvent = (req, res) => {
+    console.log(req.body);
     try {
-        Event.findByIdAndDelete(req.params.eventid, function (err, event) {
+        Event.findByIdAndDelete(req.body.eventID, (err, event) => {
 
             if (err) return console.error(err);
-    
-            Client.findOneAndUpdate({ _id: req.params.id }, { $inc: { balance: - parseInt(event.amount.toString()) }}, function(err, result) {
+            console.log("Event:\n", event)
+            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - parseInt(event.amount.toString()) }}, function(err, result) {
                     
                 if (err) console.error(err);
     
-                else console.log(result);
+                else {console.log(result); helpers.getAllData(req, res);}
             })
-    
         })
-        res.redirect(`/client/${req.params.id}`);
-
     } catch (err) { throw err ; }
 }
 
 const renderEventPage = (req, res) => {
-    try{
+    try {
         Event.findOne({_id: req.params.eventid}, function(err, event) {
         
             if (err) return console.error(err);
