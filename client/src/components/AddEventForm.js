@@ -31,7 +31,7 @@ export default function AddEventForm(props) {
     const isDark = colorMode === 'dark';
 
     const saveEvent = async () => {
-        const response = await axios.post(`http://localhost:3000/client/${props.id}/addevent`,
+        const response = await axios.post(`/client/${props.id}/addevent`,
         {
             clientID: props.id,
             date: date,

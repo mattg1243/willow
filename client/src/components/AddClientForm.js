@@ -22,7 +22,7 @@ export default function AddClientForm(props) {
 
     const addClient = async () => {
         
-        const response = await axios.post('http://localhost:3000/user/newclient', {
+        const response = await axios.post('/user/newclient', {
             fname: fname,
             lname: lname,
             email: email,
