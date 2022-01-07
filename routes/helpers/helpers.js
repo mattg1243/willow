@@ -36,8 +36,8 @@ function recalcBalance(clientID) {
 
 const verifyJWT = async (req, res, next) => {
     // extract token from the req header
-    const header = req.headers["authorization"]
-    const token = header.split(' ')[1];
+    console.log("Token:\n" + req.body.token);
+    const token = req.body.token;
 
     if (!token) {
         res.status(401).send("No token found");
@@ -60,6 +60,7 @@ const verifyJWT = async (req, res, next) => {
 
 const getAllData = async(req, res) => {
     // create blank response object to fill with data to send to client
+    console.log("user:\n", req.body.user)
     let response = {
         token: "",
         user: {
@@ -72,9 +73,18 @@ const getAllData = async(req, res) => {
         clients: [],
         events: [],
     }
+    let query;
+    // check if this request is coming from a login action or 
+    // a refresh action and create the DB query accordingly
+    if (req.body.user) {
+        query = { _id: req.body.user}
+    } else {
+        query = { username: req.body.username}
+    }
+    console.log("Query:\n", query)
     // get the user from the database
     // this is only safe because user has already been authenticated through passport middleware
-    await User.findOne({ username: req.body.username }, (err, user) => {
+    await User.findOne(query, (err, user) => {
         if (err) { return console.error(err); }
         // fill user object with needed data
         response.user.id = user._id;
