@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { HStack, Button, Box, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+import { HStack, VStack, Button, Box, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Heading } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import ClientTable from "./ClientTable"
 import AddClientForm from "./AddClientForm";
@@ -17,7 +17,8 @@ export default function Dashboard(props) {
     return (
         <>
             <Header />
-            <Box maxW='xl' maxH='lg'>
+            <VStack style={{height: '100%', width: '70%', paddingTop: '1rem'}}>
+            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', marginBottom: '2rem'}}>Clients</Heading>
                 <ClientTable />
                 <HStack style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                     <Button 
@@ -37,7 +38,7 @@ export default function Dashboard(props) {
                         </ModalBody>
                     </ModalContent>
                 </Modal>
-            </Box>
+            </VStack>
         </>
     )
 }
