@@ -33,7 +33,7 @@ export default function ClientPage() {
     const dispatch = useDispatch();
 
     const deleteEvent = async (eventID) => {
-        const response = await axios.post(`http://localhost:3000/client/deleteevent`,
+        const response = await axios.post(`/client/deleteevent`,
         {
             clientID: id,
             eventID: eventID, 
