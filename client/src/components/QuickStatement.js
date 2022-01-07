@@ -25,13 +25,13 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { AddIcon } from '@chakra-ui/icons'
 import { useEffect } from 'react';
 
-export default async function QuickStatement(props) {
+export default function QuickStatement(props) {
   
   const [autoSelection, setAutoSelection] = useState(false);
   
   const stateStr = window.sessionStorage.getItem('persist:root');
-  const state = await JSON.parse(stateStr);
-  const clients = state.clients;
+  const state = JSON.parse(stateStr);
+  const clients = JSON.parse(state.clients);
 
   const { colorMode } = useColorMode()
   const isDark = colorMode === 'dark'
