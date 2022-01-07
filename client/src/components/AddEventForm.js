@@ -10,18 +10,8 @@ import {
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { getEvents } from '../actions';
-/*
-const event = new Event({ 
-        clientID: req.body.clientID, 
-        date: req.body.date, 
-        type: req.body.type, 
-        detail: req.body.detail, 
-        duration: time, 
-        rate: req.body.rate, 
-        amount: parseFloat(amount).toFixed(2), newBalance: 0 
-    });
-*/
+import { loginAction } from '../actions';
+
 export default function AddEventForm(props) {
     // states for input fields
     const [date, setDate] = useState(new Date());
@@ -33,7 +23,7 @@ export default function AddEventForm(props) {
     const [amount, setAmount] = useState(0);
 
     const token = useSelector(state => state.user.token);
-    const user = useSelector(state => state.user.user.id);
+    const user = useSelector(state => state.user.user);
     const dispatch = useDispatch();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -49,14 +39,13 @@ export default function AddEventForm(props) {
             minutes: minutes,
             rate: rate,
             amount: parseFloat(amount).toFixed(2), 
-            newBalance: 0
-        },
-        { headers: {
-            Authorization: 'Bearer ' + token}
+            newBalance: 0,
+            user: user.id,
+            token: token,
         }).then(response => {
             console.log(response); 
-            dispatch(getEvents(response.data));
-            props.onClose();
+            dispatch(loginAction(response.data));
+            props.setIsShown(false);
         }).catch(err => {
             console.error(err)
         })
