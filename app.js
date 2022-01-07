@@ -10,6 +10,7 @@ const mongoStore = require('connect-mongo');
 const passport = require('./node_modules/passport')
 const helmet = require('helmet');
 const User = require('./models/user-model')
+const helpers = require('./routes/helpers/helpers');
 const cors = require('cors');
 
 require('dotenv').config();
@@ -103,7 +104,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
-app.use('/client', clientRouter);
+app.use('/client', helpers.verifyJWT, clientRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
