@@ -13,7 +13,7 @@ export default function ClientTable() {
     return (
             <Table size='lg' style={{marginBottom: '2rem'}} variant='striped'>
                 <Thead>
-                    <Tr>add
+                    <Tr>
                         <Th>Client</Th>
                         <Th>Balance</Th>
                     </Tr>
