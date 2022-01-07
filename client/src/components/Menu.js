@@ -12,7 +12,6 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { BiLogOut } from 'react-icons/bi';
-import { MdDashboardCustomize } from 'react-icons/md';
 import { FaFileInvoiceDollar } from 'react-icons/fa';
 import { BsFillPersonLinesFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
