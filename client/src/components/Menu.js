@@ -3,7 +3,6 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    MenuGroup,
     MenuDivider,
     IconButton,
 } from '@chakra-ui/react';
@@ -45,7 +44,7 @@ export default function HamburgerMenu() {
                 <MenuItem icon={<BsFillPersonLinesFill color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/clients') }} >
                     Clients
                 </MenuItem>
-                <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true) }}>
+                <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true); }}>
                     Quick Statement
                 </MenuItem>
                 <MenuDivider />

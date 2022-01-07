@@ -18,14 +18,16 @@ export default function Login() {
         axios.post("/login", {
             username: username,
             password: password,
-        }).then((response) => {
+        })
+        .then((response) => {
             if (response.data) {
                 dispatch(loginAction(response.data))
-                setInterval(() => {navigate('/clients')}, 10);
             } else {
                 return <h1>err</h1>
             }
-        }).catch(err => {console.log(err.response)})
+        })
+        .then(() => {navigate('/clients')})
+        .catch(err => {console.log(err.response)})
     }
     window.loginUser = loginUser;
 
