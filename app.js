@@ -20,7 +20,7 @@ const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
 const clientRouter = require('./routes/client');
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || 3001;
 
 var app = express();
 app.locals.moment = require('moment');
