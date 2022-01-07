@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState }from 'react'
 import {
+  Divider,
   Drawer,
   DrawerBody,
   DrawerFooter,
@@ -7,24 +8,25 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
   Box,
   Select,
   Input,
   FormLabel,
   Button,
   Stack,
+  VStack,
   RadioGroup,
   Radio,
-  Text
+  Text,
+  HStack
 } from '@chakra-ui/react'
 import { useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { AddIcon } from '@chakra-ui/icons'
 
-function QuickStatement() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const firstField = React.useRef()
+export default function QuickStatement(props) {
+  
+  const [autoSelection, setAutoSelection] = useState(false);
   
   const clients = useSelector(state => state.user.clients);
 
@@ -33,31 +35,18 @@ function QuickStatement() {
   
   return (
     <>
-      <Button leftIcon={<AddIcon />} colorScheme="blue" onClick={onOpen}>
-        Quick Statement
-      </Button>
       <Drawer
-        isOpen={isOpen}
-        placement="right"
-        initialFocusRef={firstField}
-        onClose={onClose}
+        isOpen={props.statementDrawerOpen}
+        placement="left"
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton />
+          <DrawerCloseButton onClick={() => { props.setStatementDrawerOpen(false) }}/>
           <DrawerHeader borderBottomWidth="1px">Quick Statement</DrawerHeader>
 
           <DrawerBody>
-            <Stack spacing="24px">
+            <Stack spacing="24px" style={{marginTop: '2rem'}}>
               <Box>
-                <RadioGroup >
-                  <Stack spacing={4} direction="row">
-                    <Radio value="1" defaultChecked="false">Current Month</Radio>
-                    <Radio value="2" defaultChecked="false">Current Year</Radio>
-                  </Stack>
-                </RadioGroup>
-              </Box>
-
               <Box>
                 <FormLabel htmlFor="owner">Select Client</FormLabel>
                 <Select id="owner" defaultValue="segun">
@@ -66,29 +55,36 @@ function QuickStatement() {
                     )})}
                 </Select>
               </Box>
-
-              <Box>
-                  <Text mb="8px">Start Date</Text>
-                  <Input type="date" />
+                <RadioGroup onClick={() => { setAutoSelection(true) }} style={{marginTop: '2rem'}}>
+                  <VStack spacing={4} direction="row">
+                    <Radio value="1" defaultChecked="false" isDisabled={autoSelection ? false : true}>Current Month</Radio>
+                    <Radio value="2" defaultChecked="false" isDisabled={autoSelection ? false : true}>Current Year</Radio>
+                  </VStack>
+                </RadioGroup>
               </Box>
-
-              <Box>
-                  <Text mb="8px">End Date</Text>
-                  <Input type="date" />
-              </Box>
+              <HStack>
+                <Divider />
+                  <h3>or</h3>
+                <Divider />
+              </HStack>
+              <Stack spacing={4} direction="column    "onClick={() => {setAutoSelection(false)}}>
+                <Box>
+                    <Text mb="8px">Start Date</Text>
+                    <Input type="date" isDisabled={autoSelection ? true: false}/>
+                </Box>
+                <Box>
+                    <Text mb="8px">End Date</Text>
+                    <Input type="date" isDisabled={autoSelection ? true: false}/>
+                </Box>
+              </Stack>
             </Stack>
           </DrawerBody>
 
-          <DrawerFooter borderTopWidth="1px" backgroundColor={isDark? "black" : "white"}>
-            <Button variant="outline" mr={20} colorScheme="red" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Submit</Button>
+          <DrawerFooter >
+            <Button style={{backgroundColor: isDark? "#63326E" : "#03b126", color: 'white'}}>Download</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>
   )
 }
-
-export default QuickStatement
