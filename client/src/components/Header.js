@@ -4,6 +4,7 @@ import HamburgerMenu from './Menu';
 import { useColorMode } from '@chakra-ui/color-mode'
 
 export default function Header() {
+    
     const { colorMode } = useColorMode()
     const isDark = colorMode === 'dark'
 
