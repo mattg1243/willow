@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
+import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, IconButton } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { loginAction } from '../actions';
+import { useDispatch } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
+import { DeleteIcon } from '@chakra-ui/icons';
 import Header from './Header';
 import AddEventForm from './AddEventForm';
+import axios from 'axios';
 
 export default function ClientPage() {
     
@@ -14,10 +18,26 @@ export default function ClientPage() {
     const { id } = useParams();
     const client = useSelector(state => state.user.clients.find(client => client._id === id));
     const events = useSelector(state => state.user.events.filter(event => event.clientID === id));
+    const token = useSelector(state => state.user.token);
+    const user = useSelector(state => state.user.user);
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const dispatch = useDispatch();
+
+    const deleteEvent = async (eventID) => {
+        const response = await axios.post(`http://localhost:3000/client/deleteevent`,
+        {
+            clientID: id,
+            eventID: eventID, 
+            user: user.id,
+            token: token,
+        }).then((response) => {
+            console.log(response);
+            dispatch(loginAction(response.data));
+        }).catch(err => console.error(err));
+    }
 
     return (
         <>
@@ -38,24 +58,31 @@ export default function ClientPage() {
                         <Tbody>
                             {events.map(event => {
                                 return (
-                                    <Tr key={event.id}>
+                                    <Tr key={event._id}>
                                         <Td>{moment.utc(event.date).format("MM/DD/YY")}</Td>
                                         <Td>{event.type}</Td>
-                                        <Td>{event.details ? event.details : '-'}</Td>
+                                        <Td>{event.detail ? event.detail : '-'}</Td>
                                         <Td>{event.duration ? event.duration : '-'}</Td>
                                         <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
+                                        <Td>
+                                            <IconButton 
+                                                icon={<DeleteIcon />} 
+                                                size="sm" 
+                                                onClick={() => { deleteEvent(event._id) }}
+                                            />
+                                        </Td>
                                     </Tr>
                                 )}
                             )}
                         </Tbody>
                     </Table>
-                    <Modal motionPreset="slideInBottom" onClose={onClose} isOpen={isOpen}>
+                    <Modal motionPreset="slideInBottom" onClose={() => {setIsShown(false)}} isOpen={isShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
                             <ModalHeader>New Client</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm id={ id } onClose={onClose}/>
+                                    <AddEventForm id={ id } setIsShown={ setIsShown }/>
                             </ModalBody>
                         </ModalContent>
                     </Modal>
@@ -63,7 +90,7 @@ export default function ClientPage() {
                     variant="outline"
                     color="white" 
                     style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}}
-                    onClick={onOpen}
+                    onClick={() => {setIsShown(true)}}
                 >Add Event</Button>
             </VStack>
         </>
