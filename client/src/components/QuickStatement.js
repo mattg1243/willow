@@ -20,9 +20,7 @@ import {
   Text,
   HStack
 } from '@chakra-ui/react'
-import { useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { AddIcon } from '@chakra-ui/icons'
 import { useEffect } from 'react';
 
 export default function QuickStatement(props) {
@@ -36,7 +34,7 @@ export default function QuickStatement(props) {
   const { colorMode } = useColorMode()
   const isDark = colorMode === 'dark'
 
-  useEffect(() => {console.log(stateStr)})
+  useEffect(() => {console.log("QuickStatement mounted")})
   
   return (
     <>
@@ -56,7 +54,7 @@ export default function QuickStatement(props) {
                 <FormLabel htmlFor="owner">Select Client</FormLabel>
                 <Select id="owner" defaultValue="segun">
                   {clients.map(client => {return (
-                        <option value={client}>{client.fname + ' ' + client.lname}</option>
+                        <option key={`${client._id}`} value={client}>{client.fname + ' ' + client.lname}</option>
                     )})}
                 </Select>
               </Box>
