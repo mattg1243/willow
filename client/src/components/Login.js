@@ -20,9 +20,8 @@ export default function Login() {
             password: password,
         }).then((response) => {
             if (response.data) {
-                console.log(response.data)
                 dispatch(loginAction(response.data))
-                navigate('/clients');;
+                navigate('/clients');
             } else {
                 return <h1>err</h1>
             }

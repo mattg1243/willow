@@ -22,8 +22,10 @@ export default function AddEventForm(props) {
     const [rate, setRate] = useState(0);
     const [amount, setAmount] = useState(0);
 
-    const token = useSelector(state => state.user.token);
-    const user = useSelector(state => state.user.user);
+    const stateStr = window.sessionStorage.getItem('persist:root');
+    const state = JSON.parse(stateStr);
+    const token = JSON.parse(state.token);
+    const user = JSON.parse(state.user);
     const dispatch = useDispatch();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -46,6 +48,7 @@ export default function AddEventForm(props) {
             console.log(response); 
             dispatch(loginAction(response.data));
             props.setIsShown(false);
+            setInterval(() => {window.location.reload();}, 100);
         }).catch(err => {
             console.error(err)
         })

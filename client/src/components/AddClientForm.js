@@ -14,8 +14,10 @@ export default function AddClientForm(props) {
 
     const { colorMode } = useColorMode()
     const isDark = colorMode === 'dark'
-    const token = useSelector(state => state.user.token);
-    const user = useSelector(state => state.user.user.id);
+    const stateStr = window.sessionStorage.getItem('persist:root');
+    const state = JSON.parse(stateStr);
+    const token = JSON.parse(state.token);
+    const user = JSON.parse(state.user);
     const dispatch = useDispatch();
 
     const addClient = async () => {
@@ -25,12 +27,13 @@ export default function AddClientForm(props) {
             lname: lname,
             email: email,
             phonenumber: phone,
-            user: user,
+            user: user.id,
             token: token,
         }).then(response => {
             console.log(response); 
             props.setIsShown();
             dispatch(getClients(response.data));
+            setInterval(() => {window.location.reload();}, 100)
         }).catch(err => 
             {console.error(err)
         })
