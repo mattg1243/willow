@@ -25,10 +25,8 @@ export default function AddClientForm(props) {
             lname: lname,
             email: email,
             phonenumber: phone,
-            user: user
-        },
-        { headers: {
-            Authorization: 'Bearer ' + token}
+            user: user,
+            token: token,
         }).then(response => {
             console.log(response); 
             props.setIsShown();
