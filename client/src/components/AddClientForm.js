@@ -33,7 +33,7 @@ export default function AddClientForm(props) {
             console.log(response); 
             props.setIsShown();
             dispatch(getClients(response.data));
-            setInterval(() => {window.location.reload();}, 100)
+            setInterval(() => {window.location.reload();}, 2000)
         }).catch(err => 
             {console.error(err)
         })

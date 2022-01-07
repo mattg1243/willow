@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input, InputGroup, Container, VStack, HStack, Button, Box } from '@chakra-ui/react';
-import { useSelector } from "react-redux";
 import { Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 
 export default function ClientTable() {
@@ -12,7 +9,7 @@ export default function ClientTable() {
     const clients = JSON.parse(state.clients);
     const navigate = useNavigate();
 
-    useEffect(() => {console.log(stateStr)});
+    useEffect(() => {console.log("ClientTable mounted")});
 
     return (
             <Table size='lg' style={{marginBottom: '2rem'}} variant='striped'>
