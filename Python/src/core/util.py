@@ -27,43 +27,95 @@ def skele():
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
     return pdf
 
+# Phone Number Formatter
+def phone_formatter(n):
+    return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 # Builds Statement Header
-def _build_statment_header():
-    header = Table(number_of_rows=5, number_of_columns=3)
+def _build_statment_header(provider, client):
+    # Initialize
+    header = Table(number_of_rows=6, number_of_columns=3)
+    
+    # Format Provider Phone Number
+    phone = phone_formatter(provider["phone"])
+    print(phone)
+    
+    # Provider Name
+    header.add(
+        Paragraph(
+            provider["name"], 
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.LEFT
+            
+        )
+    )
+    
+    # Client Name
+    header.add(
+        Paragraph(
+            "Client Name: ",
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.RIGHT
+        )
+    )
+    header.add(
+        Paragraph(
+            client["clientname"]
+        )
+    )
+    
+    # Provider Address
+    header.add(
+        Paragraph(
+            provider["address"]["street"],
+            horizontal_alignment=Alignment.LEFT
+        )
+    )
 
-    # Address1
-    header.add(Paragraph("1600 Waverly Road"))
     # Date Issued
     header.add(
         Paragraph(
-            "Date Issued:", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
+            "Statement Date:", 
+            font="Helvetica-Bold", 
+            horizontal_alignment=Alignment.RIGHT
         )
     )
     now = datetime.now()
     header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
-    # City
-    header.add(Paragraph("San Francisco, Ca"))
-    # Invoice ID ---- Serves no purpose for now
+    
+    # Provider City, Zip Code
     header.add(
-        Paragraph(
-            "Invoice #", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
-        )
+        Paragraph(provider["address"]["cityState"])
     )
-    header.add(Paragraph("%d" % random.randint(1000, 10000)))
-    # Due Date
-    header.add(Paragraph(" "))
-    header.add(
-        Paragraph(
-            "Due Date", font="Helvetica-Bold", horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    header.add(Paragraph("%d/%d/%d" % (now.month + 1, now.day, now.year)))
+    
     # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    
+    # Provider Phone
+    header.add(
+        Paragraph(
+            phone,
+            horizontal_alignment=Alignment.LEFT
+        )
+    )
+    
+    # Spacing
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    # Provider Email
+    header.add(
+        Paragraph(
+            provider["email"]
+        )
+    )
+    
+    # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
 
@@ -74,34 +126,33 @@ def _build_statment_header():
     return header
 
 
-def _build_billing_table(name):
-    # Client's name
-    NAME = name
+def _build_billing_table():
 
     # Build Billing Table
     b_table = Table(number_of_rows=3, number_of_columns=2)
+    
+    # Spacing
+    b_table.add(Paragraph(" "))
+    b_table.add(Paragraph(" "))
+    
+    # Activity
     b_table.add(
         Paragraph(
-            "BILL TO",
+            "Activity:",
             background_color=HexColor("FFFFFF"),
             font="Helvetica-Bold",
             font_color=X11Color("Black"),
         )
     )
-    b_table.add(
-        Paragraph(
-            " ",
-            background_color=HexColor("263238"),
-            font_color=X11Color("White"),
-        )
-    )
-    b_table.add(Paragraph(NAME))
+    
+    # Spacing
     b_table.add(Paragraph(" "))
     b_table.add(Paragraph(" "))
     b_table.add(Paragraph(" "))
 
     b_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     b_table.no_borders()
+    
     return b_table
 
 def std_event(event):
@@ -110,9 +161,10 @@ def std_event(event):
     else:
         return True
 
-def _description_table(session, dates, durations, hourly, amounts, new_balance):
+def _description_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
-    descrip_table = Table(number_of_rows=18, number_of_columns=6)
+    descrip_table = Table(number_of_rows=rows, number_of_columns=6)
+    descrip_table.set_borders_on_all_cells(True, True, True, True)
     for h in ["DATE", "TYPE", "DURATION", "RATE", "AMOUNT", "BALANCE"]:
         descrip_table.add(
             TableCell(
@@ -176,27 +228,31 @@ def _description_table(session, dates, durations, hourly, amounts, new_balance):
 
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    if iter < 18:
-        for row_number in range(iter + 1, 18):
+    print(rows, iter)
+    if iter < rows:
+        for row_number in range(iter + 1, rows):
             col_iter = 0
             while col_iter < 6:
                 descrip_table.add(
                     TableCell(Paragraph(" "), background_color=even_color)
                 )
                 col_iter += 1
-                if col_iter == 5 and row_number == 18:
+                if col_iter == 5 and row_number == rows:
                     descrip_table.add(Paragraph("Running Balance: %s" % balance))
                     break
     
     # Set padding on all cells 
     descrip_table.set_padding_on_all_cells(
-        Decimal(6), Decimal(6), Decimal(6), Decimal(6)
+        Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
     descrip_table.no_borders()
     return descrip_table
 
 
-def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+    name = CLIENT['clientname']
+    print(name)
+    
     # Initializing Statement..
     pdf = Document()
     page = Page()
@@ -204,30 +260,20 @@ def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, M
     page_layout = SingleColumnLayout(page)
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
-    # Add image
-    page_layout.add(
-        Image(
-            "https://atlas-content-cdn.pixelsquid.com/stock-images/willow-tree-exDE6X1-600.jpg",
-            width=Decimal(108),
-            height=Decimal(82),
-            margin_left=Decimal(177.5)
-        ),
-    )
-
     # Append Statement Header
-    page_layout.add(_build_statment_header())
-    page_layout.add(_build_billing_table(NAME))
+    page_layout.add(_build_statment_header(PROV, CLIENT))
+    page_layout.add(_build_billing_table())
     
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            _description_table(TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            _description_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
-    # Multi Paged Statement
-    else:
+    # Two paged
+    elif(len(DATES) < 52):
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(TYPES[0:16], DATES[0:16], DURATIONS[0:16], RATES[0:16], AMOUNTS[0:16], BALANCE[0:16])
+            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -236,12 +282,36 @@ def generate_statement(NAME, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, M
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(TYPES[16:], DATES[16:], DURATIONS[16:], RATES[16:], AMOUNTS[16:], BALANCE[16:])
+            _description_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
+        )
+    else:
+        # Add 16 events to page 1
+        page_layout.add(
+            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+        )
+        # Create and Initialize Second Page
+        page2 = Page()
+        pdf.append_page(page2)
+        page2_layout = SingleColumnLayout(page2)
+        page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
+        # Add the rest of the events
+        page2_layout.add(
+            _description_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
+        )
+        # Create and Initialize Third Page
+        page3 = Page()
+        pdf.append_page(page3)
+        page3_layout = SingleColumnLayout(page3)
+        page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
+        # Add the rest of the events
+        page3_layout.add(
+            _description_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
         )
         
         
+        
     # Local path
-    with open(f'public/invoices/{NAME}.pdf', 'wb') as pdf_file:
+    with open(f'public/invoices/{name}.pdf', 'wb') as pdf_file:
         PDF.dumps(pdf_file, pdf)
    
    
