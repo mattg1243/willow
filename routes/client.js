@@ -15,7 +15,7 @@ router.post('/event/:eventid', (req, res) => { handlers.updateEvent(req, res); }
 // delete an event
 router.post('/deleteevent', (req, res) => { handlers.deleteEvent(req, res) });
 // generate a statment
-router.post('/:id/makestatement/:fname/:lname', (req, res) => { handlers.makeStatement(req, res); })
+router.post('/makestatement', (req, res) => { handlers.makeStatement(req, res); })
 // download the statement
 router.get('/:id/makestatement/download/:clientname/:start/:end', (req, res) => { handlers.downloadStatement(req, res); })
 

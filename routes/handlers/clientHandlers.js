@@ -124,7 +124,7 @@ const renderEventPage = (req, res) => {
 }
 
 const makeStatement = async (req, res) => {
-    
+    console.log("req.body:\n" + JSON.stringify(req.body));
     let start, end;
     // just need to format the dates for the args and this should work
     // handle automatic date selection 
@@ -147,36 +147,38 @@ const makeStatement = async (req, res) => {
     
     let clientInfo = {  
 
-        clientname: req.params.fname + " " + req.params.lname,
-        billingAdd: req.user.street ? req.user.street + ", " + req.user.city + ", " + req.user.state + " " + req.user.zip : "",
+        clientname: req.body.client.fname + " " + req.body.client.lname,
+        billingAdd: req.body.user.street ? req.body.user.street + ", " + req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip : "",
         mailingAdd: "", // this isnt handled client side yet 
-        phone: req.user.phone
+        phone: req.body.user.phone
     };
 
     let providerInfo = {
 
-        name: req.user.nameForHeader ? req.user.nameForHeader: req.user.fname + " " + req.user.lname,
-        address: req.user.street + " " + req.user.city + ", " + req.user.state + " " + req.user.zip,
-        phone: req.user.phone,
-        email: req.user.email,
+        name: req.body.user.nameForHeader ? req.body.user.nameForHeader: req.body.user.fname + " " + req.body.user.lname,
+        address: req.body.user.street + " " + req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip,
+        phone: req.body.user.phone,
+        email: req.body.user.email,
     }
 
     let providerArg = JSON.stringify(providerInfo);
     let clientArg = JSON.stringify(clientInfo);
-    let eventsArg = await JSON.parse(req.body.events);
+    let eventsArg = req.body.events;
+    // find only the events that belong to the client
+    eventsArg = eventsArg.filter(event => event.clientID === req.body.client['_id'])
     // sort the events by date
-    eventsArg.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    eventsArg.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     // keep only the events between the given range of dates
-    eventsArg.events = eventsArg.events.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    eventsArg = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
     // check for no events in given range
-    if (eventsArg.events.length == 0) {
+    if (eventsArg.length == 0) {
         console.log("There are no events in the given range of dates.")
         req.flash('error', "There are no events in the given range of dates.");
         return res.redirect(`/client/${req.params.id}`)
     }
 
     console.log("\nUser Args : \n", clientArg);
-    console.log("\nEvents Args : \n", eventsArg.events);
+    console.log("\nEvents Args : \n", eventsArg);
 
     let options = {
         mode: "text",
@@ -188,8 +190,6 @@ const makeStatement = async (req, res) => {
 
         console.log("++++++++++++++++++++++++++++++++++ \n")
         console.log(result)
-
-        return res.redirect(`/client/${req.params.id}/makestatement/download/${clientInfo.clientname}/${start}/${end}`);
 
     })
 }
