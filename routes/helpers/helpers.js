@@ -69,6 +69,11 @@ const getAllData = async(req, res) => {
             lname: '',
             email: '',
             nameForHeader: '',
+            phone: '',
+            street: '',
+            zip: '',
+            state: '',
+            city: '',
         },
         clients: [],
         events: [],
@@ -92,6 +97,11 @@ const getAllData = async(req, res) => {
         response.user.lname = user.lname;
         response.user.email = user.email;
         response.user.nameForHeader = user.nameForHeader;
+        response.user.phone = user.phone;
+        response.user.street = user.street;
+        response.user.zip = user.zip;
+        response.user.state = user.state;
+        response.user.city = user.city;
         // create token from the user ID
         response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
         // then, populate the client array
