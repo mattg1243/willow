@@ -44,17 +44,25 @@ export default function QuickStatement(props) {
   const isDark = colorMode === 'dark';
 
   const makeStatement = async () => {
-    const response = await axios.post(`/client/makestatement`, {
+    const response = await axios.post(`/client/makestatement`, 
+    {
       user: user,
       token: token,
       client: JSON.parse(client),
       currentRadio: currentRadio,
       startdate: startdate,
       enddate: enddate,
-      events: allEvents
-    })
-    .then(response => console.log(response)
-    .catch(err => console.log(err)))
+      events: allEvents,
+    }, {responseType: 'arraybuffer'}
+    )
+    .then(async (response) => {console.log(response);
+      const url = window.URL.createObjectURL(new Blob([response.data],{type: "application/pdf"}));
+      var link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'statement.pdf');
+      document.body.appendChild(link);
+      link.click();})
+    .catch(err => console.log(err))
   }
 
   useEffect(() => {
