@@ -157,7 +157,10 @@ const makeStatement = async (req, res) => {
     let providerInfo = {
 
         name: req.body.user.nameForHeader ? req.body.user.nameForHeader: req.body.user.fname + " " + req.body.user.lname,
-        address: req.body.user.street + " " + req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip,
+        address: {
+            street: req.body.user.street, 
+            cityState: req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip
+        },
         phone: req.body.user.phone,
         email: req.body.user.email,
     }
@@ -191,6 +194,18 @@ const makeStatement = async (req, res) => {
         console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
         console.log(result)
         console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
+
+        try {
+            res.download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+    
+                if (err) return console.error(err);
+                // delete the pdf from the server after download
+                fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
+                    if (err) return console.error(err)
+        
+                });
+            })
+        } catch (err) { throw err; }
 
     })
 }
