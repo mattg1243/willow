@@ -1,5 +1,4 @@
 # General
-import random
 from decimal import Decimal
 from datetime import datetime
 
@@ -13,7 +12,6 @@ from borb.pdf.canvas.layout.table.fixed_column_width_table import (
 )
 from borb.pdf.canvas.layout.text.paragraph import Paragraph
 from borb.pdf.canvas.layout.layout_element import Alignment
-from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
 
