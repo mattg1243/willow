@@ -13,7 +13,6 @@ def get_client_info():
 
 def load():
     data = json.loads(sys.argv[3])
-    data = data['events']
     return data
 
 def parse_dates(data):
