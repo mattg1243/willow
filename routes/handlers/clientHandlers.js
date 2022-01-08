@@ -3,6 +3,7 @@ const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
+const { events } = require('../../models/client-schema');
 
 const renderClientPage = async (req, res) => {
     // TODO: change these to chargeType boolean in the event schema somehow...
@@ -161,8 +162,8 @@ const makeStatement = async (req, res) => {
         email: req.body.user.email,
     }
 
-    let providerArg = JSON.stringify(providerInfo);
-    let clientArg = JSON.stringify(clientInfo);
+    let providerArg = providerInfo;
+    let clientArg = clientInfo;
     let eventsArg = req.body.events;
     // find only the events that belong to the client
     eventsArg = eventsArg.filter(event => event.clientID === req.body.client['_id'])
@@ -179,17 +180,17 @@ const makeStatement = async (req, res) => {
 
     console.log("\nUser Args : \n", clientArg);
     console.log("\nEvents Args : \n", eventsArg);
-
     let options = {
         mode: "text",
-        args: [providerArg, clientArg, JSON.stringify(eventsArg)]
+        args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(eventsArg)]
     }
 
     PythonShell.run("Python/src/core/main.py", options, (err, result) => {
         if (err) return console.error(err)
 
-        console.log("++++++++++++++++++++++++++++++++++ \n")
+        console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
         console.log(result)
+        console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
 
     })
 }
