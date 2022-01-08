@@ -24,7 +24,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { useEffect } from 'react';
 import axios from 'axios';
 
-function QuickStatement(props) {
+export default function QuickStatement(props) {
   
   const [autoSelection, setAutoSelection] = useState(false);
   const [currentRadio, setCurrentRadio] = useState(null);
@@ -42,6 +42,20 @@ function QuickStatement(props) {
 
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
+
+  const makeStatement = async () => {
+    const response = await axios.post(`/client/makestatement`, {
+      user: user,
+      token: token,
+      client: JSON.parse(client),
+      currentRadio: currentRadio,
+      startdate: startdate,
+      enddate: enddate,
+      events: allEvents
+    })
+    .then(response => console.log(response)
+    .catch(err => console.log(err)))
+  }
 
   useEffect(() => {
     console.log("client: \n" + client); 
@@ -115,19 +129,3 @@ function QuickStatement(props) {
     </>
   )
 }
-
-const makeStatement = async () => {
-  const response = await axios.post(`/client/makestatement`, {
-    user: user,
-    token: token,
-    client: JSON.parse(client),
-    currentRadio: currentRadio,
-    startdate: startdate,
-    enddate: enddate,
-    events: allEvents
-  })
-  .then(response => console.log(response)
-  .catch(err => console.log(err)))
-}
-
-export default { QuickStatement, makeStatement };
