@@ -2,8 +2,6 @@ from util import generate_statement
 from logger import _set_log_params
 from digest import get_provider_info, load, get_client_info, parse_dates, parse_types, parse_durations
 from digest import parse_rates, parse_amounts, parse_balances, check_multipage, find_running_balance
-from qrgen import generate_qr
-
 
 logger = _set_log_params()
 
@@ -54,6 +52,3 @@ if __name__ == "__main__":
         print(StatementError)
         logger.critical("Failed to Generate Statement!: %s" % StatementError)
         exit(0)
-    
-    # Generate QR Code if Script was Successful - facing Willow home page for now...
-    generate_qr()
