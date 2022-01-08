@@ -42,7 +42,7 @@ export default function ClientPage() {
         }).then((response) => {
             console.log(response);
             dispatch(loginAction(response.data));
-            setInterval(() => {window.location.reload();}, 10);
+            setTimeout(() => {window.location.reload();}, 10);
         }).catch(err => console.error(err));
     }
 
