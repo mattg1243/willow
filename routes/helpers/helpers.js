@@ -58,7 +58,7 @@ const verifyJWT = async (req, res, next) => {
     }
 }
 
-const getAllData = async(req, res) => {
+const getAllData = (req, res) => {
     // create blank response object to fill with data to send to client
     console.log("user:\n", req.body.user)
     let response = {
@@ -89,7 +89,7 @@ const getAllData = async(req, res) => {
     console.log("Query:\n", query)
     // get the user from the database
     // this is only safe because user has already been authenticated through passport middleware
-    await User.findOne(query, (err, user) => {
+    User.findOne(query, (err, user) => {
         if (err) { return console.error(err); }
         // fill user object with needed data
         response.user.id = user._id;
@@ -103,7 +103,7 @@ const getAllData = async(req, res) => {
         response.user.state = user.state;
         response.user.city = user.city;
         // create token from the user ID
-        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
+        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '7200s' })
         // then, populate the client array
         Client.find({ ownerID: user._id }, (err, clients) => {
             if (err) { return console.error(err); }
