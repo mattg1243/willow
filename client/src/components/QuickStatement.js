@@ -108,6 +108,12 @@ export default function QuickStatement(props) {
                       value="currentYear"
                     >Current Year
                     </Radio>
+                    <Radio 
+                      defaultChecked="false" 
+                      isDisabled={autoSelection ? false : true}
+                      value="all"
+                    >All Events
+                    </Radio>
                   </VStack>
                 </RadioGroup>
               </Box>
