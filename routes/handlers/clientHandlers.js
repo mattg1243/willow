@@ -168,6 +168,7 @@ const makeStatement = async (req, res) => {
         },
         phone: req.body.user.phone,
         email: req.body.user.email,
+        paymentInfo: req.body.user.paymentInfo ? req.body.user.paymentInfo: '',
     }
 
     let providerArg = providerInfo;
