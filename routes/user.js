@@ -16,7 +16,7 @@ router.get('/dashboard', connectEnsureLogin.ensureLoggedIn('/login'), (req, res)
 // render user preference page
 router.get('/preferences', (req, res) => { res.render('preferences', { user: req.user }); })
 // update users info from preferences page
-router.post("/update-info/:id", connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.updateUserInfo(req, res) })
+router.post("/updateinfo", connectEnsureLogin.ensureLoggedIn(), (req, res) => { handlers.updateUserInfo(req, res) })
 // add a new client
 router.post('/newclient', helpers.verifyJWT, (req, res) => { handlers.addNewClient(req, res) });
 // delete a client and all associated events
