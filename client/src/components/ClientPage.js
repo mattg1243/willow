@@ -50,29 +50,31 @@ function ClientPage(props) {
     return (
         <>
             <Header />
-            <VStack style={{height: '100%', width: '100%', paddingTop: '1rem', flexWrap: 'wrap'}}>
+            <VStack style={{height: '100', width: '100%', paddingTop: '1rem'}}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                 <IconButton icon={<EditIcon />} variant="ghost" onClick={ () => {setEditIsShown(true);} }/>
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding:'1.5rem'}} >
-                        <Thead>
-                        <Tr align='justify'>
+                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '70%', padding:'1.5rem', tableLayout: 'fixed'}} >
+                        <Thead width='100%'>
+                        <Tr style={{width: '100%', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center'}}>
                             <Th>Date</Th>
                             <Th>Type</Th>
                             {breakpoints[currentBreakpoint] > breakpoints.desktop ? (<><Th>Details</Th>
                             <Th>Time</Th></>): null}
                             <Th>Amount</Th>
+                            {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+                            <Th>Delete</Th>): null}
                         </Tr>
                         </Thead>
-                        <Tbody>
+                        <Tbody width="100%">
                             {events.map(event => {
                                 return (
-                                    <Tr key={event._id} style={{textAlign: 'justify'}}>
+                                    <Tr key={event._id}>
                                         <Td>{moment.utc(event.date).format("MM/DD/YY")}</Td>
                                         <Td>{event.type}</Td>
                                         {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
                                         <>
-                                        <Td>{event.detail ? event.detail : '-'}</Td>
+                                        <Td style={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{event.detail ? event.detail : '-'}</Td>
                                         <Td>{event.duration ? event.duration : '-'}</Td>
                                         </>): null}
                                         <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
