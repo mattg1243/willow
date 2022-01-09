@@ -19,18 +19,21 @@ const store = createStore(
 const persistor = persistStore(store);
 
 function App() {
+
   return (
     <>
       <ChakraProvider>
         <Provider store={store}>
-            <Router>
+          <PersistGate persistor={persistor}>
+          <Router>
               <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/clients' element={<Dashboard />} />
                 <Route path='/client/:id' element={<ClientPage />} />
               </Routes>
-            </Router>
+          </Router>
+          </PersistGate>
         </Provider>
       </ChakraProvider>
     </>
