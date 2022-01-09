@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, IconButton, ModalFooter } from '@chakra-ui/react';
+import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import { withBreakpoints } from 'react-breakpoints'
+import { withBreakpoints } from 'react-breakpoints';
 import { loginAction } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -74,7 +74,11 @@ function ClientPage(props) {
                                         <Td>{event.type}</Td>
                                         {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
                                         <>
-                                        <Td style={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{event.detail ? event.detail : '-'}</Td>
+                                        <Td style={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                                            <Tooltip label={event.detail}>
+                                                {event.detail ? event.detail : '-'}
+                                            </Tooltip>
+                                        </Td>
                                         <Td>{event.duration ? event.duration : '-'}</Td>
                                         </>): null}
                                         <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
