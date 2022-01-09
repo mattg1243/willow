@@ -48,7 +48,16 @@ const renderDashboard = async (req, res) => {
 
 const updateUserInfo = async (req, res) => {
     try {
-        await User.findOneAndUpdate({ _id: req.body.user }, { nameForHeader: req.body.nameForHeader, phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
+        await User.findOneAndUpdate({ _id: req.body.user }, 
+            { 
+                nameForHeader: req.body.nameForHeader, 
+                phone: req.body.phone, 
+                street: req.body.street, 
+                city: req.body.city, 
+                state: req.body.state, 
+                zip: req.body.zip,
+                paymentInfo: req.body.paymentInfo,
+            }, { upsert: true }, function(err, info) {
 
             if (err) return console.error(err)
     
@@ -63,7 +72,16 @@ const addNewClient = async (req, res) => {
     console.log("Headers: " + req.headers)
     console.log("Data: " + req.body)
     try {
-        const newClient = new Client({ownerID: req.body.user, fname: req.body.fname, lname: req.body.lname, phonenumber: req.body.phonenumber, email: req.body.email, balance: 0}); 
+        const newClient = new Client(
+            {
+                ownerID: req.body.user, 
+                fname: req.body.fname, 
+                lname: req.body.lname, 
+                phonenumber: req.body.phonenumber, 
+                email: req.body.email, 
+                balance: 0
+            }
+        ); 
         newClient.save(function(err, client) {
        
         if (err) return console.error(err);
@@ -76,7 +94,6 @@ const addNewClient = async (req, res) => {
             console.log("Clients added : " + clients)
         })
         
-        // this will be optimized to only send the new clients list
         helpers.getClients(req, res);
 
     })
