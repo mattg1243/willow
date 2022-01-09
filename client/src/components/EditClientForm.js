@@ -14,9 +14,9 @@ import {
     ModalCloseButton
 } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getClients, loginAction } from '../actions';
+import { loginAction, getClients } from '../actions';
 import axios from 'axios';
 
 export default function EditClientsDialog(props) {
@@ -32,8 +32,8 @@ export default function EditClientsDialog(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const deleteClient = async () => {
-        const response = await axios.post('/user/deleteclient', {
+    const deleteClient = () => {
+        axios.post('/user/deleteclient', {
             token: props.token,
             user: props.user,
             clientID: props.client._id,
@@ -42,8 +42,8 @@ export default function EditClientsDialog(props) {
         .catch(err => {console.error(err);})
     }
 
-    const updateClient = async () => {
-        const response = await axios.post('/user/updateclient', {
+    const updateClient = () => {
+        axios.post('/user/updateclient', {
             token: props.token,
             user: props.user,
             clientID: props.client._id,
@@ -52,7 +52,7 @@ export default function EditClientsDialog(props) {
             email: email,
             phone: phone,
         })
-        .then(response => {console.log(response); dispatch(getClients(response.data));} )
+        .then(response => {console.log("Res data: \n: " + response); dispatch(getClients(response.data));} )
         .catch(err => {console.error(err);})
     }
 
@@ -67,7 +67,7 @@ export default function EditClientsDialog(props) {
             <FormLabel>Phone</FormLabel>
             <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} placeholder={props.client.phonenumber}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
-                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); window.location.reload(); }}>Save</Button>
+                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); props.setEditIsShown(false); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>
             </HStack>
             <Modal onClose={() => {setDeleteIsShown(false)}} isOpen={deleteIsShown}>

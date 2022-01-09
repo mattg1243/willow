@@ -89,7 +89,7 @@ export default function QuickStatement(props) {
                 <FormLabel>Select Client</FormLabel>
                 <Select onChange={(e) => {setClient(e.target.value); setEvents(allEvents.filter(event => event.clientID == client["_id"]));}}>
                   {clients.map(client => {return (
-                        <option value={JSON.stringify(client)}>{client.fname + " " + client.lname}</option>
+                        <option key={client._id} value={JSON.stringify(client)}>{client.fname + " " + client.lname}</option>
                       )}
                     )}
                 </Select>
