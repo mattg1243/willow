@@ -49,7 +49,6 @@ export default function AddEventForm(props) {
             console.log(response); 
             dispatch(loginAction(response.data));
             props.setIsShown(false);
-            setInterval(() => {window.location.reload();}, 100);
         }).catch(err => {
             console.error(err)
         })
