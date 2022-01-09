@@ -93,7 +93,7 @@ function ClientPage(props) {
                     <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
-                            <ModalHeader>New Client</ModalHeader>
+                            <ModalHeader>New Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                     <AddEventForm id={ id } setIsShown={ setAddIsShown }/>
