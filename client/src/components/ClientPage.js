@@ -6,9 +6,10 @@ import { withBreakpoints } from 'react-breakpoints'
 import { loginAction } from '../actions';
 import { useDispatch } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import Header from './Header';
 import AddEventForm from './AddEventForm';
+import EditClientForm from './EditClientForm';
 import axios from 'axios';
 
 function ClientPage(props) {
@@ -16,6 +17,7 @@ function ClientPage(props) {
     const [addIsShown, setAddIsShown] = useState(false);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [toDelete, setToDelete] = useState('');
+    const [editIsShown, setEditIsShown] = useState(false);
 
     const { id } = useParams();
     const { breakpoints, currentBreakpoint } = props
@@ -52,6 +54,7 @@ function ClientPage(props) {
             <Header />
             <VStack style={{height: '100%', width: '100%', paddingTop: '1rem', flexWrap: 'wrap'}}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
+                <IconButton icon={<EditIcon />} variant="ghost" onClick={ () => {setEditIsShown(true);} }/>
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', padding: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                     <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding:'2rem'}} >
                         <Thead>
@@ -60,7 +63,6 @@ function ClientPage(props) {
                             <Th>Type</Th>
                             {breakpoints[currentBreakpoint] > breakpoints.desktop ? (<><Th>Details</Th>
                             <Th>Time</Th></>): null}
-                            
                             <Th>Amount</Th>
                         </Tr>
                         </Thead>
@@ -113,6 +115,16 @@ function ClientPage(props) {
                                 <Button colorScheme='red' mr={3} onClick={() => { deleteEvent(toDelete); setDeleteIsShown(false) }}>Delete</Button>
                                 <Button variant='ghost' onClick={() => { setDeleteIsShown(false); }}>Cancel</Button>
                             </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+                    <Modal onClose={() => {setEditIsShown(false)}} isOpen={editIsShown}>
+                        <ModalOverlay />
+                        <ModalContent pb={5}>
+                            <ModalHeader>Edit Client Info</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.5rem'}}>
+                                <EditClientForm client={client} token={token} user={user.id}/>
+                            </ModalBody>
                         </ModalContent>
                     </Modal>
                 <Button 
