@@ -1,5 +1,6 @@
 const User = require('../../models/user-model');
-const Client = require('../../models/client-schema')
+const Client = require('../../models/client-schema');
+const Event = require('../../models/event-schema');
 const helpers = require('../helpers/helpers')
 
 const registerUser = async (req, res) => {
@@ -83,7 +84,22 @@ const addNewClient = async (req, res) => {
     
 }
 
+const deleteClient = async (req, res) => {
+
+    Client.findOneAndDelete({ _id: req.body.clientID }, (err, client) => {
+        if (err) { throw err };
+
+        console.log('Deleted client: ' + client);
+        Event.deleteMany({ clientID: req.body.clientID }, (err, events) => {
+            console.log('Removed events: ' + events);
+            helpers.getAllData(req, res);
+        })
+    })
+
+}
+
 module.exports.registerUser = registerUser;
 module.exports.renderDashboard = renderDashboard;
 module.exports.updateUserInfo = updateUserInfo;
 module.exports.addNewClient = addNewClient;
+module.exports.deleteClient = deleteClient;
