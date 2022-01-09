@@ -11,7 +11,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { BiLogOut } from 'react-icons/bi';
-import { FaFileInvoiceDollar } from 'react-icons/fa';
+import { FaFileInvoiceDollar, FaUserCircle } from 'react-icons/fa';
 import { BsFillPersonLinesFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import QuickStatement from './QuickStatement';
@@ -48,8 +48,8 @@ export default function HamburgerMenu() {
                     Quick Statement
                 </MenuItem>
                 <MenuDivider />
-                <MenuItem icon={<IoSettingsSharp color={isDark? "white" : "black"}/>} color={isDark? "white" : "black"}>
-                    Settings
+                <MenuItem icon={<FaUserCircle color={isDark? "white" : "black"}/>} color={isDark? "white" : "black"} onClick={() => { navigate('/profile') }}>
+                    Profile
                 </MenuItem>
                 <MenuItem icon={<BiLogOut color="#EC4E20" />} color={isDark? "white" : "black"} onClick={() => { logout(); }}>
                     Logout
