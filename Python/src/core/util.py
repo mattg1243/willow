@@ -30,128 +30,118 @@ def phone_formatter(n):
     return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 # Builds Statement Header
-def _build_statment_header(provider, client):
+def _build_statment_header(provider, client, running):
     # Initialize
-    header = Table(number_of_rows=6, number_of_columns=3)
+    header = Table(number_of_rows=11, number_of_columns=3)
+    
+    # Centered provider name
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["name"],
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider street address
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["address"]["street"],
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider city, state, zip code
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["address"]["cityState"],
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
     
     # Format Provider Phone Number
     phone = phone_formatter(provider["phone"])
     print(phone)
     
-    # Provider Name
-    header.add(
-        Paragraph(
-            provider["name"], 
-            font="Helvetica-Bold",
-            horizontal_alignment=Alignment.LEFT
-            
-        )
-    )
-    
-    # Client Name
-    header.add(
-        Paragraph(
-            "Client Name: ",
-            font="Helvetica-Bold",
-            horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    header.add(
-        Paragraph(
-            client["clientname"]
-        )
-    )
-    
-    # Provider Address
-    header.add(
-        Paragraph(
-            provider["address"]["street"],
-            horizontal_alignment=Alignment.LEFT
-        )
-    )
-
-    # Date Issued
-    header.add(
-        Paragraph(
-            "Statement Date:", 
-            font="Helvetica-Bold", 
-            horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    now = datetime.now()
-    header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
-    
-    # Provider City, Zip Code
-    header.add(
-        Paragraph(provider["address"]["cityState"])
-    )
-    
-    # Spacing
+    # Centered provider phone number
     header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    
-    
-    # Provider Phone
     header.add(
         Paragraph(
             phone,
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider email address
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["email"],
+            horizontal_alignment=Alignment.CENTERED,
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Empty Lines break
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    # Left Aligned Client Name
+    client_name = client["clientname"]
+    header.add(
+        Paragraph(
+            f"Client Name: {client_name}",
             horizontal_alignment=Alignment.LEFT
         )
     )
-    
-    # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     
-    # Provider Email
+    # Left Aligned Statement Date
+    now = datetime.now()
+    formatted_now = "%d/%d/%d" % (now.month, now.day, now.year)
     header.add(
         Paragraph(
-            provider["email"]
+            f"Statement Date: {formatted_now}",
+            horizontal_alignment=Alignment.LEFT
         )
     )
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
     
-    # Spacing
+    # Left Aligned Running Balance
+    running = f"%s{running}" % ('$')
+    print(running)
+    header.add(
+        Paragraph(
+            f"Balance: {running}",
+            horizontal_alignment=Alignment.LEFT
+        )
+    )
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
-
+    
+    # Line Breaks to Finish Header
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
     # Padding
     header.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     header.no_borders()
 
     return header
-
-
-def _build_billing_table():
-
-    # Build Billing Table
-    b_table = Table(number_of_rows=3, number_of_columns=2)
-    
-    # Spacing
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-    
-    # Activity
-    b_table.add(
-        Paragraph(
-            "Activity:",
-            background_color=HexColor("FFFFFF"),
-            font="Helvetica-Bold",
-            font_color=X11Color("Black"),
-        )
-    )
-    
-    # Spacing
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-
-    b_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
-    b_table.no_borders()
-    
-    return b_table
 
 def std_event(event):
     if(event == 'Retainer' or event == 'Refund'):
@@ -247,7 +237,7 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
     return descrip_table
 
 
-def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, RUNNING, MULTIPAGE):
     name = CLIENT['clientname']
     print(name)
     
@@ -259,8 +249,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
     # Append Statement Header
-    page_layout.add(_build_statment_header(PROV, CLIENT))
-    page_layout.add(_build_billing_table())
+    page_layout.add(_build_statment_header(PROV, CLIENT, RUNNING))
     
     # If single paged - build single description table 
     if(not MULTIPAGE):
