@@ -87,7 +87,7 @@ const addNewClient = async (req, res) => {
 const deleteClient = async (req, res) => {
 
     Client.findOneAndDelete({ _id: req.body.clientID }, (err, client) => {
-        if (err) { throw err };
+        if (err) { throw err; }
 
         console.log('Deleted client: ' + client);
         Event.deleteMany({ clientID: req.body.clientID }, (err, events) => {
@@ -98,8 +98,24 @@ const deleteClient = async (req, res) => {
 
 }
 
+const updateClientInfo = async (req, res) => {
+
+    Client.findOneAndUpdate({ _id: req.body.clientID }, 
+        { 
+            fname: req.body.fname, lname: req.body.lname, 
+            email: req.body.email, phonenumber: req.body.phone
+        }, (err, client) => {
+            if (err) { throw err; }
+
+            console.log("Client updated : \n" + client);
+            helpers.getClients(req, res);
+        }
+    )
+}
+
 module.exports.registerUser = registerUser;
 module.exports.renderDashboard = renderDashboard;
 module.exports.updateUserInfo = updateUserInfo;
+module.exports.updateClientInfo = updateClientInfo;
 module.exports.addNewClient = addNewClient;
 module.exports.deleteClient = deleteClient;

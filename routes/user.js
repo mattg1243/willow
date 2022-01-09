@@ -21,5 +21,7 @@ router.post("/update-info/:id", connectEnsureLogin.ensureLoggedIn(), (req, res) 
 router.post('/newclient', helpers.verifyJWT, (req, res) => { handlers.addNewClient(req, res) });
 // delete a client and all associated events
 router.post('/deleteclient', helpers.verifyJWT, (req, res) => { handlers.deleteClient(req, res) });
+// update a clients information
+router.post('/updateclient', helpers.verifyJWT, (req, res) => { handlers.updateClientInfo(req, res) });
 
 module.exports = router;
