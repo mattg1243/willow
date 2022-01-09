@@ -48,12 +48,12 @@ const renderDashboard = async (req, res) => {
 
 const updateUserInfo = async (req, res) => {
     try {
-        await User.findOneAndUpdate({ _id: req.params.id }, { nameForHeader: req.body.nameForHeader, phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
+        await User.findOneAndUpdate({ _id: req.body.user }, { nameForHeader: req.body.nameForHeader, phone: req.body.phone, street: req.body.street, city: req.body.city, state: req.body.state, zip: req.body.zip}, { upsert: true }, function(err, info) {
 
             if (err) return console.error(err)
     
             console.log("Info updated : \n" + info)
-            res.redirect('/');
+            helpers.getAllData(req, res);
     
         })
     } catch (err) { throw err ;}
