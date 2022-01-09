@@ -11,11 +11,11 @@ export default function ClientTable() {
     useEffect(() => {console.log("ClientTable mounted")});
 
     return (
-            <Table size='lg' style={{marginBottom: '2rem'}} variant='striped'>
-                <Thead>
+            <Table size='lg' style={{marginBottom: '2rem', tableLayout: 'fixed'}} variant='striped'>
+                <Thead style={{textAlign: 'center'}}>
                     <Tr>
-                        <Th>Client</Th>
-                        <Th>Balance</Th>
+                        <Th width="50%" style={{textAlign: 'start'}}>Client</Th>
+                        <Th width="50%" style={{textAlign: 'end'}}>Balance</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
