@@ -26,19 +26,19 @@ import axios from 'axios';
 
 export default function QuickStatement(props) {
   
-  const [autoSelection, setAutoSelection] = useState(false);
-  const [currentRadio, setCurrentRadio] = useState(null);
-  const [client, setClient] = useState('');
-  const [startdate, setStartdate] = useState(new Date());
-  const [enddate, setEnddate] = useState(new Date());
-  const [events, setEvents] = useState([]);
-
   const stateStr = window.sessionStorage.getItem('persist:root');
   const state = JSON.parse(stateStr);
   const user = JSON.parse(state.user);
   const token = JSON.parse(state.token);
   const clients = JSON.parse(state.clients);
   const allEvents = JSON.parse(state.events);
+
+  const [autoSelection, setAutoSelection] = useState(false);
+  const [currentRadio, setCurrentRadio] = useState(null);
+  const [client, setClient] = useState(JSON.stringify(clients[0]));
+  const [startdate, setStartdate] = useState(new Date());
+  const [enddate, setEnddate] = useState(new Date());
+  const [events, setEvents] = useState([]);
 
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
