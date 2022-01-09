@@ -140,6 +140,11 @@ const makeStatement = async (req, res) => {
             start = new Date(date.getFullYear(), 0, 1).toISOString().split('T')[0];
             end = date.toISOString().split('T')[0];
         }
+        else if (req.body.currentRadio == "all") {
+            let date = new Date();
+            start = "1900-01-01";
+            end = date.toISOString().split('T')[0];
+        }
     } else {
             start = req.body.startdate;
             end = req.body.enddate;
