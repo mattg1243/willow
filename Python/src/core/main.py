@@ -45,7 +45,7 @@ if __name__ == "__main__":
     
     # Generate the statement
     try:
-        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, multipage)
+        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, running_balance, multipage)
    
     # Log Error & Terminate
     except Exception as StatementError:
