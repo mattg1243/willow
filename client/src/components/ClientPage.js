@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, IconButton, ModalFooter } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { withBreakpoints } from 'react-breakpoints'
 import { loginAction } from '../actions';
 import { useDispatch } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -11,13 +11,14 @@ import Header from './Header';
 import AddEventForm from './AddEventForm';
 import axios from 'axios';
 
-export default function ClientPage() {
+function ClientPage(props) {
     
     const [addIsShown, setAddIsShown] = useState(false);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [toDelete, setToDelete] = useState('');
 
     const { id } = useParams();
+    const { breakpoints, currentBreakpoint } = props
     
     const stateStr = window.sessionStorage.getItem('persist:root');
     const state = JSON.parse(stateStr);
@@ -49,35 +50,41 @@ export default function ClientPage() {
     return (
         <>
             <Header />
-            <VStack style={{height: '100%', width: '70%', paddingTop: '1rem'}}>
+            <VStack style={{height: '100%', width: '100%', paddingTop: '1rem', flexWrap: 'wrap'}}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', padding: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                    <Table variant='striped' size='lg' style={{marginBottom: '2rem'}}>
+                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding:'2rem'}} >
                         <Thead>
-                        <Tr>
+                        <Tr align='justify'>
                             <Th>Date</Th>
                             <Th>Type</Th>
-                            <Th>Details</Th>
-                            <Th>Time</Th>
+                            {breakpoints[currentBreakpoint] > breakpoints.desktop ? (<><Th>Details</Th>
+                            <Th>Time</Th></>): null}
+                            
                             <Th>Amount</Th>
                         </Tr>
                         </Thead>
                         <Tbody>
                             {events.map(event => {
                                 return (
-                                    <Tr key={event._id}>
+                                    <Tr key={event._id} style={{textAlign: 'justify'}}>
                                         <Td>{moment.utc(event.date).format("MM/DD/YY")}</Td>
                                         <Td>{event.type}</Td>
+                                        {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+                                        <>
                                         <Td>{event.detail ? event.detail : '-'}</Td>
                                         <Td>{event.duration ? event.duration : '-'}</Td>
+                                        </>): null}
                                         <Td>${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
+                                        {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
                                         <Td>
                                             <IconButton 
                                                 icon={<DeleteIcon />} 
                                                 size="sm" 
                                                 onClick={() => { setDeleteIsShown(true); setToDelete(event._id) }}
                                             />
-                                        </Td>
+                                        </Td>): null}
+                                        
                                     </Tr>
                                 )}
                             )}
@@ -118,3 +125,5 @@ export default function ClientPage() {
         </>
     )
 }
+
+export default withBreakpoints(ClientPage);
