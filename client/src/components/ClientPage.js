@@ -4,7 +4,7 @@ import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, 
 import { useParams } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints'
 import { loginAction } from '../actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import Header from './Header';
@@ -22,21 +22,19 @@ function ClientPage(props) {
     const { id } = useParams();
     const { breakpoints, currentBreakpoint } = props
     
-    const stateStr = window.sessionStorage.getItem('persist:root');
-    const state = JSON.parse(stateStr);
-    const token = JSON.parse(state.token);
-    const user = JSON.parse(state.user);
-    const clients = JSON.parse(state.clients);
+    const token = useSelector(state => state.token);
+    const user = useSelector(state => state.user);
+    const clients = useSelector(state => state.clients);
     const client = clients.find(client => client._id === id);
-    const allEvents = JSON.parse(state.events);
+    const allEvents = useSelector(state => state.events);
     const events = allEvents.filter(event => event.clientID === id);
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const dispatch = useDispatch();
 
-    const deleteEvent = async (eventID) => {
-        const response = await axios.post(`/client/deleteevent`,
+    const deleteEvent = (eventID) => {
+        axios.post(`/client/deleteevent`,
         {
             clientID: id,
             eventID: eventID, 
@@ -55,8 +53,8 @@ function ClientPage(props) {
             <VStack style={{height: '100%', width: '100%', paddingTop: '1rem', flexWrap: 'wrap'}}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                 <IconButton icon={<EditIcon />} variant="ghost" onClick={ () => {setEditIsShown(true);} }/>
-                <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', padding: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding:'2rem'}} >
+                <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding:'1.5rem'}} >
                         <Thead>
                         <Tr align='justify'>
                             <Th>Date</Th>
@@ -123,7 +121,7 @@ function ClientPage(props) {
                             <ModalHeader>Edit Client Info</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.5rem'}}>
-                                <EditClientForm client={client} token={token} user={user.id}/>
+                                <EditClientForm client={client} token={token} user={user.id} setEditIsShown={setEditIsShown}/>
                             </ModalBody>
                         </ModalContent>
                     </Modal>

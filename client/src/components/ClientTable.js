@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 
 export default function ClientTable() {
     
-    const stateStr = window.sessionStorage.getItem('persist:root');
-    const state = JSON.parse(stateStr);
-    const clients = JSON.parse(state.clients);
+    const clients = useSelector(state => state.clients);
     const navigate = useNavigate();
 
     useEffect(() => {console.log("ClientTable mounted")});
