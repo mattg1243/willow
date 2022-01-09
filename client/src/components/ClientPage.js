@@ -56,14 +56,14 @@ function ClientPage(props) {
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
                     Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
-                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: '70%', padding:'1.5rem', tableLayout: 'fixed'}} >
+                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: breakpoints[currentBreakpoint] > breakpoints.desktop ? '70%': '100%', padding:'1.5rem', tableLayout: 'fixed'}} >
                         <Thead width='100%'>
                         <Tr style={{width: '100%', marginLeft: 'auto', marginRight: 'auto', textAlign: 'justify'}}>
                             <Th style={{textAlign: 'start'}}>Date</Th>
                             <Th style={{textAlign: 'center'}}>Type</Th>
                             {breakpoints[currentBreakpoint] > breakpoints.desktop ? (<><Th style={{textAlign: 'center'}}>Details</Th>
                             <Th style={{textAlign: 'center'}}>Time</Th></>): null}
-                            <Th style={{textAlign: breakpoints[currentBreakpoint] > breakpoints.desktop ? 'center': 'end'}}>Amount</Th>
+                            <Th style={{textAlign: 'center'}}>{breakpoints[currentBreakpoint] > breakpoints.desktop ? 'Amount': '$'}</Th>
                             {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
                             <Th style={{textAlign: 'end'}}>Delete</Th>): null}
                         </Tr>
