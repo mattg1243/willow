@@ -5,7 +5,8 @@ import {
     HStack, 
     Button, 
     Divider,  
-    Select
+    Select,
+    FormLabel
 } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useSelector, useDispatch } from 'react-redux';
@@ -57,18 +58,21 @@ export default function AddEventForm(props) {
     return (
         <>
             <VStack justifyContent='center'>  
+                <FormLabel>Date</FormLabel>
                 <Input type='date' onChange={(e) => { setDate(e.target.value) }}/>
-                <Select placeholder="Event Type" onChange={(e) => { setType(e.target.value) }}>
+                <FormLabel>Event Type</FormLabel>
+                <Select onChange={(e) => { setType(e.target.value) }}>
                     <option value='Meeting'>Meeting</option>
                     <option value='Email'>Email</option>
                     <option value='Phone Call'>Phone Call</option>
                     <option value='Refund'>Refund</option>
-                    <option value='Retainer'>Meeting</option>
+                    <option value='Retainer'>Retainer</option>
                     <option value='Other'>Other</option>
                 </Select>
+                <FormLabel>Details</FormLabel>
                 <Input placeholder="Details" onChange={(e) => { setDetails(e.target.value) }}/>
-                <p>Time</p>
-                <HStack spacing={10}>
+                <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>Time</FormLabel>
+                <HStack spacing={10} style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>
                     <Select placeholder="Hours" onChange={(e) => { setHours(e.target.value) }}>
                         <option value='0'>0</option>
                         <option value='1'>1</option>
@@ -94,9 +98,11 @@ export default function AddEventForm(props) {
                         <option value='0.9'>49-54 mins</option>
                     </Select>
                 </HStack>
-                <Input type="number" placeholder="Rate" onChange={(e) =>{ setRate(e.target.value) }}/>
-                <Input type="number" placeholder="Amount" onChange={(e) =>{ setAmount(e.target.value) }}/>
-                <Divider />
+                <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>Hourly Rate</FormLabel>
+                <Input type="number" placeholder="Rate" style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}} onChange={(e) =>{ setRate(e.target.value) }}/>
+                <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'flex': 'none'}}>$ Amount</FormLabel>
+                <Input type="number" placeholder="Amount" style={{display: type === 'Retainer' || type === 'Refund' ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
+                <Divider style={{paddingTop: '2rem'}} />
                 <Button 
                     variant="outline"
                     color="white" 
