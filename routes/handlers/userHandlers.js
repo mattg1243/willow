@@ -84,7 +84,7 @@ const addNewClient = async (req, res) => {
     
 }
 
-const deleteClient = async (req, res) => {
+const deleteClient = (req, res) => {
 
     Client.findOneAndDelete({ _id: req.body.clientID }, (err, client) => {
         if (err) { throw err; }
@@ -98,7 +98,7 @@ const deleteClient = async (req, res) => {
 
 }
 
-const updateClientInfo = async (req, res) => {
+const updateClientInfo = (req, res) => {
 
     Client.findOneAndUpdate({ _id: req.body.clientID }, 
         { 
