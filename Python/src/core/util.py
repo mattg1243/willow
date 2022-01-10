@@ -2,6 +2,9 @@
 from decimal import Decimal
 from datetime import datetime
 
+# Digest
+from digest import ensure_payment_info
+
 # For PDF Handling
 from borb.pdf.pdf import PDF
 from borb.pdf.page.page import Page
@@ -30,7 +33,7 @@ def phone_formatter(n):
     return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 # Builds Statement Header
-def _build_statment_header(provider, client, running):
+def build_statement_header(provider, client, running):
     # Initialize
     header = Table(number_of_rows=11, number_of_columns=3)
     
@@ -102,7 +105,7 @@ def _build_statment_header(provider, client, running):
     header.add(
         Paragraph(
             f"Client Name: {client_name}",
-            horizontal_alignment=Alignment.LEFT
+            horizontal_alignment=Alignment.LEFT,
         )
     )
     header.add(Paragraph(" "))
@@ -143,13 +146,31 @@ def _build_statment_header(provider, client, running):
 
     return header
 
+def build_payments_header(provider):
+    # Init Payment info table
+    payments = Table(number_of_rows=2, number_of_columns=1)
+    
+    if(ensure_payment_info(provider)):
+        payments.add(
+            Paragraph(
+                provider["paymentInfo"]
+            )
+        )
+    else:
+        payments.add(Paragraph(" "))
+    
+    # Empty Line break
+    payments.add(Paragraph(" "))
+    
+    return payments.no_borders()
+
 def std_event(event):
     if(event == 'Retainer' or event == 'Refund'):
         return False
     else:
         return True
 
-def _description_table(rows, session, dates, durations, hourly, amounts, new_balance):
+def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
     descrip_table = Table(number_of_rows=rows, number_of_columns=6)
     descrip_table.set_borders_on_all_cells(True, True, True, True)
@@ -249,18 +270,21 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
     # Append Statement Header
-    page_layout.add(_build_statment_header(PROV, CLIENT, RUNNING))
+    page_layout.add(build_statement_header(PROV, CLIENT, RUNNING))
+    
+    # Will Leave an Empty Row if No Payment Info Provided
+    page_layout.add(build_payments_header(PROV))
     
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            _description_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            build_descrip_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
     # Two paged
     elif(len(DATES) < 52):
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -269,12 +293,12 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
+            build_descrip_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
         )
     else:
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -283,7 +307,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
+            build_descrip_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
         )
         # Create and Initialize Third Page
         page3 = Page()
@@ -292,9 +316,8 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page3_layout.add(
-            _description_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
+            build_descrip_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
         )
-        
         
         
     # Local path
