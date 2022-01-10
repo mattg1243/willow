@@ -20,7 +20,7 @@ const UserSchema = new Schema({
     state: {type: String, required: false, maxLength: 2},
     zip: {type: String, required: false, maxLength: 5},
     clients: [{type: mongoose.Schema.Types.ObjectId, ref: 'Client'}],
-    paymentInfo: {type: String, required: false, maxLength: 200}
+    paymentInfo: {type: String, required: false, maxLength: 80}
 })
 
 UserSchema.plugin(passportLocalMongoose);

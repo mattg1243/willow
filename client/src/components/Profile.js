@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { 
     Input, 
+    InputGroup,
+    InputRightElement,
     VStack, 
     HStack, 
     Button, 
@@ -26,7 +28,7 @@ export default function Profile() {
     const [zip, setZip] = useState(`${user.zip}`);
     const [state, setState] = useState(`${user.state}`);
     const [phone, setPhone] = useState(`${user.phone}`)
-    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo}`)
+    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`)
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -54,27 +56,37 @@ export default function Profile() {
             <VStack style={{height: '100%', width: '60%'}} spacing={5}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', paddingBottom: '2rem'}}>Profile</Heading>
                 <FormLabel>Name for Header</FormLabel>
-                <Input type="text" placeholder={user.nameForHeader} onChange={(e) => { setName(e.target.value) }}/>
+                <Input type="text" value={user.nameForHeader} onChange={(e) => { setName(e.target.value) }}/>
                 <FormLabel>Street Address</FormLabel>
-                <Input type="text" placeholder={user.street} onChange={(e) => { setStreet(e.target.value) }}/>
+                <Input type="text" value={user.street} onChange={(e) => { setStreet(e.target.value) }}/>
                 <FormLabel>City</FormLabel>
-                <Input type="text" placeholder={user.city} onChange={(e) => { setCity(e.target.value) }}/>
+                <Input type="text" value={user.city} onChange={(e) => { setCity(e.target.value) }}/>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} width="100%">
                     <VStack>
                         <FormLabel>State</FormLabel>
-                        <Input type="text" placeholder={user.state} onChange={(e) => { setState(e.target.value) }}/>
+                        <Input type="text" value={user.state} onChange={(e) => { setState(e.target.value) }}/>
                     </VStack>
                     <VStack>
                         <FormLabel>Zip Code</FormLabel>
-                        <Input type="text" placeholder={user.zip} onChange={(e) => { setZip(e.target.value) }}/>
+                        <Input type="text" value={user.zip} onChange={(e) => { setZip(e.target.value) }}/>
                     </VStack>
                 </HStack>
                 <FormLabel>Phone Number</FormLabel>
-                <Input type="text" placeholder={user.phone} onChange={(e) => { setPhone(e.target.value) }}/>
-                <Tooltip label="This will tell your clients how you'd like to receive payment. It will show on the bottom of statements, but is not required.">
+                <Input type="text" value={user.phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                <Tooltip 
+                    label="This will tell your clients how you'd like to receive payment. 
+                        It will show on the bottom of statements, but is not required (limited to 80 characters)."
+                        >
                     <FormLabel>Payment Info <InfoIcon style={{color: 'grey'}}/></FormLabel>
                 </Tooltip>
-                <Input type="text" placeholder={user.paymentInfo ? user.paymentInfo: null} onChange={(e) => { setPaymentInfo(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={paymentInfo} onChange={(e) => { setPaymentInfo(e.target.value) }} maxLength='80'/>
+                    <InputRightElement width='4.5rem'>
+                        <Button h='1.75rem' size='sm' onClick={() => { setPaymentInfo('');  }}>
+                        Clear
+                        </Button>
+                    </InputRightElement>
+                </InputGroup>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '3rem'}} width="100%">
                     <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateInfo(); navigate('/clients'); }}>Save</Button>
                     <Button style={{backgroundColor: isDark? "#EC4E20" : '#58A4B0', color: 'white'}}>Cancel</Button>
