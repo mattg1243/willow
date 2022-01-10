@@ -14,7 +14,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { InfoIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginAction, getClients } from '../actions';
+import { loginAction } from '../actions';
 import Header from './Header';
 import axios from 'axios';
 
@@ -26,9 +26,10 @@ export default function Profile() {
     const [street, setStreet] = useState(`${user.street}`);
     const [city, setCity] = useState(`${user.city}`);
     const [zip, setZip] = useState(`${user.zip}`);
+    const [email, setEmail] = useState(`${user.email}`);
     const [state, setState] = useState(`${user.state}`);
-    const [phone, setPhone] = useState(`${user.phone}`)
-    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`)
+    const [phone, setPhone] = useState(`${user.phone}`);
+    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`);
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -42,6 +43,7 @@ export default function Profile() {
             street: street,
             city: city,
             zip: zip,
+            email: email,
             phone: phone,
             state: state,
             paymentInfo: paymentInfo,
@@ -71,6 +73,8 @@ export default function Profile() {
                         <Input type="text" value={user.zip} onChange={(e) => { setZip(e.target.value) }}/>
                     </VStack>
                 </HStack>
+                <FormLabel>Email</FormLabel>
+                <Input type="text" value={user.email} onChange={(e) => { setEmail(e.target.value) }}/>
                 <FormLabel>Phone Number</FormLabel>
                 <Input type="text" value={user.phone} onChange={(e) => { setPhone(e.target.value) }}/>
                 <Tooltip 
