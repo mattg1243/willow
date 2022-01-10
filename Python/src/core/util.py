@@ -2,6 +2,9 @@
 from decimal import Decimal
 from datetime import datetime
 
+# Digest
+from digest import ensure_payment_info
+
 # For PDF Handling
 from borb.pdf.pdf import PDF
 from borb.pdf.page.page import Page
@@ -30,128 +33,136 @@ def phone_formatter(n):
     return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 # Builds Statement Header
-def _build_statment_header(provider, client):
+def build_statement_header(provider, client, running):
     # Initialize
-    header = Table(number_of_rows=6, number_of_columns=3)
+    header = Table(number_of_rows=11, number_of_columns=3)
+    
+    # Centered provider name
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["name"],
+            font="Helvetica-Bold",
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider street address
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["address"]["street"],
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider city, state, zip code
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["address"]["cityState"],
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
     
     # Format Provider Phone Number
     phone = phone_formatter(provider["phone"])
     print(phone)
     
-    # Provider Name
-    header.add(
-        Paragraph(
-            provider["name"], 
-            font="Helvetica-Bold",
-            horizontal_alignment=Alignment.LEFT
-            
-        )
-    )
-    
-    # Client Name
-    header.add(
-        Paragraph(
-            "Client Name: ",
-            font="Helvetica-Bold",
-            horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    header.add(
-        Paragraph(
-            client["clientname"]
-        )
-    )
-    
-    # Provider Address
-    header.add(
-        Paragraph(
-            provider["address"]["street"],
-            horizontal_alignment=Alignment.LEFT
-        )
-    )
-
-    # Date Issued
-    header.add(
-        Paragraph(
-            "Statement Date:", 
-            font="Helvetica-Bold", 
-            horizontal_alignment=Alignment.RIGHT
-        )
-    )
-    now = datetime.now()
-    header.add(Paragraph("%d/%d/%d" % (now.month, now.day, now.year)))
-    
-    # Provider City, Zip Code
-    header.add(
-        Paragraph(provider["address"]["cityState"])
-    )
-    
-    # Spacing
+    # Centered provider phone number
     header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    header.add(Paragraph(" "))
-    
-    
-    # Provider Phone
     header.add(
         Paragraph(
             phone,
+            horizontal_alignment=Alignment.CENTERED
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Centered provider email address
+    header.add(Paragraph(" "))
+    header.add(
+        Paragraph(
+            provider["email"],
+            horizontal_alignment=Alignment.CENTERED,
+        )
+    )
+    header.add(Paragraph(" "))
+    
+    # Empty Lines break
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    # Left Aligned Client Name
+    client_name = client["clientname"]
+    header.add(
+        Paragraph(
+            f"Client Name: {client_name}",
+            horizontal_alignment=Alignment.LEFT,
+        )
+    )
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
+    
+    # Left Aligned Statement Date
+    now = datetime.now()
+    formatted_now = "%d/%d/%d" % (now.month, now.day, now.year)
+    header.add(
+        Paragraph(
+            f"Statement Date: {formatted_now}",
             horizontal_alignment=Alignment.LEFT
         )
     )
-    
-    # Spacing
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
     
-    # Provider Email
+    # Left Aligned Running Balance
+    running = f"%s{running}" % ('$')
+    print(running)
     header.add(
         Paragraph(
-            provider["email"]
+            f"Balance: {running}",
+            horizontal_alignment=Alignment.LEFT
         )
     )
+    header.add(Paragraph(" "))
+    header.add(Paragraph(" "))
     
-    # Spacing
+    # Line Breaks to Finish Header
     header.add(Paragraph(" "))
     header.add(Paragraph(" "))
-
+    header.add(Paragraph(" "))
+    
     # Padding
     header.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
     header.no_borders()
 
     return header
 
-
-def _build_billing_table():
-
-    # Build Billing Table
-    b_table = Table(number_of_rows=3, number_of_columns=2)
+def build_payments_header(provider):
+    # Init Payment info table
+    payments = Table(number_of_rows=2, number_of_columns=1)
     
-    # Spacing
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-    
-    # Activity
-    b_table.add(
-        Paragraph(
-            "Activity:",
-            background_color=HexColor("FFFFFF"),
-            font="Helvetica-Bold",
-            font_color=X11Color("Black"),
+    if(ensure_payment_info(provider)):
+        payments.add(
+            Paragraph(
+                provider["paymentInfo"]
+            )
         )
-    )
+    else:
+        payments.add(Paragraph(" "))
     
-    # Spacing
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-    b_table.add(Paragraph(" "))
-
-    b_table.set_padding_on_all_cells(Decimal(2), Decimal(2), Decimal(2), Decimal(2))
-    b_table.no_borders()
+    # Empty Line break
+    payments.add(Paragraph(" "))
     
-    return b_table
+    return payments.no_borders()
 
 def std_event(event):
     if(event == 'Retainer' or event == 'Refund'):
@@ -159,7 +170,7 @@ def std_event(event):
     else:
         return True
 
-def _description_table(rows, session, dates, durations, hourly, amounts, new_balance):
+def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
     descrip_table = Table(number_of_rows=rows, number_of_columns=6)
     descrip_table.set_borders_on_all_cells(True, True, True, True)
@@ -247,7 +258,7 @@ def _description_table(rows, session, dates, durations, hourly, amounts, new_bal
     return descrip_table
 
 
-def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, MULTIPAGE):
+def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BALANCE, RUNNING, MULTIPAGE):
     name = CLIENT['clientname']
     print(name)
     
@@ -259,19 +270,21 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     page_layout.vertical_margin = page.get_page_info().get_height() * Decimal(0.02)
 
     # Append Statement Header
-    page_layout.add(_build_statment_header(PROV, CLIENT))
-    page_layout.add(_build_billing_table())
+    page_layout.add(build_statement_header(PROV, CLIENT, RUNNING))
+    
+    # Will Leave an Empty Row if No Payment Info Provided
+    page_layout.add(build_payments_header(PROV))
     
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            _description_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            build_descrip_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
     # Two paged
     elif(len(DATES) < 52):
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -280,12 +293,12 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
+            build_descrip_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
         )
     else:
         # Add 16 events to page 1
         page_layout.add(
-            _description_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -294,7 +307,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            _description_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
+            build_descrip_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
         )
         # Create and Initialize Third Page
         page3 = Page()
@@ -303,9 +316,8 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page3_layout.add(
-            _description_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
+            build_descrip_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
         )
-        
         
         
     # Local path
