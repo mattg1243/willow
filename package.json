@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node app.js",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=exp-billing:* npm run devstart"
+    "serverstart": "DEBUG=exp-billing:* npm run devstart",
+    "buildpush": "cd client && npm run build && cd .. && git commit -m 'new react build' && git push origin react && git push heroku react:main"
   },
   "dependencies": {
     "async": "^3.2.1",
