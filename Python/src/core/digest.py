@@ -60,3 +60,9 @@ def check_multipage(dates):
         return True
     else:
         return False
+
+def ensure_payment_info(provider):
+    if(provider["paymentInfo"] == ''):
+        return False
+    else:
+        return True

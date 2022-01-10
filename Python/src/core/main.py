@@ -13,24 +13,33 @@ if __name__ == "__main__":
         # Provider info
         prov = get_provider_info()
         print(f'PROVIDER -> {prov}\n')
+        
         # User info
         header = get_client_info()
         print('USER INFO -> ', header)
+        
         # Event log
         data = load()
+        
         # Parse dates
         dates = parse_dates(data)
         print(len(dates))
+        
         # Parse types
         types = parse_types(data)
+        
         # Parse durations
         durations = parse_durations(data)
+        
         # Parse rates
         rates = parse_rates(data)
+        
         # Parse amounts
         amounts = parse_amounts(data)
+        
         # Parse new balances
         newBalances = parse_balances(data)
+        
         # Find running balance
         running_balance = find_running_balance(newBalances)
         print('RUNNING BALANCE -> ', running_balance)
@@ -45,7 +54,7 @@ if __name__ == "__main__":
     
     # Generate the statement
     try:
-        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, multipage)
+        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, running_balance, multipage)
    
     # Log Error & Terminate
     except Exception as StatementError:
