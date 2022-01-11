@@ -2,6 +2,8 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const helpers = require('../helpers/helpers')
+const crypto = require('crypto');
+const transporter = require('./mailerConfig');
 
 const registerUser = async (req, res) => {
     if (req.body.password == req.body.passwordConfirm) {
@@ -130,9 +132,39 @@ const updateClientInfo = (req, res) => {
     )
 }
 
+const resetPassword = (req, res) => {
+    crypto.randomBytes(32, (err, buf) => {
+        if (err) { throw err; }
+
+        const token = buf.toString('hex');
+        const expireToken = Date.now() + 3600000;
+        console.log("Token : " + token);
+
+        User.findOneAndUpdate({ email: req.body.email}, { resetToken: token, expireToken: expireToken}, (err, user) => {
+            if (err) { throw err; }
+           
+            transporter.sendMail({
+                from: "Willow Support <no-reply@willow.com>",
+                to: req.body.email,
+                subject: "Reset your password",
+                html: `
+                <h5>Click <a href="http://localhost:3001/resetpassword/${token}">here</a> to reset your password<h5>
+                `,
+            }, (err, res) => {
+                if (err) { throw err; }
+
+                console.log(res);
+            })
+            
+            res.json(user);
+        })  
+    })
+}
+
 module.exports.registerUser = registerUser;
 module.exports.renderDashboard = renderDashboard;
 module.exports.updateUserInfo = updateUserInfo;
 module.exports.updateClientInfo = updateClientInfo;
 module.exports.addNewClient = addNewClient;
 module.exports.deleteClient = deleteClient;
+module.exports.resetPassword = resetPassword;
