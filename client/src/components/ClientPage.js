@@ -20,7 +20,7 @@ function ClientPage(props) {
     const [editIsShown, setEditIsShown] = useState(false);
 
     const { id } = useParams();
-    const { breakpoints, currentBreakpoint } = props
+    const { breakpoints, currentBreakpoint } = props;
     
     const token = useSelector(state => state.token);
     const user = useSelector(state => state.user);
