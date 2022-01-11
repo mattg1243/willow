@@ -59,13 +59,13 @@ const addEvent = async (req, res) => {
         event.save((err, event) => {
         if (err) return console.error(err);
         console.log(event);
+        helpers.recalcBalance(req.body.clientID);
         Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
             if (err) return console.error(err);
 
             console.log(result);
-            helpers.recalcBalance(req.body.clientID);
-            helpers.getAllData(req, res);
             console.log('Event added')
+            helpers.getAllData(req, res)
         })
     });
 }

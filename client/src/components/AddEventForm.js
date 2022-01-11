@@ -61,6 +61,7 @@ export default function AddEventForm(props) {
                 <Input type='date' onChange={(e) => { setDate(e.target.value) }}/>
                 <FormLabel>Event Type</FormLabel>
                 <Select onChange={(e) => { setType(e.target.value) }}>
+                    <option value=''>...</option>
                     <option value='Meeting'>Meeting</option>
                     <option value='Email'>Email</option>
                     <option value='Phone Call'>Phone Call</option>
