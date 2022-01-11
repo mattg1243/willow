@@ -14,6 +14,8 @@ const UserSchema = new Schema({
     lname: {type: String, required: true, maxLength: 100},
     nameForHeader: {type: String, required: false, maxLength: 100},
     email: {type: String, required: true, maxLength: 100},
+    resetToken: {type: String, required: false},
+    expireToken: {type: Date, required: false},
     phone: {type: String, required: false, maxLength: 100},
     street: {type: String, required: false},
     city: {type: String, required: false},

@@ -23,5 +23,7 @@ router.post('/newclient', helpers.verifyJWT, (req, res) => { handlers.addNewClie
 router.post('/deleteclient', helpers.verifyJWT, (req, res) => { handlers.deleteClient(req, res) });
 // update a clients information
 router.post('/updateclient', helpers.verifyJWT, (req, res) => { handlers.updateClientInfo(req, res) });
+// reset password
+router.post('/resetpassword', (req, res) => { handlers.resetPassword(req, res) });
 
 module.exports = router;
