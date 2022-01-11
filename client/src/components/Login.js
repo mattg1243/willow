@@ -1,7 +1,21 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import { Input, Container, VStack, HStack, Button } from '@chakra-ui/react';
+import {
+    Input, 
+    Container, 
+    VStack, 
+    HStack, 
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    FormLabel,
+ } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import axios from "axios"
 import { loginAction } from "../actions"
@@ -10,6 +24,8 @@ export default function Login() {
     // states for text input
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [resetModalShown, setResetModalShown] = useState(false);
+    const [emailReset, setEmailReset] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -37,6 +53,15 @@ export default function Login() {
     }
     window.loginUser = loginUser;
 
+    const resetPassword = () => {
+        axios.post("/user/resetPassword", {
+            email: emailReset
+        }).then((response) => {
+            console.log(response);
+            window.alert("Please check your email to reset your password")
+        })
+    }
+
     return (
         <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <VStack className="loginCont" >
@@ -49,6 +74,24 @@ export default function Login() {
                     <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
                     <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
                 </HStack>
+                <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer'}}>Reset Password</p>
+                <Modal isOpen={resetModalShown} onClose={() => {setResetModalShown(false)}}>
+                    <ModalOverlay />
+                    <ModalContent>
+                    <ModalHeader>Reset Email</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormLabel>Please enter your email:</FormLabel>
+                        <Input type="email" onChange={(e) => { setEmailReset(e.target.value); }}/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button style={{backgroundColor: "#63326E", color: 'white'}} mr={3} onClick={() => { resetPassword(); }}>
+                        Reset
+                        </Button>
+                        <Button onClick={() => {setResetModalShown(false)}}>Cancel</Button>
+                    </ModalFooter>
+                    </ModalContent>
+                </Modal>
             </VStack>
         </Container>
     )
