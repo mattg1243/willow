@@ -148,9 +148,14 @@ const resetPassword = (req, res) => {
                 to: req.body.email,
                 subject: "Reset your password",
                 // need to change this for production
+                text: `Go here to reset your password: ${process.env.BASE_URL}/resetpassword/${token}/${user.username}`
+                /*
                 html: `
+                <table>
                 <h5>Click <a href="http://localhost:3002/resetpassword/${token}/${user.username}">here</a> to reset your password<h5>
+                </table>
                 `,
+                */
             }, (err, res) => {
                 if (err) { throw err; }
 
