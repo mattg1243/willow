@@ -54,7 +54,7 @@ export default function Login() {
     window.loginUser = loginUser;
 
     const resetPassword = () => {
-        axios.post("/user/resetPassword", {
+        axios.post("/user/resetpassword", {
             email: emailReset
         }).then((response) => {
             console.log(response);
@@ -70,15 +70,15 @@ export default function Login() {
                     <Input className="textInput" placeholder="Username" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
                     <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
                 </VStack>
-                <HStack>
+                <HStack style={{paddingTop: '1rem'}}>
                     <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
                     <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
                 </HStack>
-                <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer'}}>Reset Password</p>
+                <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer', color: '#63326E'}}>Reset Password</p>
                 <Modal isOpen={resetModalShown} onClose={() => {setResetModalShown(false)}}>
                     <ModalOverlay />
                     <ModalContent>
-                    <ModalHeader>Reset Email</ModalHeader>
+                    <ModalHeader>Reset Password</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <FormLabel>Please enter your email:</FormLabel>

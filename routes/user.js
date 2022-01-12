@@ -25,5 +25,7 @@ router.post('/deleteclient', helpers.verifyJWT, (req, res) => { handlers.deleteC
 router.post('/updateclient', helpers.verifyJWT, (req, res) => { handlers.updateClientInfo(req, res) });
 // reset password
 router.post('/resetpassword', (req, res) => { handlers.resetPassword(req, res) });
+// save new password
+router.post('/changepassword', (req, res) => { handlers.changePassword(req, res) });
 
 module.exports = router;

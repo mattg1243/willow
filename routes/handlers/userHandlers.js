@@ -147,8 +147,9 @@ const resetPassword = (req, res) => {
                 from: "Willow Support <no-reply@willow.com>",
                 to: req.body.email,
                 subject: "Reset your password",
+                // need to change this for production
                 html: `
-                <h5>Click <a href="http://localhost:3001/resetpassword/${token}">here</a> to reset your password<h5>
+                <h5>Click <a href="http://localhost:3002/resetpassword/${token}/${user.username}">here</a> to reset your password<h5>
                 `,
             }, (err, res) => {
                 if (err) { throw err; }
@@ -161,6 +162,23 @@ const resetPassword = (req, res) => {
     })
 }
 
+const changePassword = (req, res) => {
+    User.findOne({ username: req.body.username }, (err, user) => {
+        if (err) { throw err; }
+        console.log("Req body: " + req.body.password)
+        if (req.body.token == user.resetToken && Date.now() <= user.expireToken) {
+            user.setPassword(req.body.password, (err, user) => {
+                if (err) { throw err; }
+                user.save();
+                console.log(user);
+                res.json(user);
+            })
+        } else {
+            res.status(401).send("Not authorized; reset token doesnt match.")
+        }
+    })
+}
+
 module.exports.registerUser = registerUser;
 module.exports.renderDashboard = renderDashboard;
 module.exports.updateUserInfo = updateUserInfo;
@@ -168,3 +186,4 @@ module.exports.updateClientInfo = updateClientInfo;
 module.exports.addNewClient = addNewClient;
 module.exports.deleteClient = deleteClient;
 module.exports.resetPassword = resetPassword;
+module.exports.changePassword = changePassword;
