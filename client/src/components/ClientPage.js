@@ -19,6 +19,8 @@ function ClientPage(props) {
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [toDelete, setToDelete] = useState('');
     const [editIsShown, setEditIsShown] = useState(false);
+    const [editEventIsShown, setEditEventIsShown] = useState(false);
+    const [toEdit, setToEdit] = useState('');
     const [statementDrawerOpen, setStatementDrawerOpen] = useState(false);
 
     const { id } = useParams();
@@ -84,7 +86,7 @@ function ClientPage(props) {
                             <Th style={{textAlign: 'center'}}>Time</Th></>)}
                             <Th style={{textAlign: 'center'}}>{breakpoints[currentBreakpoint] < breakpoints.desktop ? '$': 'Amount'}</Th>
                             {breakpoints[currentBreakpoint] < breakpoints.mobileLandscape ? null : (
-                            <Th style={{textAlign: 'end'}}>Delete</Th>
+                            <Th style={{textAlign: 'end'}}>Edit</Th>
                             )}
                         </Tr>
                         </Thead>
@@ -109,6 +111,12 @@ function ClientPage(props) {
                                         {breakpoints[currentBreakpoint] > breakpoints.mobile ? (
                                         <Td style={{textAlign: 'end'}}>
                                             <IconButton 
+                                                icon={<EditIcon />} 
+                                                size="sm" 
+                                                onClick={() => { setToEdit(event); setEditEventIsShown(true); }}
+                                                style={{margin: '1rem'}}
+                                            />
+                                            <IconButton 
                                                 icon={<DeleteIcon />} 
                                                 size="sm" 
                                                 onClick={() => { setDeleteIsShown(true); setToDelete(event._id) }}
@@ -124,7 +132,7 @@ function ClientPage(props) {
                     <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
-                            <ModalHeader>New Event</ModalHeader>
+                            <ModalHeader>Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                     <AddEventForm id={ id } setIsShown={ setAddIsShown }/>
@@ -153,6 +161,16 @@ function ClientPage(props) {
                             <ModalCloseButton />
                             <ModalBody style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.5rem'}}>
                                 <EditClientForm client={client} token={token} user={user.id} setEditIsShown={setEditIsShown}/>
+                            </ModalBody>
+                        </ModalContent>
+                    </Modal>
+                    <Modal motionPreset="slideInBottom" onClose={() => {setEditEventIsShown(false)}} isOpen={editEventIsShown}>
+                        <ModalOverlay />
+                        <ModalContent pb={5}>
+                            <ModalHeader>New Event</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                    <AddEventForm event={toEdit} setIsShown={setEditEventIsShown} />
                             </ModalBody>
                         </ModalContent>
                     </Modal>
