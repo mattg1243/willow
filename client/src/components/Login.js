@@ -15,6 +15,10 @@ import {
     ModalBody,
     ModalCloseButton,
     FormLabel,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    CloseButton
  } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import axios from "axios"
@@ -26,6 +30,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [resetModalShown, setResetModalShown] = useState(false);
     const [emailReset, setEmailReset] = useState('');
+    const [message, setMessage] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -49,7 +54,12 @@ export default function Login() {
                 return <h1>err</h1>
             }
         })
-        .catch(err => {console.log(err.response)})
+        .catch(err => {
+            console.log(err.response); 
+            if (err.response.data === "Unauthorized") {
+                setMessage("Invalid login credentials")
+            }
+        })
     }
     window.loginUser = loginUser;
 
@@ -69,6 +79,11 @@ export default function Login() {
                 <VStack style={{width: '20rem'}}>
                     <Input className="textInput" placeholder="Username" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
                     <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
+                    <Alert status='error' style={{display: message ? 'flex': 'none'}}>
+                        <AlertIcon />
+                        <AlertTitle mr={2}>{message}</AlertTitle>
+                        <CloseButton position='absolute' right='8px' top='8px' />
+                    </Alert>
                 </VStack>
                 <HStack style={{paddingTop: '1rem'}}>
                     <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
