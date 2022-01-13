@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import { VStack, HStack, Stack, Input, InputGroup, Button, Tooltip, Box, Divider } from '@chakra-ui/react';
+import { VStack, HStack, Container, Input, InputGroup, Button, Tooltip, Divider } from '@chakra-ui/react';
 import { QuestionIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -39,47 +39,45 @@ export default function Register() {
 
     return (
         <>
-            <VStack style={{padding: '8rem'}}>
-                <Box maxW='xl' maxH='lg'>
-                    <Stack direction={'column'} spacing={5}>
-                        <h3>User Info</h3>
-                        <InputGroup>
-                            <Input className="textInput" placeholder="First Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setFname(e.target.value);}}/>
-                            <Input className="textInput" placeholder="Last Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setLname(e.target.value);}}/>
-                        </InputGroup>
-                        <InputGroup>
-                            <Input className="textInput" placeholder="Email" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setEmail(e.target.value);}}/>
-                            <Input className="textInput" placeholder="Username" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value);}}/>
-                        </InputGroup>
-                        <InputGroup>
-                            <Input className="textInput" placeholder="Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value);}}/>
-                            <Input className="textInput" placeholder="Confirm Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPasswordConfirm(e.target.value);}}/>
-                        </InputGroup>
-                        <Divider orientation="horizontal"/>
-                        <HStack style={{justifyContent: 'center'}}>
-                            <h3>Info for Statement Header</h3>
-                                <Tooltip label="This information will be included in the header of all statements.
-                                If you would like your name to appear with a title or as anything else than provided in the previous form,
-                                enter it here.">
-                                    <QuestionIcon/>
-                                </Tooltip> 
-                        </HStack>
-                        <InputGroup>
-                        </InputGroup>
-                            <Input className="textInput" placeholder="Name to appear on statements" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setNameForHeader(e.target.value);}}/>
-                            <Input className="textInput" placeholder="Phone Number" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPhone(e.target.value);}}/>
-                        <InputGroup>
-                            <Input className="textInput" placeholder="Street" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setStreet(e.target.value);}}/>
-                            <Input className="textInput" placeholder="City" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setCity(e.target.value);}}/>
-                        </InputGroup>
-                        <InputGroup>
-                            <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setState(e.target.value);}}/>
-                            <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="#03b126" onChange={(e) => {setZip(e.target.value);}}/>
-                        </InputGroup>
-                        <Button background="#03b126" color="#fff" onClick={() => { registerUser(); }}>Sign Up</Button>
-                    </Stack>
-                </Box>
-            </VStack>
+            <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <VStack spacing={5}>
+                    <h3>User Info</h3>
+                    <InputGroup>
+                        <Input className="textInput" placeholder="First Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setFname(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Last Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setLname(e.target.value);}}/>
+                    </InputGroup>
+                    <InputGroup>
+                        <Input className="textInput" placeholder="Email" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setEmail(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Username" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value);}}/>
+                    </InputGroup>
+                    <InputGroup>
+                        <Input className="textInput" placeholder="Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Confirm Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPasswordConfirm(e.target.value);}}/>
+                    </InputGroup>
+                    <Divider orientation="horizontal"/>
+                    <HStack style={{justifyContent: 'center'}}>
+                        <h3>Info for Statement Header</h3>
+                            <Tooltip label="This information will be included in the header of all statements.
+                            If you would like your name to appear with a title or as anything else than provided in the previous form,
+                            enter it here.">
+                                <QuestionIcon/>
+                            </Tooltip> 
+                    </HStack>
+                    <InputGroup>
+                    </InputGroup>
+                        <Input className="textInput" placeholder="Name to appear on statements" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setNameForHeader(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Phone Number" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPhone(e.target.value);}}/>
+                    <InputGroup>
+                        <Input className="textInput" placeholder="Street" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setStreet(e.target.value);}}/>
+                        <Input className="textInput" placeholder="City" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setCity(e.target.value);}}/>
+                    </InputGroup>
+                    <InputGroup>
+                        <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setState(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="#03b126" onChange={(e) => {setZip(e.target.value);}}/>
+                    </InputGroup>
+                    <Button background="#03b126" color="#fff" onClick={() => { registerUser(); }}>Sign Up</Button>
+                </VStack>
+            </Container>
         </>
     )
 }
