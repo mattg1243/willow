@@ -59,25 +59,30 @@ const addEvent = async (req, res) => {
         event.save((err, event) => {
         if (err) return console.error(err);
         console.log(event);
-        helpers.recalcBalance(req.body.clientID);
+       
         Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
             if (err) return console.error(err);
 
             console.log(result);
             console.log('Event added')
-            helpers.getAllData(req, res)
+            helpers.recalcBalance(req.body.clientID, req, res);
         })
     });
 }
 
 const updateEvent = (req, res) => {
-        
-    let hrs = parseFloat(req.body.hours)
-    let mins = parseFloat(req.body.minutes)
-    let duration = hrs + (mins / 10)
-    let rate = req.body.rate
-    let amount = req.body.type != "Retainer" ? -(duration * rate): req.body.amount;
-    let detail = req.body.detail
+    let hrs, mins, duration, rate, amount, detail;  
+    if (! req.body.type == 'Retainer' || ! req.body.type == 'Refund') {
+        hrs = parseFloat(req.body.hours)
+        mins = parseFloat(req.body.minutes)
+        duration = hrs + (mins / 10)
+        rate = req.body.rate
+    } else {
+        hrs, mins, duration, rate = 0;
+    }
+    
+    amount = req.body.type != "Retainer" ? -(duration * rate): req.body.amount;
+    detail = req.body.detail
     let clientID = ''
 
     try {
@@ -87,9 +92,7 @@ const updateEvent = (req, res) => {
 
             clientID = docs.clientID
             //find all events that belong to this client so the new balance can be calculated
-            helpers.recalcBalance(clientID);
-
-            res.redirect(`/user/client/${clientID}`)
+            helpers.recalcBalance(clientID, req, res);
         })
     } catch (err) { throw err ; }
 }
