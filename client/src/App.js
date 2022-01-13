@@ -4,6 +4,7 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
+import Splash from './components/Splash';
 import './style.css';
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -30,10 +31,12 @@ function App() {
           <PersistGate persistor={persistor}>
           <Router>
               <Routes>
-                <Route path='/' element={<Login />} />
-                <Route path='/profile' element={<Profile />} />
-                <Route path='/resetpassword/:token/:username' element={<ResetPassword />} />
+                <Route path='/' element={<Splash />} />
+                <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
+                <Route path='/resetpassword/:token/:username' element={<ResetPassword />} />
+                {/* All routes below are priveleged and need to be wrapped in a PrivateRoutes component */}
+                <Route path='/profile' element={<Profile />} />
                 <Route path='/clients' element={<Dashboard />} />
                 <Route path='/client/:id' element={<ClientPage />} />
               </Routes>

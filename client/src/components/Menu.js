@@ -26,7 +26,7 @@ export default function HamburgerMenu() {
 
     const logout = () => {
         window.sessionStorage.removeItem('persist:root');
-        navigate('/');
+        navigate('/login');
     }
 
     useEffect(() => {console.log(statementDrawerOpen)})

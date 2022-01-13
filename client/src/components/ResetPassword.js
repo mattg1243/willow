@@ -27,7 +27,7 @@ import {
             token: token,
         }).then((response) => {
             console.log(response);
-            navigate('/');
+            navigate('/login');
         }).catch(err => console.error(err));
     };
 
