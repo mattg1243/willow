@@ -64,7 +64,7 @@ function ClientPage(props) {
                             {breakpoints[currentBreakpoint] < breakpoints.desktop ? null: (<><Th style={{textAlign: 'center'}}>Details</Th>
                             <Th style={{textAlign: 'center'}}>Time</Th></>)}
                             <Th style={{textAlign: 'center'}}>{breakpoints[currentBreakpoint] < breakpoints.desktop ? '$': 'Amount'}</Th>
-                            {breakpoints[currentBreakpoint] < breakpoints.desktop ? null : (
+                            {breakpoints[currentBreakpoint] < breakpoints.mobileLandscape ? null : (
                             <Th style={{textAlign: 'end'}}>Delete</Th>
                             )}
                         </Tr>
@@ -87,7 +87,7 @@ function ClientPage(props) {
                                         <Td style={{textAlign: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'center': 'end'}}>
                                             ${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                         </Td>
-                                        {breakpoints[currentBreakpoint] > breakpoints.tablet ? (
+                                        {breakpoints[currentBreakpoint] > breakpoints.mobile ? (
                                         <Td style={{textAlign: 'end'}}>
                                             <IconButton 
                                                 icon={<DeleteIcon />} 
