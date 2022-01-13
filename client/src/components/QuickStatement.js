@@ -18,7 +18,11 @@ import {
   RadioGroup,
   Radio,
   Text,
-  HStack
+  HStack,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  CloseButton
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useEffect } from 'react';
@@ -39,6 +43,7 @@ export default function QuickStatement(props) {
   const [startdate, setStartdate] = useState(new Date());
   const [enddate, setEnddate] = useState(new Date());
   const [events, setEvents] = useState([]);
+  const [message, setMessage] = useState('');
 
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
@@ -53,7 +58,7 @@ export default function QuickStatement(props) {
       startdate: startdate,
       enddate: enddate,
       events: allEvents,
-    }, {responseType: 'arraybuffer'}
+    }, {responseType: 'arraybuffer' || 'application/json'}
     )
     .then(async (response) => {console.log(response);
       const url = window.URL.createObjectURL(new Blob([response.data],{type: "application/pdf"}));
@@ -62,8 +67,11 @@ export default function QuickStatement(props) {
       link.setAttribute('download', 'statement.pdf');
       document.body.appendChild(link);
       link.click();})
-    .catch(err => console.log(err))
-  }
+    .catch(err => {
+      console.log(err);
+      setMessage("There are no events in the given range of dates.");
+    })
+  } 
 
   useEffect(() => {
     console.log("client: \n" + client); 
@@ -87,14 +95,23 @@ export default function QuickStatement(props) {
               <Box>
               <Box>
                 <FormLabel>Select Client</FormLabel>
-                <Select onChange={(e) => {setClient(e.target.value); setEvents(allEvents.filter(event => event.clientID == client["_id"]));}}>
+                <Select onChange={(e) => {
+                  setClient(e.target.value); 
+                  setMessage(""); 
+                  setEvents(allEvents.filter(event => event.clientID == client["_id"]));
+                }}>
                   {clients.map(client => {return (
                         <option key={client._id} value={JSON.stringify(client)}>{client.fname + " " + client.lname}</option>
                       )}
                     )}
                 </Select>
               </Box>
-                <RadioGroup onClick={() => { setAutoSelection(true) }} onChange={(val) => {setCurrentRadio(val)}}style={{marginTop: '2rem'}}>
+                <RadioGroup onClick={() => { setAutoSelection(true) }}
+                 onChange={(val) => {
+                    setCurrentRadio(val); 
+                    setMessage("");
+                    }}
+                  style={{marginTop: '2rem'}}>
                   <VStack spacing={4} direction="row">
                     <Radio 
                       defaultChecked="false" 
@@ -122,7 +139,7 @@ export default function QuickStatement(props) {
                   <h3>or</h3>
                 <Divider />
               </HStack>
-              <Stack spacing={4} direction="column"onClick={() => {setAutoSelection(false)}}>
+              <Stack spacing={4} direction="column"onClick={() => {setAutoSelection(false); setMessage("")}}>
                 <Box>
                     <Text mb="8px">Start Date</Text>
                     <Input type="date" isDisabled={autoSelection ? true: false} onChange={(e) => {setStartdate(e.target.value)}}/>
@@ -131,6 +148,10 @@ export default function QuickStatement(props) {
                     <Text mb="8px">End Date</Text>
                     <Input type="date" isDisabled={autoSelection ? true: false} onChange={(e) => {setEnddate(e.target.value)}}/>
                 </Box>
+                <Alert status='error' style={{display: message ? 'flex': 'none'}}>
+                    <AlertTitle mr={2}>{message}</AlertTitle>
+                    <CloseButton position='absolute' right='8px' top='8px' />
+                </Alert>
               </Stack>
             </Stack>
           </DrawerBody>

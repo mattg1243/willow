@@ -183,37 +183,39 @@ const makeStatement = async (req, res) => {
     // check for no events in given range
     if (eventsArg.length == 0) {
         console.log("There are no events in the given range of dates.")
-        req.flash('error', "There are no events in the given range of dates.");
-        return res.redirect(`/client/${req.params.id}`)
-    }
+        res.status(503).send("There are no events in");
+        return;
+    } else {
 
-    console.log("\nUser Args : \n", clientArg);
-    console.log("\nEvents Args : \n", eventsArg);
-    let options = {
-        mode: "text",
-        args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(eventsArg)]
-    }
+        console.log("\nUser Args : \n", clientArg);
+        console.log("\nEvents Args : \n", eventsArg);
+        let options = {
+            mode: "text",
+            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(eventsArg)]
+        }
 
-    PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-        if (err) return console.error(err)
+        PythonShell.run("Python/src/core/main.py", options, (err, result) => {
+            if (err) return console.error(err)
 
-        console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-        console.log(result)
-        console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
+            console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
+            console.log(result)
+            console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
 
-        try {
-            res.download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
-    
-                if (err) return console.error(err);
-                // delete the pdf from the server after download
-                fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
-                    if (err) return console.error(err)
+            try {
+                res.download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
         
-                });
-            })
-        } catch (err) { throw err; }
+                    if (err) return console.error(err);
+                    // delete the pdf from the server after download
+                    fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
+                        if (err) return console.error(err)
+            
+                    });
+                })
+            } catch (err) { throw err; }
 
-    })
+        })
+
+    }
 }
 
 const downloadStatement = async (req, res) => {
