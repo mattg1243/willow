@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { VStack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
+import { VStack, HStack, Stack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints';
 import { loginAction } from '../actions';
@@ -10,6 +10,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import Header from './Header';
 import AddEventForm from './AddEventForm';
 import EditClientForm from './EditClientForm';
+import QuickStatement from './QuickStatement';
 import axios from 'axios';
 
 function ClientPage(props) {
@@ -18,6 +19,7 @@ function ClientPage(props) {
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [toDelete, setToDelete] = useState('');
     const [editIsShown, setEditIsShown] = useState(false);
+    const [statementDrawerOpen, setStatementDrawerOpen] = useState(false);
 
     const { id } = useParams();
     const { breakpoints, currentBreakpoint } = props;
@@ -51,11 +53,28 @@ function ClientPage(props) {
         <>
             <Header />
             <VStack style={{height: '100', width: '100%', paddingTop: '1rem'}}>
-                <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
-                <IconButton icon={<EditIcon />} variant="ghost" onClick={ () => {setEditIsShown(true);} }/>
-                <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
-                    Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                </Text>
+                <HStack spacing={10} style={{paddingRight: '2rem', paddingLeft: '2rem'}}>
+                    <VStack style={{display: 'flex', flexDirection: 'column', alignItems: 'start'}}>
+                        <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
+                        <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
+                            Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Text>
+                    </VStack>
+                        <VStack style={{flexDirection: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'row': 'column', alignItems: 'end', justifyContent: 'end'}}>
+                            <Button 
+                                variant="outline"
+                                color="white" 
+                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                onClick={() => {setAddIsShown(true)}}
+                                >New Event</Button>
+                            <Button 
+                                variant="outline"
+                                color="white" 
+                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                onClick={() => {setStatementDrawerOpen(true)}}
+                            >Statement</Button>
+                        </VStack>
+                </HStack>
                     <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': '70%', padding:'1.5rem', tableLayout: 'fixed'}} >
                         <Thead width='100%'>
                         <Tr style={{width: '100%', marginLeft: 'auto', marginRight: 'auto', textAlign: 'justify'}}>
@@ -101,6 +120,7 @@ function ClientPage(props) {
                             )}
                         </Tbody>
                     </Table>
+                    <Button variant="outline" onClick={ () => {setEditIsShown(true);} }>Edit Client</Button>
                     <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
@@ -136,12 +156,7 @@ function ClientPage(props) {
                             </ModalBody>
                         </ModalContent>
                     </Modal>
-                <Button 
-                    variant="outline"
-                    color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}}
-                    onClick={() => {setAddIsShown(true)}}
-                >Add Event</Button>
+                <QuickStatement statementDrawerOpen={statementDrawerOpen} setStatementDrawerOpen={setStatementDrawerOpen} client={client}/>
             </VStack>
         </>
     )

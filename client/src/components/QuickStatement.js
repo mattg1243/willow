@@ -12,6 +12,7 @@ import {
   Select,
   Input,
   FormLabel,
+  Heading,
   Button,
   Stack,
   VStack,
@@ -39,7 +40,7 @@ export default function QuickStatement(props) {
 
   const [autoSelection, setAutoSelection] = useState(false);
   const [currentRadio, setCurrentRadio] = useState(null);
-  const [client, setClient] = useState(JSON.stringify(clients[0]));
+  const [client, setClient] = useState(props.client ? props.client: JSON.stringify(clients[0]));
   const [startdate, setStartdate] = useState(new Date());
   const [enddate, setEnddate] = useState(new Date());
   const [events, setEvents] = useState([]);
@@ -53,7 +54,7 @@ export default function QuickStatement(props) {
     {
       user: user,
       token: token,
-      client: JSON.parse(client),
+      client: props.client ? client: JSON.parse(client),
       currentRadio: currentRadio,
       startdate: startdate,
       enddate: enddate,
@@ -88,23 +89,31 @@ export default function QuickStatement(props) {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton onClick={() => { props.setStatementDrawerOpen(false) }}/>
-          <DrawerHeader borderBottomWidth="1px">Quick Statement</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">Make Statement</DrawerHeader>
 
           <DrawerBody>
             <Stack spacing="24px" style={{marginTop: '2rem'}}>
               <Box>
               <Box>
-                <FormLabel>Select Client</FormLabel>
-                <Select onChange={(e) => {
-                  setClient(e.target.value); 
-                  setMessage(""); 
-                  setEvents(allEvents.filter(event => event.clientID == client["_id"]));
-                }}>
-                  {clients.map(client => {return (
-                        <option key={client._id} value={JSON.stringify(client)}>{client.fname + " " + client.lname}</option>
-                      )}
-                    )}
-                </Select>
+                {props.client ? 
+                (<>
+                  <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '2rem', textAlign: 'center', marginBottom: '2rem'}}>{client.fname + " " + client.lname}</Heading>  
+                  <Divider />
+                </>) : (
+                  <>
+                    <FormLabel>Select Client</FormLabel>
+                    <Select onChange={(e) => {
+                      setClient(e.target.value); 
+                      setMessage(""); 
+                      setEvents(allEvents.filter(event => event.clientID == client["_id"]));
+                    }}>
+                      {clients.map(client => {return (
+                            <option key={client._id} value={JSON.stringify(client)}>{client.fname + " " + client.lname}</option>
+                          )}
+                        )}
+                    </Select>
+                  </>
+                )}
               </Box>
                 <RadioGroup onClick={() => { setAutoSelection(true) }}
                  onChange={(val) => {
