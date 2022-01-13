@@ -1,23 +1,24 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { HStack, VStack, Button, Box, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Heading } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import { withBreakpoints } from 'react-breakpoints';
 import ClientTable from "./ClientTable"
 import AddClientForm from "./AddClientForm";
 import Header from "./Header";
 import { useColorMode } from '@chakra-ui/color-mode';
 
-export default function Dashboard(props) {
+function Dashboard(props) {
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     
     const [isShown, setIsShown] = useState(false);
+    const { breakpoints, currentBreakpoint } = props;
     
     return (
         <>
             <Header />
-            <VStack style={{height: '100%', width: '70%', paddingTop: '1rem'}}>
+            <VStack style={{height: '100%', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': '70%', paddingTop: '1rem'}}>
             <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', marginBottom: '2rem'}}>Clients</Heading>
                 <ClientTable />
                 <HStack style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
@@ -42,3 +43,5 @@ export default function Dashboard(props) {
         </>
     )
 }
+
+export default withBreakpoints(Dashboard);

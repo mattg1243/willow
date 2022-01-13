@@ -56,16 +56,17 @@ function ClientPage(props) {
                 <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
                     Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
-                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: breakpoints[currentBreakpoint] > breakpoints.desktop ? '70%': '100%', padding:'1.5rem', tableLayout: 'fixed'}} >
+                    <Table variant='striped' size='lg' style={{marginBottom: '2rem', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': '70%', padding:'1.5rem', tableLayout: 'fixed'}} >
                         <Thead width='100%'>
                         <Tr style={{width: '100%', marginLeft: 'auto', marginRight: 'auto', textAlign: 'justify'}}>
                             <Th style={{textAlign: 'start'}}>Date</Th>
                             <Th style={{textAlign: 'center'}}>Type</Th>
-                            {breakpoints[currentBreakpoint] > breakpoints.desktop ? (<><Th style={{textAlign: 'center'}}>Details</Th>
-                            <Th style={{textAlign: 'center'}}>Time</Th></>): null}
-                            <Th style={{textAlign: 'center'}}>{breakpoints[currentBreakpoint] > breakpoints.desktop ? 'Amount': '$'}</Th>
-                            {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
-                            <Th style={{textAlign: 'end'}}>Delete</Th>): null}
+                            {breakpoints[currentBreakpoint] < breakpoints.desktop ? null: (<><Th style={{textAlign: 'center'}}>Details</Th>
+                            <Th style={{textAlign: 'center'}}>Time</Th></>)}
+                            <Th style={{textAlign: 'center'}}>{breakpoints[currentBreakpoint] < breakpoints.desktop ? '$': 'Amount'}</Th>
+                            {breakpoints[currentBreakpoint] < breakpoints.desktop ? null : (
+                            <Th style={{textAlign: 'end'}}>Delete</Th>
+                            )}
                         </Tr>
                         </Thead>
                         <Tbody width="100%">
@@ -74,7 +75,7 @@ function ClientPage(props) {
                                     <Tr key={event._id} >
                                         <Td style={{textAlign: 'start'}}>{moment.utc(event.date).format("MM/DD/YY")}</Td>
                                         <Td style={{textAlign: 'center'}}>{event.type}</Td>
-                                        {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+                                        {breakpoints[currentBreakpoint] > breakpoints.tablet ? (
                                         <>
                                         <Td style={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", textAlign: 'center'}}>
                                             <Tooltip label={event.detail}>
@@ -83,10 +84,10 @@ function ClientPage(props) {
                                         </Td>
                                         <Td style={{textAlign: 'center'}}>{event.duration ? event.duration : '-'}</Td>
                                         </>): null}
-                                        <Td style={{textAlign: breakpoints[currentBreakpoint] > breakpoints.desktop ? 'center': 'end'}}>
+                                        <Td style={{textAlign: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'center': 'end'}}>
                                             ${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                         </Td>
-                                        {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+                                        {breakpoints[currentBreakpoint] > breakpoints.tablet ? (
                                         <Td style={{textAlign: 'end'}}>
                                             <IconButton 
                                                 icon={<DeleteIcon />} 
