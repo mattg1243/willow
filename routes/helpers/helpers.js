@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 require('../../models/event-schema');
 
-function recalcBalance(clientID) {
+function recalcBalance(clientID, req, res) {
     
     let balance = 0;
     
@@ -30,7 +30,7 @@ function recalcBalance(clientID) {
             if (err) return console.error(err)
     
             console.log("---balance updated---")
-    
+            getAllData(req, res)
         })
 })}
 
