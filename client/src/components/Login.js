@@ -77,7 +77,7 @@ export default function Login() {
             <VStack className="loginCont" >
                 <h3 className="willowCursive" style={{fontSize: '7rem'}}>Willow</h3>
                 <VStack style={{width: '20rem'}}>
-                    <Input className="textInput" placeholder="Username" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
+                    <Input className="textInput" placeholder="Username" autoCapitalize="none" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
                     <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
                     <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                         <AlertIcon />
