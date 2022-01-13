@@ -1,0 +1,48 @@
+import React from 'react';
+import {
+    VStack,
+    HStack,
+    Button
+}
+from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { withBreakpoints } from 'react-breakpoints';
+
+
+function Splash(props) {
+
+    const { breakpoints, currentBreakpoint} = props;
+    const navigate = useNavigate();
+
+    return (
+        <>
+            <VStack style={{marginTop: '5rem'}}>
+                <h1 className="willowCursive" style={{fontSize: '6rem'}}>Willow</h1>
+                <h3 style={{maxWidth: breakpoints[currentBreakpoint] < breakpoints.tablet ? '80%' : '50%', fontSize: '1.5rem'}}>A free and easy way for professionals to track their time, manage retainers and invoice clients.</h3>
+                <HStack spacing={10} style={{margin: '2rem'}}>
+                    <Button style={{backgroundColor: "#63326E", color: 'white'}} onClick={() => { navigate('/register') }}>Register</Button>
+                    <Button style={{backgroundColor: "#03b126", color: 'white'}} onClick={() => { navigate('/login') }}>Log In</Button>
+                </HStack>
+                <VStack style={{flexDirection: breakpoints[currentBreakpoint] < breakpoints.tablet ? 'column': 'row', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%' : '70%', justifyContent: 'space-between', textAlign: 'center'}} spacing={5}>
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>
+                        <img style={{width: '50%', height: 'auto'}} src={require("../assets/clock.png")} alt="bill"/>
+                        <h3 style={{fontSize: '2rem', paddingTop: '.5rem'}}>Time Tracking</h3>
+                        <p style={{width: '80%'}}>Log events such as meetings, phone calls and emails. Track your billable time, bill rate and the total fees.</p>
+                    </VStack>
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>    
+                        <img style={{width: '50%', height: 'auto'}} src={require("../assets/money.png")} alt="bill"/>
+                        <h3 style={{fontSize: '2rem'}}>Retainer management</h3>
+                        <p style={{width: '80%'}}>Accept and manage retainers. Apply funds to a client account and bill against the balance.</p>
+                    </VStack>
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>
+                        <img style={{width: '50%', height: 'auto'}} src={require("../assets/bill.png")} alt="bill"/>
+                        <h3 style={{fontSize: '2rem'}}>Statement Generator</h3>
+                        <p style={{width: '80%'}}>Prepare and send PDF statements to clients detailing activity by event or date range.</p>
+                    </VStack>
+                </VStack>
+            </VStack>
+        </>
+    )
+}
+
+export default withBreakpoints(Splash);

@@ -34,7 +34,7 @@ export default function Register() {
             fname: fname, lname: lname, email: email, username: username,
             password: password, passwordConfirm: passwordConfirm, nameForHeader: nameForHeader, phone: phone,
             street: street, city: city, state: state, zip: zip,
-        }).then((response) => {console.log(response); if(response.data === 'success'){ navigate('/') }}).catch(err => {console.log(err)})
+        }).then((response) => {console.log(response); if(response.data === 'success'){ navigate('/login') }}).catch(err => {console.log(err)})
     }
 
     return (
