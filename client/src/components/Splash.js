@@ -24,20 +24,20 @@ function Splash(props) {
                     <Button style={{backgroundColor: "#03b126", color: 'white'}} onClick={() => { navigate('/login') }}>Log In</Button>
                 </HStack>
                 <VStack style={{flexDirection: breakpoints[currentBreakpoint] < breakpoints.tablet ? 'column': 'row', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%' : '70%', justifyContent: 'space-between', textAlign: 'center'}} spacing={5}>
-                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}>
                         <img style={{width: '50%', height: 'auto'}} src={require("../assets/clock.png")} alt="bill"/>
-                        <h3 style={{fontSize: '2rem', paddingTop: '.5rem'}}>Time Tracking</h3>
-                        <p style={{width: '80%'}}>Log events such as meetings, phone calls and emails. Track your billable time, bill rate and the total fees.</p>
+                        <h3 style={{fontSize: '2rem'}}>Time Tracking</h3>
+                        <p style={{width: '80%', height: 'auto'}}>Log events such as meetings, phone calls and emails. Track your billable time, bill rate and the total fees.</p>
                     </VStack>
-                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>    
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}>    
                         <img style={{width: '50%', height: 'auto'}} src={require("../assets/money.png")} alt="bill"/>
                         <h3 style={{fontSize: '2rem'}}>Retainer management</h3>
                         <p style={{width: '80%'}}>Accept and manage retainers. Apply funds to a client account and bill against the balance.</p>
                     </VStack>
-                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem'}}>
+                    <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}> 
                         <img style={{width: '50%', height: 'auto'}} src={require("../assets/bill.png")} alt="bill"/>
                         <h3 style={{fontSize: '2rem'}}>Statement Generator</h3>
-                        <p style={{width: '80%'}}>Prepare and send PDF statements to clients detailing activity by event or date range.</p>
+                        <p style={{width: '80%', marginBottom: '4rem'}}>Prepare and send PDF statements to clients detailing activity by event or date range.</p>
                     </VStack>
                 </VStack>
             </VStack>
