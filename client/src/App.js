@@ -31,8 +31,8 @@ function App() {
           <PersistGate persistor={persistor}>
           <Router>
               <Routes>
-                <Route path='/' element={<Splash />} />
-                <Route path='/login' element={<Login />} />
+                <Route path='/home' element={<Splash />} />
+                <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/resetpassword/:token/:username' element={<ResetPassword />} />
                 {/* All routes below are priveleged and need to be wrapped in a PrivateRoutes component */}

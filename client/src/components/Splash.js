@@ -31,7 +31,7 @@ function Splash(props) {
                     </VStack>
                     <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}>    
                         <img style={{width: '50%', height: 'auto'}} src={require("../assets/money.png")} alt="bill"/>
-                        <h3 style={{fontSize: '2rem'}}>Retainer management</h3>
+                        <h3 style={{fontSize: '2rem'}}>Retainer Management</h3>
                         <p style={{width: '80%'}}>Accept and manage retainers. Apply funds to a client account and bill against the balance.</p>
                     </VStack>
                     <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}> 

@@ -128,11 +128,11 @@ function ClientPage(props) {
                             )}
                         </Tbody>
                     </Table>
-                    <Button variant="outline" onClick={ () => {setEditIsShown(true);} }>Edit Client</Button>
+                    <Button variant="outline" style={{marginBottom: '2rem'}} onClick={ () => {setEditIsShown(true);}}>Edit Client</Button>
                     <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
-                            <ModalHeader>Event</ModalHeader>
+                            <ModalHeader>New Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                     <AddEventForm id={ id } setIsShown={ setAddIsShown }/>
@@ -167,7 +167,7 @@ function ClientPage(props) {
                     <Modal motionPreset="slideInBottom" onClose={() => {setEditEventIsShown(false)}} isOpen={editEventIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>
-                            <ModalHeader>New Event</ModalHeader>
+                            <ModalHeader>Edit Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                     <AddEventForm event={toEdit} setIsShown={setEditEventIsShown} />
