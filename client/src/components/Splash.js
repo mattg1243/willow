@@ -21,7 +21,7 @@ function Splash(props) {
                 <h3 style={{maxWidth: breakpoints[currentBreakpoint] < breakpoints.tablet ? '80%' : '50%', fontSize: '1.5rem'}}>A free and easy way for professionals to track their time, manage retainers and invoice clients.</h3>
                 <HStack spacing={10} style={{margin: '2rem'}}>
                     <Button style={{backgroundColor: "#63326E", color: 'white'}} onClick={() => { navigate('/register') }}>Register</Button>
-                    <Button style={{backgroundColor: "#03b126", color: 'white'}} onClick={() => { navigate('/login') }}>Log In</Button>
+                    <Button style={{backgroundColor: "#03b126", color: 'white'}} onClick={() => { navigate('/') }}>Log In</Button>
                 </HStack>
                 <VStack style={{flexDirection: breakpoints[currentBreakpoint] < breakpoints.tablet ? 'column': 'row', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%' : '70%', justifyContent: 'space-between', textAlign: 'center'}} spacing={5}>
                     <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}>
