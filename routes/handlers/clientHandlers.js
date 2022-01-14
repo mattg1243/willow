@@ -21,7 +21,11 @@ const renderClientPage = async (req, res) => {
 }
 
 const addEvent = async (req, res) => {
-    console.log("req:\n", req.body);
+    /* DEBUG LOGS
+    console.log("Add event req.body: \n"); 
+    console.dir(req.body);
+    console.log("----------------------------------------------------------------")
+    */
     let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
     console.log("time:\n", time);
     let amount = 0;
@@ -36,7 +40,7 @@ const addEvent = async (req, res) => {
 
         } else {
 
-        amount = -(time * parseFloat(req.body.rate)).toFixed(2)
+        amount = -(time * parseFloat(req.body.rate));
     
      }
      console.log("amount:\n", amount)
@@ -48,7 +52,7 @@ const addEvent = async (req, res) => {
             detail: req.body.detail, 
             duration: time, 
             rate: parseFloat(req.body.rate), 
-            amount: parseFloat(amount).toFixed(2), 
+            amount: amount, 
             newBalance: 0 
         });
         // saving event to db
@@ -67,22 +71,28 @@ const addEvent = async (req, res) => {
 }
 
 const updateEvent = (req, res) => {
-    let hrs, mins, duration, rate, amount, detail;  
-    if (! req.body.type == 'Retainer' || ! req.body.type == 'Refund') {
+    let hrs, mins, duration, rate, amount, detail; 
+    /* DEBUG LOGS
+    console.log("Update event req.body: \n"); 
+    console.dir(req.body);
+    console.log("----------------------------------------------------------------")
+    */
+    if (req.body.type != 'Refund' && req.body.type != 'Retainer') {
         hrs = parseFloat(req.body.hours)
         mins = parseFloat(req.body.minutes)
-        duration = hrs + (mins / 10)
-        rate = req.body.rate
+        duration = hrs + mins;
+        rate = req.body.rate;
+        amount = -(duration * rate);
     } else {
         hrs, mins, duration, rate = 0;
+        amount = parseFloat(req.body.amount);
     }
     
-    amount = req.body.type != "Retainer" ? -(duration * rate): req.body.amount;
     detail = req.body.detail
     let clientID = ''
 
     try {
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: parseFloat(amount), detail: detail }, function (err, docs) {
 
             if (err) return console.error(err)
 
