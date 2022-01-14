@@ -8,9 +8,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { IoSettingsSharp } from 'react-icons/io5';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { BiLogOut } from 'react-icons/bi';
+import { BiLogOut, BiHome } from 'react-icons/bi';
 import { FaFileInvoiceDollar, FaUserCircle } from 'react-icons/fa';
 import { BsFillPersonLinesFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +25,7 @@ export default function HamburgerMenu() {
 
     const logout = () => {
         window.sessionStorage.removeItem('persist:root');
-        navigate('/login');
+        navigate('/');
     }
 
     useEffect(() => {console.log(statementDrawerOpen)})
@@ -41,6 +40,9 @@ export default function HamburgerMenu() {
             variant='flat'
                 />
             <MenuList >
+                <MenuItem icon={<BiHome color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/home') }} >
+                    Home
+                </MenuItem>
                 <MenuItem icon={<BsFillPersonLinesFill color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/clients') }} >
                     Clients
                 </MenuItem>

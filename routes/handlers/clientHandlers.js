@@ -28,7 +28,7 @@ const addEvent = async (req, res) => {
     
     if (req.body.type == 'Retainer') {
 
-        amount = req.body.amount;
+        amount = parseFloat(req.body.amount);
 
         } else if(req.body.type == 'Refund') {
 
