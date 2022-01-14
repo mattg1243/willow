@@ -16,7 +16,7 @@ function recalcBalance(clientID, req, res) {
         console.log(events)
 
         for (let i = 0; i < events.length; i++) {
-            balance += parseFloat(events[i].amount.toString())
+            balance += parseFloat(events[i].amount['$numberDecimal'])
             
             Event.findOneAndUpdate({ _id: events[i]._id }, { newBalance: balance }, (err) => {
                 if (err) console.error(err)
