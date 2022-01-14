@@ -12,8 +12,8 @@ const EventSchema = new Schema({
     duration: {type: Number, required: false, maxLength: 100},
     rate: {type: Number, required: false, maxLength: 10},
     amount: {type: mongoose.Schema.Types.Decimal128, required: false,
-            get: v => new mongoose.Types.Decimal128(v.toString())},
+            get: v => {return { '$numberDecimal': `${Number.parseFloat(v.toString()).toFixed(2)}`}}},
     newBalance: {type: mongoose.Schema.Types.Decimal128, required: true}
-})
+}, {toJSON: {getters: true}})
 
 module.exports = mongoose.model('EventModel', EventSchema, 'events');
