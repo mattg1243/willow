@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
     Input, 
     VStack, 
@@ -20,8 +20,8 @@ export default function AddEventForm(props) {
     const [type, setType] = useState(props.event ? props.event.type: '');
     const [details, setDetails] = useState(props.event ? props.event.detail : '');
     const [hours, setHours] = useState(props.event ? (props.event.duration + "").split(".")[0]: 0);
-    const [minutes, setMinutes] = useState(props.event ? (props.event.duration + "").split(".")[1] : 0);
-    const [rate, setRate] = useState(props.event ? props.event.rate : 0);
+    const [minutes, setMinutes] = useState(props.event ? "0." + (props.event.duration + "").split(".")[1] : 0);
+    const [rate, setRate] = useState(props.event ? props.event.rate.toString() : 0);
     const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
     // save event if this component is being used to update and existing event
     const eventID = props.event ? props.event._id : null;
@@ -34,16 +34,20 @@ export default function AddEventForm(props) {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const saveEvent = async () => {
-        const response = await axios.post(`/client/${props.id}/addevent`,
+    useEffect(() => {
+        console.log('Hours: ' + typeof hours + '\nMinutes : ' + typeof minutes + '\nRate: ' + typeof rate + '\n');
+    })
+
+    const saveEvent = () => {
+        axios.post(`/client/${props.id}/addevent`,
         {
             clientID: props.id,
             date: date,
             type: type,
             detail: details,
-            hours: hours,
-            minutes: minutes,
-            rate: rate,
+            hours: parseFloat(hours),
+            minutes: parseFloat(minutes),
+            rate: parseFloat(rate),
             amount: parseFloat(amount).toFixed(2), 
             newBalance: 0,
             user: user.id,
@@ -63,10 +67,10 @@ export default function AddEventForm(props) {
             date: date,
             type: type,
             detail: details,
-            hours: hours,
-            minutes: minutes,
-            rate: rate,
-            amount: parseFloat(amount).toFixed(2), 
+            hours: parseFloat(hours),
+            minutes: parseFloat(minutes),
+            rate: parseFloat(rate),
+            amount: parseFloat(amount).toFixed(2),
             newBalance: 0,
             user: user.id,
             token: token,
@@ -113,16 +117,16 @@ export default function AddEventForm(props) {
                             <option value='9'>9</option>
                         </Select>
                         <Select placeholder="Minutes" onChange={(e) => { setMinutes(e.target.value) }} defaultValue={isNaN(minutes) ? '.0' : '.' + minutes}>
-                            <option value='.0'>0</option>
-                            <option value='.1'>1-6 mins</option>
-                            <option value='.2'>7-12 mins</option>
-                            <option value='.3'>13-18 mins</option>
-                            <option value='.4'>19-24 mins</option>
-                            <option value='.5'>25-30 mins</option>
-                            <option value='.6'>31-36 mins</option>
-                            <option value='.7'>37-42 mins</option>
-                            <option value='.8'>43-48 mins</option>
-                            <option value='.9'>49-54 mins</option>
+                            <option value='0.0'>0</option>
+                            <option value='0.1'>1-6 mins</option>
+                            <option value='0.2'>7-12 mins</option>
+                            <option value='0.3'>13-18 mins</option>
+                            <option value='0.4'>19-24 mins</option>
+                            <option value='0.5'>25-30 mins</option>
+                            <option value='0.6'>31-36 mins</option>
+                            <option value='0.7'>37-42 mins</option>
+                            <option value='0.8'>43-48 mins</option>
+                            <option value='0.9'>49-54 mins</option>
                         </Select>
                     </HStack>
                 </VStack>
