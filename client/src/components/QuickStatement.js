@@ -122,24 +122,30 @@ export default function QuickStatement(props) {
                     }}
                   style={{marginTop: '2rem'}}>
                   <VStack spacing={4} direction="row">
-                    <Radio 
-                      defaultChecked="false" 
-                      isDisabled={autoSelection ? false : true} 
-                      value="currentMonth"
-                    >Current Month
-                    </Radio>
-                    <Radio 
-                      defaultChecked="false" 
-                      isDisabled={autoSelection ? false : true}
-                      value="currentYear"
-                    >Current Year
-                    </Radio>
-                    <Radio 
-                      defaultChecked="false" 
-                      isDisabled={autoSelection ? false : true}
-                      value="all"
-                    >All Events
-                    </Radio>
+                    <HStack>
+                      <Radio 
+                        defaultChecked="false" 
+                        isDisabled={autoSelection ? false : true} 
+                        value="currentMonth"
+                      ></Radio>
+                      <FormLabel>Current Month</FormLabel>
+                    </HStack>
+                    <HStack>
+                      <Radio 
+                        defaultChecked="false" 
+                        isDisabled={autoSelection ? false : true}
+                        value="currentYear"
+                      ></Radio>
+                      <FormLabel>Current Year</FormLabel>
+                    </HStack>
+                    <HStack>
+                      <Radio 
+                        defaultChecked="false" 
+                        isDisabled={autoSelection ? false : true}
+                        value="all"
+                      ></Radio>
+                      <FormLabel>All Events</FormLabel>
+                    </HStack>
                   </VStack>
                 </RadioGroup>
               </Box>
