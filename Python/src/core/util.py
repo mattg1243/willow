@@ -170,7 +170,7 @@ def std_event(event):
     else:
         return True
 
-def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance):
+def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance, page_number):
     length_of_events = len(dates)
     descrip_table = Table(number_of_rows=rows, number_of_columns=6)
     descrip_table.set_borders_on_all_cells(True, True, True, True)
@@ -180,16 +180,22 @@ def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_ba
                 Paragraph(
                     h,
                     horizontal_alignment=Alignment.LEFT,
-                    font_color=X11Color("White"),
+                    font_color=X11Color("Black"),
                     font_size=10,
-                    font="Helvetica",
+                    font="Helvetica-Bold",
                 ),
-                background_color=HexColor("000000"),
+                border_top=True, 
+                border_bottom=True,
+                border_left=True,
+                border_right=True,
+                border_color=X11Color("Black"),
             )
         )
 
     # white
-    even_color = HexColor("FFFFFF")
+    even_color = HexColor("ffffff")
+    # grey
+    odd_color = HexColor("d3d3d3")
 
     # Fill Out Table With Events
     iter = 0
@@ -237,17 +243,15 @@ def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_ba
 
     # If alloted lines is less than the max space
     # Available, fill remaining space with empty rows
-    print(rows, iter)
     if iter < rows:
         for row_number in range(iter + 1, rows):
             col_iter = 0
             while col_iter < 6:
                 descrip_table.add(
-                    TableCell(Paragraph(" "), background_color=even_color)
+                    TableCell(Paragraph(" "))
                 )
                 col_iter += 1
-                if col_iter == 5 and row_number == rows:
-                    descrip_table.add(Paragraph("Running Balance: %s" % balance))
+                if row_number == rows:
                     break
     
     # Set padding on all cells 
@@ -255,6 +259,8 @@ def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_ba
         Decimal(4), Decimal(4), Decimal(4), Decimal(4)
     )
     descrip_table.no_borders()
+    descrip_table.even_odd_row_colors(even_row_color=even_color, odd_row_color=odd_color)
+    
     return descrip_table
 
 
@@ -277,45 +283,42 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     # If single paged - build single description table 
     if(not MULTIPAGE):
         page_layout.add(
-            build_descrip_table(22, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
+            build_descrip_table(28, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCE)
         )
     # Two paged
-    elif(len(DATES) < 52):
-        # Add 16 events to page 1
+    elif(len(DATES) <= 64):
+        # Add 27 events to page 1
         page_layout.add(
-            build_descrip_table(28, TYPES[0:26], DATES[0:26], DURATIONS[0:26], RATES[0:26], AMOUNTS[0:26], BALANCE[0:26])
+            build_descrip_table(28, TYPES[0:27], DATES[0:27], DURATIONS[0:27], RATES[0:27], AMOUNTS[0:27], BALANCE[0:27], 1)
         )
         # Create and Initialize Second Page
         page2 = Page()
         pdf.append_page(page2)
-        page2_layout = SingleColumnLayout(page2)
-        page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
+        page2_layout = SingleColumnLayout(page2, vertical_margin=page.get_page_info().get_height() * Decimal(0.02))
         # Add the rest of the events
         page2_layout.add(
-            build_descrip_table(33, TYPES[26:], DATES[26:], DURATIONS[26:], RATES[26:], AMOUNTS[26:], BALANCE[26:])
+            build_descrip_table(38, TYPES[27:], DATES[27:], DURATIONS[27:], RATES[27:], AMOUNTS[27:], BALANCE[27:], 2)
         )
     else:
-        # Add 16 events to page 1
+        # Add 27 events to page 1
         page_layout.add(
-            build_descrip_table(28, TYPES[0:26], DATES[0:26], DURATIONS[0:26], RATES[0:26], AMOUNTS[0:26], BALANCE[0:26])
+            build_descrip_table(28, TYPES[0:27], DATES[0:27], DURATIONS[0:27], RATES[0:27], AMOUNTS[0:27], BALANCE[0:27])
         )
         # Create and Initialize Second Page
         page2 = Page()
         pdf.append_page(page2)
-        page2_layout = SingleColumnLayout(page2)
-        page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
+        page2_layout = SingleColumnLayout(page2, vertical_margin=page.get_page_info().get_height() * Decimal(0.04))
         # Add the rest of the events
         page2_layout.add(
-            build_descrip_table(39, TYPES[26:58], DATES[26:58], DURATIONS[26:58], RATES[26:58], AMOUNTS[26:58], BALANCE[26:58])
+            build_descrip_table(38, TYPES[27:64], DATES[27:64], DURATIONS[27:64], RATES[27:64], AMOUNTS[27:64], BALANCE[27:64])
         )
         # Create and Initialize Third Page
         page3 = Page()
         pdf.append_page(page3)
-        page3_layout = SingleColumnLayout(page3)
-        page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
+        page3_layout = SingleColumnLayout(page3, vertical_margin=page.get_page_info().get_height() * Decimal(0.04))
         # Add the rest of the events
         page3_layout.add(
-            build_descrip_table(39, TYPES[58:], DATES[58:], DURATIONS[58:], RATES[58:], AMOUNTS[58:], BALANCE[58:])
+            build_descrip_table(38, TYPES[64:], DATES[64:], DURATIONS[64:], RATES[64:], AMOUNTS[64:], BALANCE[64:])
         )
         
         
