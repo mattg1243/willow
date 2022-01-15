@@ -170,7 +170,7 @@ def std_event(event):
     else:
         return True
 
-def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance, page_number):
+def build_descrip_table(rows, session, dates, durations, hourly, amounts, new_balance):
     length_of_events = len(dates)
     descrip_table = Table(number_of_rows=rows, number_of_columns=6)
     descrip_table.set_borders_on_all_cells(True, True, True, True)
