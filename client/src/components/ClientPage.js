@@ -54,7 +54,7 @@ function ClientPage(props) {
     return (
         <>
             <Header />
-            <VStack style={{height: '100', width: '100%', paddingTop: '1rem'}}>
+            <VStack style={{height: '100%', width: '100%', paddingTop: '1rem'}}>
                 <HStack spacing={10} style={{paddingRight: '2rem', paddingLeft: '2rem'}}>
                     <VStack style={{display: 'flex', flexDirection: 'column', alignItems: 'start'}}>
                         <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
@@ -128,7 +128,7 @@ function ClientPage(props) {
                             )}
                         </Tbody>
                     </Table>
-                    <Button variant="outline" style={{marginBottom: '2rem'}} onClick={ () => {setEditIsShown(true);}}>Edit Client</Button>
+                    <Button variant="outline" style={{padding: '1rem'}} onClick={ () => {setEditIsShown(true);}}>Edit Client</Button>
                     <Modal motionPreset="slideInBottom" onClose={() => {setAddIsShown(false)}} isOpen={addIsShown}>
                         <ModalOverlay />
                         <ModalContent pb={5}>

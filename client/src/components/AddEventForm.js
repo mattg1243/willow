@@ -20,7 +20,12 @@ export default function AddEventForm(props) {
     const [type, setType] = useState(props.event ? props.event.type: '');
     const [details, setDetails] = useState(props.event ? props.event.detail : '');
     const [hours, setHours] = useState(props.event ? (props.event.duration + "").split(".")[0]: 0);
-    const [minutes, setMinutes] = useState(props.event ? "0." + (props.event.duration + "").split(".")[1] : 0);
+    const [minutes, setMinutes] = useState(
+        // if form is being opened in update mode, check if the duration has a decimal value in very hacky fashion
+        props.event ? props.event.duration % 1 != 0 ? 
+        "0." + (props.event.duration + "").split(".")[1] : 
+        "0.0" : 
+        0);
     const [rate, setRate] = useState(props.event ? props.event.rate.toString() : 0);
     const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
     // save event if this component is being used to update and existing event
@@ -116,7 +121,7 @@ export default function AddEventForm(props) {
                             <option value='8'>8</option>
                             <option value='9'>9</option>
                         </Select>
-                        <Select placeholder="Minutes" onChange={(e) => { setMinutes(e.target.value) }} defaultValue={isNaN(minutes) ? '.0' : '.' + minutes}>
+                        <Select placeholder="Minutes" onChange={(e) => { setMinutes(e.target.value) }} defaultValue={isNaN(parseFloat(minutes)) ? '0.0' : minutes}>
                             <option value='0.0'>0</option>
                             <option value='0.1'>1-6 mins</option>
                             <option value='0.2'>7-12 mins</option>
