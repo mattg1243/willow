@@ -26,7 +26,7 @@ if __name__ == "__main__":
         dates = parse_dates(data)
         num_events = len(dates)
         print('NUM DATES -> ', num_events)
-        if(num_events > 98):
+        if(num_events > 101):
             sys.exit(0)
         
         # Parse types
