@@ -283,7 +283,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     elif(len(DATES) < 52):
         # Add 16 events to page 1
         page_layout.add(
-            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(28, TYPES[0:26], DATES[0:26], DURATIONS[0:26], RATES[0:26], AMOUNTS[0:26], BALANCE[0:26])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -292,12 +292,12 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            build_descrip_table(33, TYPES[20:], DATES[20:], DURATIONS[20:], RATES[20:], AMOUNTS[20:], BALANCE[20:])
+            build_descrip_table(33, TYPES[26:], DATES[26:], DURATIONS[26:], RATES[26:], AMOUNTS[26:], BALANCE[26:])
         )
     else:
         # Add 16 events to page 1
         page_layout.add(
-            build_descrip_table(22, TYPES[0:20], DATES[0:20], DURATIONS[0:20], RATES[0:20], AMOUNTS[0:20], BALANCE[0:20])
+            build_descrip_table(28, TYPES[0:26], DATES[0:26], DURATIONS[0:26], RATES[0:26], AMOUNTS[0:26], BALANCE[0:26])
         )
         # Create and Initialize Second Page
         page2 = Page()
@@ -306,7 +306,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page2_layout.vertical_margin = page2.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page2_layout.add(
-            build_descrip_table(33, TYPES[20:52], DATES[20:52], DURATIONS[20:52], RATES[20:52], AMOUNTS[20:52], BALANCE[20:52])
+            build_descrip_table(39, TYPES[26:58], DATES[26:58], DURATIONS[26:58], RATES[26:58], AMOUNTS[26:58], BALANCE[26:58])
         )
         # Create and Initialize Third Page
         page3 = Page()
@@ -315,7 +315,7 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
         page3_layout.vertical_margin = page3.get_page_info().get_height() * Decimal(0.02)
         # Add the rest of the events
         page3_layout.add(
-            build_descrip_table(33, TYPES[52:], DATES[52:], DURATIONS[52:], RATES[52:], AMOUNTS[52:], BALANCE[52:])
+            build_descrip_table(39, TYPES[58:], DATES[58:], DURATIONS[58:], RATES[58:], AMOUNTS[58:], BALANCE[58:])
         )
         
         
