@@ -56,7 +56,7 @@ def find_running_balance(balances):
     return running_balance
 
 def check_multipage(dates):
-    if(len(dates) > 20):
+    if(len(dates) > 27):
         return True
     else:
         return False
