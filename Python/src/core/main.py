@@ -1,5 +1,6 @@
 from util import generate_statement
 from logger import _set_log_params
+import sys
 from digest import get_provider_info, load, get_client_info, parse_dates, parse_types, parse_durations
 from digest import parse_rates, parse_amounts, parse_balances, check_multipage, find_running_balance
 
@@ -23,7 +24,10 @@ if __name__ == "__main__":
         
         # Parse dates
         dates = parse_dates(data)
-        print(len(dates))
+        num_events = len(dates)
+        print('NUM DATES -> ', num_events)
+        if(num_events > 101):
+            sys.exit(0)
         
         # Parse types
         types = parse_types(data)
