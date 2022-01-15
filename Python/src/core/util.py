@@ -267,7 +267,6 @@ def generate_statement(CLIENT, PROV, DATES, TYPES, DURATIONS, RATES, AMOUNTS, BA
     page = Page()
     pdf.append_page(page)
     page_layout = SingleColumnLayout(page, vertical_margin=page.get_page_info().get_height() * Decimal(0.04))
-    print('Page layout vert margins -> ', page_layout.vertical_margin)
     
     # Append Statement Header
     page_layout.add(build_statement_header(PROV, CLIENT, RUNNING))
