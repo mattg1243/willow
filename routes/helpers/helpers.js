@@ -122,7 +122,7 @@ const getAllData = (req, res) => {
                 
                 response.events = events;
                 // send the data!
-                res.json(response);
+                return res.json(response);
             })
         })
     }).clone();
