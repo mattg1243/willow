@@ -72,7 +72,8 @@ const addEvent = async (req, res) => {
 
 const updateEvent = (req, res) => {
     let hrs, mins, duration, rate, amount, detail; 
-    /* DEBUG LOGS
+    // DEBUG LOGS
+    /*
     console.log("Update event req.body: \n"); 
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
@@ -85,7 +86,13 @@ const updateEvent = (req, res) => {
         amount = -(duration * rate);
     } else {
         hrs, mins, duration, rate = 0;
-        amount = parseFloat(req.body.amount);
+        if (req.body.type == 'Refund') {
+            // ensure amount is always negative if event is a refund
+            amount =  - (Math.abs(req.body.amount));
+        } else if (req.body.type == 'Retainer') {
+            // ensure the opposite for a retainer payment
+            amount = Math.abs(parseFloat(req.body.amount));
+        }
     }
     
     detail = req.body.detail
@@ -109,8 +116,10 @@ const deleteEvent = (req, res) => {
         Event.findByIdAndDelete(req.body.eventID, (err, event) => {
 
             if (err) return console.error(err);
-            console.log("Event:\n", event)
-            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - parseInt(event.amount.toString()) }}, function(err, result) {
+            console.log("Event:\n");
+            console.dir(event);
+            console.log('\nThe events amount with index:\n' + event.amount['$numberDecimal']);
+            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount['$numberDecimal'] }}, function(err, result) {
                     
                 if (err) console.error(err);
     
