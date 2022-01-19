@@ -18,7 +18,8 @@ import {
     Alert,
     AlertIcon,
     AlertTitle,
-    CloseButton
+    CloseButton,
+    Spinner
  } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import axios from "axios"
@@ -31,6 +32,7 @@ export default function Login() {
     const [resetModalShown, setResetModalShown] = useState(false);
     const [emailReset, setEmailReset] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -42,6 +44,7 @@ export default function Login() {
     }
 
     const loginUser = async () => {
+        setLoading(true);
         axios.post("/login", {
             username: username,
             password: password,
@@ -49,7 +52,7 @@ export default function Login() {
         .then((response) => {
             if (response.data) {
                 dispatch(loginAction(response.data))
-                setTimeout(checkStorage, 1000)
+                setTimeout(checkStorage, 1250)
             } else {
                 return <h1>err</h1>
             }
@@ -72,24 +75,37 @@ export default function Login() {
         })
     }
 
+    const handleKeypress = e => {
+        //it triggers by pressing the enter key
+      if (e.key === 'Enter') {
+        loginUser();
+      }
+    };
+
     return (
         <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <VStack className="loginCont" >
                 <h3 className="willowCursive" style={{fontSize: '7rem'}}>Willow</h3>
                 <VStack style={{width: '20rem'}}>
                     <Input className="textInput" placeholder="Username" autoCapitalize="none" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
-                    <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}}/>
+                    <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}} onKeyPress={(e) => handleKeypress(e)}/>
                     <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                         <AlertIcon />
                         <AlertTitle mr={2}>{message}</AlertTitle>
                         <CloseButton position='absolute' right='8px' top='8px' />
                     </Alert>
                 </VStack>
-                <HStack style={{paddingTop: '1rem'}}>
-                    <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
-                    <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
-                </HStack>
-                <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer', color: '#63326E'}}>Reset Password</p>
+                {loading ? (
+                    <Spinner style={{margin: '1.9rem', padding: '1rem', color: '#03b126'}}/>
+                ) : (
+                    <>
+                        <HStack style={{paddingTop: '1rem'}}>
+                        <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
+                        <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
+                        </HStack>
+                        <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer', color: '#63326E'}}>Reset Password</p>
+                    </>
+                )}
                 <Modal isOpen={resetModalShown} onClose={() => {setResetModalShown(false)}}>
                     <ModalOverlay />
                     <ModalContent>
