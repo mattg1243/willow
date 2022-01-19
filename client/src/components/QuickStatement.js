@@ -23,7 +23,8 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  CloseButton
+  CloseButton,
+  Spinner
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useEffect } from 'react';
@@ -45,11 +46,13 @@ export default function QuickStatement(props) {
   const [enddate, setEnddate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
 
   const makeStatement = async () => {
+    setLoading(true);
     const response = await axios.post(`/client/makestatement`, 
     {
       user: user,
@@ -65,11 +68,14 @@ export default function QuickStatement(props) {
       const url = window.URL.createObjectURL(new Blob([response.data],{type: "application/pdf"}));
       var link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'statement.pdf');
+      link.setAttribute('download', `${client.fname}${client.lname[0]}.pdf`);
       document.body.appendChild(link);
-      link.click();})
+      link.click();
+      setLoading(false);  
+    })
     .catch(err => {
       console.log(err);
+      setLoading(false);
       setMessage("There are no events in the given range of dates.");
     })
   } 
@@ -168,6 +174,15 @@ export default function QuickStatement(props) {
                     <CloseButton position='absolute' right='8px' top='8px' />
                 </Alert>
               </Stack>
+              {loading ? (
+                  <>
+                    <VStack width='100%'>
+                      <Spinner style={{margin: '2rem', padding: '2rem', color: isDark? "#63326E" : "#03b126"}}/>
+                    </VStack>
+                  </>
+                ) : (
+                  null
+                )}
             </Stack>
           </DrawerBody>
 
