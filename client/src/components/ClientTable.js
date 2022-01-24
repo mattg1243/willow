@@ -5,9 +5,8 @@ import { Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 
 export default function ClientTable() {
     
-    const clients = useSelector(state => state.clients);
+    const clients = useSelector(state => state.clients) || [];
     const navigate = useNavigate();
-
 
     useEffect(() => {console.log("ClientTable mounted")});
 
