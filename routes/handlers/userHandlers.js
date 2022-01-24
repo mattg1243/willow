@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
                 street: req.body.street, 
                 city: req.body.city, 
                 state: req.body.state, 
-                zip: req.body.zip}), 
+                zip: req.body.zip}),
                 req.body.password, function(err) {
                 
                     if (err) {
@@ -27,7 +27,7 @@ const registerUser = async (req, res) => {
                     return err;
                 } else {
                     console.log('User registered');
-                    res.send("success")
+                    helpers.getAllData(req, res);
                 }
             })
         } 
