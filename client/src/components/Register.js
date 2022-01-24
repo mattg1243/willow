@@ -2,6 +2,8 @@ import { React, useState } from 'react';
 import { VStack, HStack, Container, Input, InputGroup, Button, Tooltip, Divider } from '@chakra-ui/react';
 import { QuestionIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../actions';
 import axios from 'axios';
 
 export default function Register() {
@@ -20,21 +22,21 @@ export default function Register() {
     const [zip, setZip] = useState('');
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const registerUser = () => {
-        const configObject ={
-            method: "POST",
-            url: "http://localhost:3000/user/register/newuser",
-            data: { fname: fname, lname: lname, email: email, username: username,
-                    password: password, nameForHeader: nameForHeader, phone: phone,
-                    street: street, city: city, state: state, zip: zip, },
-        }
-        // axios(configObject).then((response) => { console.log(response); navigate('/')});
-        axios.post("http://localhost:3000/user/register/newuser", {
+        axios.post("/user/register/newuser", {
             fname: fname, lname: lname, email: email, username: username,
             password: password, passwordConfirm: passwordConfirm, nameForHeader: nameForHeader, phone: phone,
             street: street, city: city, state: state, zip: zip,
-        }).then((response) => {console.log(response); if(response.data === 'success'){ navigate('/') }}).catch(err => {console.log(err)})
+        })
+        .then((response) => {
+            console.log(response); 
+            if(response.data) {
+                dispatch(loginAction(response.data));
+                setTimeout(() => {navigate('/clients')}, 1000);
+            }})
+        .catch(err => {console.log(err)})
     }
 
     return (
