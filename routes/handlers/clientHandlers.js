@@ -30,7 +30,7 @@ const addEvent = async (req, res) => {
     console.log("time:\n", time);
     let amount = 0;
     
-    if (req.body.type == 'Retainer') {
+    if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
 
         amount = parseFloat(req.body.amount);
 
@@ -78,7 +78,7 @@ const updateEvent = (req, res) => {
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
     */
-    if (req.body.type != 'Refund' && req.body.type != 'Retainer') {
+    if (req.body.type != 'Refund' && req.body.type != 'Retainer' && req.body.type == 'Payment') {
         hrs = parseFloat(req.body.hours)
         mins = parseFloat(req.body.minutes)
         duration = hrs + mins;
@@ -89,8 +89,8 @@ const updateEvent = (req, res) => {
         if (req.body.type == 'Refund') {
             // ensure amount is always negative if event is a refund
             amount =  - (Math.abs(req.body.amount));
-        } else if (req.body.type == 'Retainer') {
-            // ensure the opposite for a retainer payment
+        } else if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
+            // ensure the opposite for a retainer / payment
             amount = Math.abs(parseFloat(req.body.amount));
         }
     }
