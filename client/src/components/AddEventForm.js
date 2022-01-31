@@ -30,6 +30,8 @@ export default function AddEventForm(props) {
     const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
     // save event if this component is being used to update and existing event
     const eventID = props.event ? props.event._id : null;
+    // for showing only relevant input fields based on event type
+    const [hrlyEvent, setHrlyEvent] = useState(true);
 
     const stateStr = window.sessionStorage.getItem('persist:root');
     const state = JSON.parse(stateStr);
@@ -38,6 +40,7 @@ export default function AddEventForm(props) {
     const dispatch = useDispatch();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const hrlyEvents = ['Meeting', 'Email', 'Phone Call', 'Other']
 
     useEffect(() => {
         console.log('Hours: ' + typeof hours + '\nMinutes : ' + typeof minutes + '\nRate: ' + typeof rate + '\n');
@@ -94,20 +97,21 @@ export default function AddEventForm(props) {
                 <FormLabel>Date</FormLabel>
                 <Input type='date' onChange={(e) => { setDate(e.target.value) }} value={date}/>
                 <FormLabel>Event Type</FormLabel>
-                <Select onChange={(e) => { setType(e.target.value) }} value={type}>
+                <Select onChange={(e) => { setType(e.target.value); if (e.target.value === 'Refund' || e.target.value === 'Retainer' || e.target.value === 'Payment') {setHrlyEvent(false)}}} value={type}>
                     <option value=''>...</option>
                     <option value='Meeting'>Meeting</option>
                     <option value='Email'>Email</option>
                     <option value='Phone Call'>Phone Call</option>
                     <option value='Refund'>Refund</option>
                     <option value='Retainer'>Retainer</option>
+                    <option value='Payment'>Payment</option>
                     <option value='Other'>Other</option>
                 </Select>
                 <FormLabel>Details</FormLabel>
                 <Input placeholder="Details" onChange={(e) => { setDetails(e.target.value) }} value={details}/>
-                <HStack spacing={10} style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>
+                <HStack spacing={10} style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}}>
                 <VStack>
-                    <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>Time</FormLabel>
+                    <FormLabel style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}}>Time</FormLabel>
                     <HStack spacing={10}>
                         <Select placeholder="Hours" onChange={(e) => { setHours(e.target.value) }} defaultValue={hours}>
                             <option value='0'>0</option>
@@ -136,10 +140,10 @@ export default function AddEventForm(props) {
                     </HStack>
                 </VStack>
                 </HStack>
-                <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}}>Hourly Rate</FormLabel>
-                <Input type="number" placeholder={rate} style={{display: type === 'Retainer' || type === 'Refund' ? 'none': 'flex'}} onChange={(e) =>{ setRate(e.target.value) }}/>
-                <FormLabel style={{display: type === 'Retainer' || type === 'Refund' ? 'flex': 'none'}}>$ Amount</FormLabel>
-                <Input type="number" placeholder={amount} style={{display: type === 'Retainer' || type === 'Refund' ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
+                <FormLabel style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}}>Hourly Rate</FormLabel>
+                <Input type="number" placeholder={rate} style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}} onChange={(e) =>{ setRate(e.target.value) }}/>
+                <FormLabel style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}}>$ Amount</FormLabel>
+                <Input type="number" placeholder={amount} style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
                 <Divider style={{paddingTop: '2rem'}} />
                 {props.event ? (
                     <Button 
