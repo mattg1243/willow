@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
                 
                     if (err) {
                     console.log('Error while registering user : ', err);
-                    return err;
+                    return res.status(500).send(err.message);
                 } else {
                     console.log('User registered');
                     helpers.getAllData(req, res);
