@@ -59,13 +59,13 @@ export default function EditClientsDialog(props) {
     return (
         <VStack>
             <FormLabel>First Name</FormLabel>
-            <Input type="text" onChange={(e) => { setFname(e.target.value); }} placeholder={props.client.fname}/>
+            <Input type="text" onChange={(e) => { setFname(e.target.value); }} value={props.client.fname}/>
             <FormLabel>Last Name</FormLabel>
-            <Input type="text" onChange={(e) => { setLname(e.target.value); }} placeholder={props.client.lname}/>
+            <Input type="text" onChange={(e) => { setLname(e.target.value); }} value={props.client.lname}/>
             <FormLabel>Email</FormLabel>
-            <Input type="email" onChange={(e) => { setEmail(e.target.value); }} placeholder={props.client.email}/>
+            <Input type="email" onChange={(e) => { setEmail(e.target.value); }} value={props.client.email}/>
             <FormLabel>Phone</FormLabel>
-            <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} placeholder={props.client.phonenumber}/>
+            <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={props.client.phonenumber}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
                 <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); props.setEditIsShown(false); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>

@@ -141,9 +141,9 @@ export default function AddEventForm(props) {
                 </VStack>
                 </HStack>
                 <FormLabel style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}}>Hourly Rate</FormLabel>
-                <Input type="number" placeholder={rate} style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}} onChange={(e) =>{ setRate(e.target.value) }}/>
+                <Input type="number" value={rate} style={{display: !hrlyEvents.includes(type) ? 'none': 'flex'}} onChange={(e) =>{ setRate(e.target.value) }}/>
                 <FormLabel style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}}>$ Amount</FormLabel>
-                <Input type="number" placeholder={amount} style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
+                <Input type="number" value={amount} style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
                 <Divider style={{paddingTop: '2rem'}} />
                 {props.event ? (
                     <Button 
