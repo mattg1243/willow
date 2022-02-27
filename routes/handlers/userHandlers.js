@@ -69,7 +69,8 @@ const addNewClient = async (req, res) => {
                 lname: req.body.lname, 
                 phonenumber: req.body.phonenumber, 
                 email: req.body.email, 
-                balance: 0
+                balance: 0,
+                rate: req.body.rate,
             }
         ); 
         newClient.save(function(err, client) {
