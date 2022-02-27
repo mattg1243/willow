@@ -26,7 +26,7 @@ export default function AddEventForm(props) {
         "0." + (props.event.duration + "").split(".")[1] : 
         "0.0" : 
         0);
-    const [rate, setRate] = useState(props.event ? props.event.rate.toString() : 0);
+    const [rate, setRate] = useState(props.event ? props.event.rate.toString() : props.rate.toString());
     const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
     // save event if this component is being used to update and existing event
     const eventID = props.event ? props.event._id : null;

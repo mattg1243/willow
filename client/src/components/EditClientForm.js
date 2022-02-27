@@ -25,6 +25,7 @@ export default function EditClientsDialog(props) {
     const [lname, setLname] = useState(`${props.client.lname}`);
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
+    const [rate, setRate] = useState(`${props.client.rate ? props.client.rate['$numberDecimal'] : 0}`);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
 
     const { colorMode } = useColorMode();
@@ -51,6 +52,7 @@ export default function EditClientsDialog(props) {
             lname: lname,
             email: email,
             phone: phone,
+            rate: rate,
         })
         .then(response => {console.log("Res data: \n: " + response); dispatch(getClients(response.data));} )
         .catch(err => {console.error(err);})
@@ -66,6 +68,8 @@ export default function EditClientsDialog(props) {
             <Input type="email" onChange={(e) => { setEmail(e.target.value); }} value={props.client.email}/>
             <FormLabel>Phone</FormLabel>
             <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={props.client.phonenumber}/>
+            <FormLabel>Billing Rate</FormLabel>
+            <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
                 <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); props.setEditIsShown(false); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>
