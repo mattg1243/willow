@@ -135,7 +135,7 @@ function ClientPage(props) {
                             <ModalHeader>New Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm id={ id } setIsShown={ setAddIsShown }/>
+                                    <AddEventForm id={ id } rate={client.rate['$numberDecimal']} setIsShown={ setAddIsShown }/>
                             </ModalBody>
                         </ModalContent>
                     </Modal>
@@ -170,7 +170,7 @@ function ClientPage(props) {
                             <ModalHeader>Edit Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm event={toEdit} setIsShown={setEditEventIsShown} />
+                                    <AddEventForm event={toEdit} rate={client.rate['$numberDecimal']} setIsShown={setEditEventIsShown} />
                             </ModalBody>
                         </ModalContent>
                     </Modal>
