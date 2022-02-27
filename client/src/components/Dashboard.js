@@ -34,7 +34,7 @@ function Dashboard(props) {
                     <ModalContent pb={5}>
                         <ModalHeader>New Client</ModalHeader>
                         <ModalCloseButton />
-                        <ModalBody>
+                        <ModalBody style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.5rem'}}>
                                 <AddClientForm setIsShown={setIsShown}/>
                         </ModalBody>
                     </ModalContent>
