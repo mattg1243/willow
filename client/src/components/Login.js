@@ -60,7 +60,8 @@ export default function Login() {
         .catch(err => {
             console.log(err.response); 
             if (err.response.data === "Unauthorized") {
-                setMessage("Invalid login credentials")
+                setMessage("Invalid login credentials");
+                setLoading(false);
             }
         })
     }
@@ -76,7 +77,6 @@ export default function Login() {
     }
 
     const handleKeypress = e => {
-        //it triggers by pressing the enter key
       if (e.key === 'Enter') {
         loginUser();
       }
@@ -92,7 +92,7 @@ export default function Login() {
                     <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                         <AlertIcon />
                         <AlertTitle mr={2}>{message}</AlertTitle>
-                        <CloseButton position='absolute' right='8px' top='8px' />
+                        <CloseButton position='absolute' right='8px' top='8px' onClick={() => setMessage("")}/>
                     </Alert>
                 </VStack>
                 {loading ? (
