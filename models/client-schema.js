@@ -9,7 +9,8 @@ const ClientSchema = new Schema({
     phonenumber: {type: String, required: false, maxLength: 100},
     email: {type: String, required: false, maxLength: 100},
     sessions: [{type: mongoose.Schema.Types.ObjectId, ref: 'events'}], // this needs to be changed to an array of IDs and refactored to "events"
-    balance: {type: mongoose.Schema.Types.Decimal128}
+    balance: {type: mongoose.Schema.Types.Decimal128},
+    rate: {type: mongoose.Schema.Types.Decimal128}
 
 })
 

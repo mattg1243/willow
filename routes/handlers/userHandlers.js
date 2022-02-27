@@ -111,7 +111,8 @@ const updateClientInfo = (req, res) => {
         Client.findOneAndUpdate({ _id: req.body.clientID }, 
             { 
                 fname: req.body.fname, lname: req.body.lname, 
-                email: req.body.email, phonenumber: req.body.phone
+                email: req.body.email, phonenumber: req.body.phone,
+                rate: req.body.rate,
             }, (err, client) => {
                 if (err) { throw err; }
     
