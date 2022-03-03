@@ -15,6 +15,22 @@ import axios from 'axios';
 import { loginAction } from '../actions';
 
 export default function AddEventForm(props) {
+    // set rate depending on how the component is rendered
+    // default to 0 when no rate is passed through props
+    let billRate = 0;
+    if (props.edit) {
+        // use the events prespecified rates when rendered for editing
+        billRate = props.event.rate;
+    } else {
+        // default to clients billing rate when rendered for new event
+        if (!isNaN(props.rate)) {
+            billRate = props.rate;
+        } else {
+            billRate = 0;
+        }
+        
+    }
+    
     // states for input fields
     const [date, setDate] = useState(props.event ? moment.utc(props.event.date).format("YYYY-MM-DD"): moment.utc(new Date()).format("YYYY-MM-DD"));
     const [type, setType] = useState(props.event ? props.event.type: '');
@@ -26,7 +42,7 @@ export default function AddEventForm(props) {
         "0." + (props.event.duration + "").split(".")[1] : 
         "0.0" : 
         0);
-    const [rate, setRate] = useState(props.event ? props.event.rate.toString() : props.rate.toString());
+    const [rate, setRate] = useState(billRate);
     const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
     // save event if this component is being used to update and existing event
     const eventID = props.event ? props.event._id : null;
