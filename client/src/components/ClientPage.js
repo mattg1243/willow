@@ -170,7 +170,7 @@ function ClientPage(props) {
                             <ModalHeader>Edit Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm event={toEdit} rate={client.rate ? client.rate['$numberDecimal']: "Not specified"} setIsShown={setEditEventIsShown} />
+                                    <AddEventForm event={toEdit} rate={client.rate ? client.rate['$numberDecimal']: "Not specified"} edit={true} setIsShown={setEditEventIsShown} />
                             </ModalBody>
                         </ModalContent>
                     </Modal>
