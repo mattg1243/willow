@@ -27,12 +27,11 @@ export default function AddEventForm(props) {
             billRate = props.rate;
         } else {
             billRate = 0;
-        }
-        
+        }  
     }
     
     // states for input fields
-    const [date, setDate] = useState(props.event ? moment.utc(props.event.date).format("YYYY-MM-DD"): moment.utc(new Date()).format("YYYY-MM-DD"));
+    const [date, setDate] = useState(props.event ? moment.utc(props.event.date).format("YYYY-MM-DD"): moment().format("YYYY-MM-DD"));
     const [type, setType] = useState(props.event ? props.event.type: '');
     const [details, setDetails] = useState(props.event ? props.event.detail : '');
     const [hours, setHours] = useState(props.event ? (props.event.duration + "").split(".")[0]: 0);
