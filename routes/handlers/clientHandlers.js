@@ -26,9 +26,10 @@ const addEvent = async (req, res) => {
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
     */
-    let time = parseFloat(req.body.hours) + parseFloat(req.body.minutes)
-    console.log("time:\n", time);
+    
     let amount = 0;
+    let time = 0;
+    let rate = 0;
     
     if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
 
@@ -40,8 +41,9 @@ const addEvent = async (req, res) => {
 
         } else {
 
-        amount = -(time * parseFloat(req.body.rate));
-    
+            time = parseFloat(req.body.hours) + parseFloat(req.body.minutes);    
+            amount = -(time * parseFloat(req.body.rate));
+            rate = parseFloat(req.body.rate);
      }
      console.log("amount:\n", amount)
 
@@ -51,7 +53,7 @@ const addEvent = async (req, res) => {
             type: req.body.type, 
             detail: req.body.detail, 
             duration: time, 
-            rate: parseFloat(req.body.rate), 
+            rate: rate, 
             amount: amount, 
             newBalance: 0 
         });
