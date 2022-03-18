@@ -1,12 +1,10 @@
 const router = require('express').Router();
-const Client = require('../models/client-schema')
-const Event = require('../models/event-schema')
-const connectEnsureLogin = require('connect-ensure-login');
 const handlers = require('./handlers/userHandlers');
 const helpers = require('./helpers/helpers');
+const validators = require('./validators/userValidators');
 
 // register new user to DB
-router.post('/register/newuser', (req, res) => { handlers.registerUser(req, res) })
+router.post('/register/newuser', validators.registerUserValidator, (req, res) => { handlers.registerUser(req, res) })
 // update users info from preferences page
 router.post("/updateinfo", helpers.verifyJWT, (req, res) => { handlers.updateUserInfo(req, res) }) // p
 // add a new client
