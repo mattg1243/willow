@@ -5,34 +5,32 @@ const helpers = require('../helpers/helpers')
 const crypto = require('crypto');
 const transporter = require('./mailerConfig');
 
-const registerUser = async (req, res) => {
-    if (req.body.password == req.body.passwordConfirm) {
-        
-        try {
-            await User.register(new User({
-                username: req.body.username, 
-                fname: req.body.fname, 
-                lname: req.body.lname, 
-                email: req.body.email, 
-                nameForHeader: req.body.nameForHeader, 
-                phone: req.body.phone, 
-                street: req.body.street, 
-                city: req.body.city, 
-                state: req.body.state, 
-                zip: req.body.zip}),
-                req.body.password, function(err) {
-                
-                    if (err) {
-                    console.log('Error while registering user : ', err);
-                    return res.status(500).send(err.message);
-                } else {
-                    console.log('User registered');
-                    helpers.getAllData(req, res);
-                }
-            })
-        } 
-        catch(err) { throw err; } 
-    }
+const registerUser = (req, res) => {
+         
+    try {
+        User.register(new User({
+            username: req.body.username, 
+            fname: req.body.fname, 
+            lname: req.body.lname, 
+            email: req.body.email, 
+            nameForHeader: req.body.nameForHeader, 
+            phone: req.body.phone, 
+            street: req.body.street, 
+            city: req.body.city, 
+            state: req.body.state, 
+            zip: req.body.zip}),
+            req.body.password, function(err) {
+            
+                if (err) {
+                console.log('Error while registering user : ', err);
+                return res.status(500).send(err.message);
+            } else {
+                console.log('User registered');
+                helpers.getAllData(req, res);
+            }
+        })
+    } 
+    catch(err) { throw new Error(err.message); } 
 }
 
 const updateUserInfo = (req, res) => {
