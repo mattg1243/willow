@@ -116,3 +116,27 @@ exports.registerUserValidator = [
     },
   
 ]
+
+exports.loginUserValidator = [
+  
+]
+
+exports.updateUserInfoValidator = [
+
+]
+
+exports.newClientValidator = [
+
+]
+
+exports.udpateClientValidator = [
+
+]
+
+exports.resetPasswordValidator = [
+
+]
+
+exports.changePasswordValidator = [
+
+]
