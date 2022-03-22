@@ -58,25 +58,25 @@ export default function Profile() {
             <VStack style={{height: '100%', width: '60%'}} spacing={5}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', paddingBottom: '2rem'}}>Profile</Heading>
                 <FormLabel>Name for Header</FormLabel>
-                <Input type="text" value={user.nameForHeader} onChange={(e) => { setName(e.target.value) }}/>
+                <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
                 <FormLabel>Street Address</FormLabel>
-                <Input type="text" value={user.street} onChange={(e) => { setStreet(e.target.value) }}/>
+                <Input type="text" value={street} onChange={(e) => { setStreet(e.target.value) }}/>
                 <FormLabel>City</FormLabel>
-                <Input type="text" value={user.city} onChange={(e) => { setCity(e.target.value) }}/>
+                <Input type="text" value={city} onChange={(e) => { setCity(e.target.value) }}/>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} width="100%">
                     <VStack>
                         <FormLabel>State</FormLabel>
-                        <Input type="text" value={user.state} onChange={(e) => { setState(e.target.value) }}/>
+                        <Input type="text" value={state} onChange={(e) => { setState(e.target.value) }}/>
                     </VStack>
                     <VStack>
                         <FormLabel>Zip Code</FormLabel>
-                        <Input type="text" value={user.zip} onChange={(e) => { setZip(e.target.value) }}/>
+                        <Input type="text" value={zip} onChange={(e) => { setZip(e.target.value) }}/>
                     </VStack>
                 </HStack>
                 <FormLabel>Email</FormLabel>
-                <Input type="text" value={user.email} onChange={(e) => { setEmail(e.target.value) }}/>
+                <Input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
                 <FormLabel>Phone Number</FormLabel>
-                <Input type="text" value={user.phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
                 <Tooltip 
                     label="This will tell your clients how you'd like to receive payment. 
                         It will show on the bottom of statements, but is not required (limited to 80 characters)."
