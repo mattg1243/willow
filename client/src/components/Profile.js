@@ -16,11 +16,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginAction } from '../actions';
 import Header from './Header';
+import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
 
 export default function Profile() {
 
     const user = useSelector(state => state.user);
+    const token = useSelector(state => state.token);
 
     const [name, setName] = useState(`${user.nameForHeader}`);
     const [street, setStreet] = useState(`${user.street}`);
@@ -30,15 +32,19 @@ export default function Profile() {
     const [state, setState] = useState(`${user.state}`);
     const [phone, setPhone] = useState(`${user.phone}`);
     const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`);
+    const [badInput, setBadInput] = useState(false);
+    const [errMsg, setErrMsg] = useState("Please only use alphanumeric characters");
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const updateInfo = () => {
+    const updateInfo = (e) => {
+        e.preventDefault();
         axios.post('/user/updateinfo', {
             user: user.id,
+            token: token,
             nameForHeader: name,
             street: street,
             city: city,
@@ -48,8 +54,19 @@ export default function Profile() {
             state: state,
             paymentInfo: paymentInfo,
         })
-        .then(response => {console.log(response); dispatch(loginAction(response.data)); } )
-        .catch(err => {console.error(err);})
+        .then(response => {
+            // valid input, go back to the dashboard
+            dispatch(loginAction(response.data));
+            navigate('/clients'); 
+        })
+        .catch(err => {
+            console.error(err);
+            // check for invalid characters
+            if (err.response.status === 422) {
+                setErrMsg(err.response.data);
+                setBadInput(true);
+            }
+        })
     }
 
     return (
@@ -57,6 +74,11 @@ export default function Profile() {
         <Header />
             <VStack style={{height: '100%', width: '60%'}} spacing={5}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', paddingBottom: '2rem'}}>Profile</Heading>
+                {badInput ? (
+                   errMsg.map(err => (
+                    <BadInputAlert errMsg={err.msg} />
+                    ))) : (<></>)
+                }
                 <FormLabel>Name for Header</FormLabel>
                 <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
                 <FormLabel>Street Address</FormLabel>
@@ -92,7 +114,7 @@ export default function Profile() {
                     </InputRightElement>
                 </InputGroup>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '3rem'}} width="100%">
-                    <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateInfo(); navigate('/clients'); }}>Save</Button>
+                    <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={(e) => { updateInfo(e); }}>Save</Button>
                     <Button style={{backgroundColor: isDark? "#EC4E20" : '#58A4B0', color: 'white'}}>Cancel</Button>
                 </HStack>
             </VStack>
