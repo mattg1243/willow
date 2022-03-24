@@ -1,9 +1,19 @@
 import { React, useState } from 'react';
-import { VStack, HStack, Container, Input, InputGroup, Button, Tooltip, Divider } from '@chakra-ui/react';
+import { 
+    VStack, 
+    HStack, 
+    Container, 
+    Input, 
+    InputGroup, 
+    Button, 
+    Tooltip, 
+    Divider, 
+} from '@chakra-ui/react';
 import { QuestionIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginAction } from '../actions';
+import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
 
 export default function Register() {
@@ -20,6 +30,8 @@ export default function Register() {
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zip, setZip] = useState('');
+    const [badInput, setBadInput] = useState(false);
+    const [errMsg, setErrMsg] = useState([])
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -30,13 +42,20 @@ export default function Register() {
             password: password, passwordConfirm: passwordConfirm, nameForHeader: nameForHeader, phone: phone,
             street: street, city: city, state: state, zip: zip,
         })
-        .then((response) => {
-            console.log(response); 
-            if(response.data) {
+        .then((response) => {       
+            if (response.data) {
                 dispatch(loginAction(response.data));
                 setTimeout(() => {navigate('/clients')}, 1000);
-            }})
-        .catch(err => {console.log(err)})
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            // check for invalid characters
+            if (err.response.status === 422) {
+                setErrMsg(err.response.data);
+                setBadInput(true);
+            }
+        })
     }
 
     return (
@@ -44,6 +63,10 @@ export default function Register() {
             <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <VStack spacing={5}>
                     <h3>User Info</h3>
+                   {badInput ? 
+                   errMsg.map(err => (
+                       <BadInputAlert errMsg={err.msg} />
+                   )) : <></>}
                     <InputGroup>
                         <Input className="textInput" placeholder="First Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setFname(e.target.value);}}/>
                         <Input className="textInput" placeholder="Last Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setLname(e.target.value);}}/>
