@@ -17,6 +17,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginAction, getClients } from '../actions';
+import BadInputAlert from "./BadInputAlert";
 import axios from 'axios';
 
 export default function EditClientsDialog(props) {
@@ -27,6 +28,8 @@ export default function EditClientsDialog(props) {
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
     const [rate, setRate] = useState(`${props.client.rate ? props.client.rate['$numberDecimal'] : 0}`);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
+    const [badInput, setBadInput] = useState(false);
+    const [errMsg, setErrMsg] = useState([]);
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -39,8 +42,20 @@ export default function EditClientsDialog(props) {
             user: props.user,
             clientID: props.client._id,
         })
-        .then(response => {console.log(response); dispatch(loginAction(response.data));} )
-        .catch(err => {console.error(err);})
+        .then(response => {
+            console.log(response); 
+            dispatch(loginAction(response.data));
+            props.setEditIsShown(false);
+        })
+        .catch(err => {
+            if (err.response.status === 422) {
+                setErrMsg(err.response.data);
+                setBadInput(true);
+            } 
+            else {
+                console.error(err);
+            }
+        })
     }
 
     const updateClient = () => {
@@ -54,24 +69,36 @@ export default function EditClientsDialog(props) {
             phone: phone,
             rate: rate,
         })
-        .then(response => {console.log("Res data: \n: " + response); dispatch(getClients(response.data));} )
-        .catch(err => {console.error(err);})
+        .catch(err => {
+            if (err.response.status === 422) {
+                setErrMsg(err.response.data);
+                setBadInput(true);
+            } 
+            else {
+                console.error(err);
+            }
+        })
     }
 
     return (
         <VStack>
+            {badInput ? (
+                errMsg.map(err => {
+                    return <BadInputAlert errMsg={err.msg} />
+                })
+            ) : null}
             <FormLabel>First Name</FormLabel>
-            <Input type="text" onChange={(e) => { setFname(e.target.value); }} value={props.client.fname}/>
+            <Input type="text" onChange={(e) => { setFname(e.target.value); }} value={fname}/>
             <FormLabel>Last Name</FormLabel>
-            <Input type="text" onChange={(e) => { setLname(e.target.value); }} value={props.client.lname}/>
+            <Input type="text" onChange={(e) => { setLname(e.target.value); }} value={lname}/>
             <FormLabel>Email</FormLabel>
-            <Input type="email" onChange={(e) => { setEmail(e.target.value); }} value={props.client.email}/>
+            <Input type="email" onChange={(e) => { setEmail(e.target.value); }} value={email}/>
             <FormLabel>Phone</FormLabel>
-            <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={props.client.phonenumber}/>
+            <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
             <FormLabel>Billing Rate</FormLabel>
             <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
-                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); props.setEditIsShown(false); }}>Save</Button>
+                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>
             </HStack>
             <Modal onClose={() => {setDeleteIsShown(false)}} isOpen={deleteIsShown}>
