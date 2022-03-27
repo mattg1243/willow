@@ -45,8 +45,7 @@ const registerUserValidator = [
     body('state').trim().escape().isAlpha().isLength({ min: 2, max: 2 })
     .withMessage('Please enter your states two letter code (i.e. CA, NV)'),
 
-    body('zip').trim().escape().isPostalCode()
-    .withMessage('Zip code should be all numbers.'),
+    body('zip', 'Zip code should be all numbers.').trim().escape()
 
 ]
 
@@ -122,23 +121,59 @@ const newClientValidator = [
 ]
 
 const deleteClientValidator = [
-  // trim + escape all fields
-  check().trim().escape(),
+  
+  body('user', 'It appears you are not logged')
+  .trim().escape(),
+  
+  body('token', 'It appears you are not logged').trim().escape(),
+
+  body('clientID', 'Invalid client ID provided to the server').trim().escape(),
+
+
 ]
 
 const udpateClientValidator = [
-  // trim + escape all fields
-  check().trim().escape(),
+  
+  body('fname', "Invalid characters in the first name field")
+  .trim().escape().isLength({ min: 1, max: 50}).isAlpha(),
+
+  body('lname', "Missing last name")
+  .trim().escape().isLength({ min: 1, max: 50}).isAlpha()
+  .withMessage("Invalid characters in the last name field"),
+
+  body('email', "Invalid characters in the email field")
+  .optional().trim().escape().isLength({ min: 1, max: 100})
+  .isEmail().withMessage('Invalid email'),
+  
+  body('phone', "Invalid phone number")
+  .optional().isNumeric().withMessage('Phone number must be only numbers')
+  .trim().escape(),
+
+  body('rate', "Invalid characters in the billing rate field")
+  .optional().trim().escape().isNumeric()
+  .withMessage("Only numbers are valid in the billing rate field"),
+
+  body('user', 'It appears you are not logged')
+  .trim().escape(),
+  
+  body('token', 'It appears you are not logged').trim().escape(),
+
+  body('clientID', 'Invalid client ID provided to the server').trim().escape(),
+
 ]
 
 const resetPasswordValidator = [
   // trim + escape all fields
-  check().trim().escape(),
+  body('email').trim().escape()
 ]
 
 const changePasswordValidator = [
   // trim + escape all fields
-  check().trim().escape(),
+  body('username').trim().escape().isLength({ min: 7, max: 30 }),
+
+  body('password').trim().escape().isLength({ min: 7, max: 30 }),
+
+  body('token').trim().escape(),
 ]
 
 module.exports = {
