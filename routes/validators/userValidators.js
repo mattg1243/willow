@@ -91,19 +91,34 @@ const updateUserInfoValidator = [
   .isLength({ min: 2, max: 80})
   .withMessage('Payment Info field exceeds 80 charactes'),
 
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json(errors.array())
-    }
-    next();
-  }
- 
 ]
 
 const newClientValidator = [
-  // trim + escape all fields
-  check().trim().escape(),
+
+  body('fname', "Invalid characters in the first name field")
+  .trim().escape().isLength({ min: 1, max: 50}).isAlpha(),
+
+  body('lname', "Missing last name")
+  .trim().escape().isLength({ min: 1, max: 50}).isAlpha()
+  .withMessage("Invalid characters in the last name field"),
+
+  body('email', "Invalid characters in the email field")
+  .optional().trim().escape().isLength({ min: 1, max: 100})
+  .isEmail().withMessage('Invalid email'),
+  
+  body('phonenumber', "Invalid phone number")
+  .optional().isNumeric().withMessage('Phone number must be only numbers')
+  .trim().escape(),
+
+  body('rate', "Invalid characters in the billing rate field")
+  .optional().trim().escape().isNumeric()
+  .withMessage("Only numbers are valid in the billing rate field"),
+
+  body('user', 'It appears you are not logged')
+  .trim().escape(),
+  
+  body('token', 'It appears you are not logged').trim().escape(),
+
 ]
 
 const deleteClientValidator = [
