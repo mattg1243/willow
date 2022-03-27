@@ -9,6 +9,7 @@
     "start": "node app.js",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=exp-billing:* npm run devstart",
+    "test": "mocha --exit",
     "buildpush": "cd client && npm run build && cd .. && git add . && git commit -m 'new react build' && git push origin react && git push heroku react:main"
   },
   "dependencies": {
@@ -54,6 +55,10 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.2.2",
+    "nodemon": "^2.0.12",
+    "supertest": "^6.2.2"
   }
 }
