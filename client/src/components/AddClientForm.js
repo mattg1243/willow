@@ -4,6 +4,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { getClients } from "../actions";
+import BadInputAlert from "./BadInputAlert";
 
 export default function AddClientForm(props) {
     // states for input fields
@@ -12,6 +13,8 @@ export default function AddClientForm(props) {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [rate, setRate] = useState(0);
+    const [badInput, setBadInput] = useState(false);
+    const [errMsg, setErrMsg] = useState([]);
 
     const { colorMode } = useColorMode()
     const isDark = colorMode === 'dark'
@@ -36,14 +39,24 @@ export default function AddClientForm(props) {
             props.setIsShown();
             dispatch(getClients(response.data));
             setInterval(() => {window.location.reload();}, 2000)
-        }).catch(err => 
-            {console.error(err)
-        })
+        }).catch(err => {
+                if (err.response.status === 422) {
+                    console.log(err.response)
+                    setErrMsg(err.response.data)
+                    setBadInput(true);
+                }
+            }
+        )
     }
 
     return (
         <>
             <VStack >
+                {badInput ? (
+                    errMsg.map(err => {
+                        return <BadInputAlert errMsg={err.msg} />
+                    })
+                ) : null}
                 <FormLabel>First Name</FormLabel>
                 <Input onChange={(e) => { setFname(e.target.value) }} />
                 <FormLabel>Last Name</FormLabel>
