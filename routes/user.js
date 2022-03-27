@@ -6,11 +6,13 @@ const validators = require('./validators/userValidators');
 // register new user to DB
 router.post('/register/newuser', 
   validators.registerUserValidator,
+  validators.validate,
   (req, res) => { handlers.registerUser(req, res) }
 );
 // update users info from preferences page
 router.post("/updateinfo", 
   validators.updateUserInfoValidator,
+  validators.validate,
   helpers.verifyJWT, 
   (req, res) => { handlers.updateUserInfo(req, res) }
 );
