@@ -80,11 +80,11 @@ const updateEvent = (req, res) => {
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
     */
-    if (req.body.type != 'Refund' && req.body.type != 'Retainer' && req.body.type == 'Payment') {
+    if (req.body.type != 'Refund' && req.body.type != 'Retainer' && req.body.type != 'Payment') {
         hrs = parseFloat(req.body.hours)
         mins = parseFloat(req.body.minutes)
         duration = hrs + mins;
-        rate = req.body.rate;
+        rate = parseFloat(req.body.rate);
         amount = -(duration * rate);
     } else {
         hrs, mins, duration, rate = 0;
@@ -101,7 +101,7 @@ const updateEvent = (req, res) => {
     let clientID = ''
 
     try {
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: parseFloat(amount), detail: detail }, function (err, docs) {
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
             if (err) return console.error(err)
 
