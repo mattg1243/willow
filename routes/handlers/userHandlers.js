@@ -56,6 +56,22 @@ const updateUserInfo = (req, res) => {
     } catch (err) { throw err ;}
 }
 
+const deleteUser = (req, res) => {
+    User.findOneAndDelete({ _id: req.params.id }, (err) => {
+        if (err) { return res.status(500).send(err); }
+        // delete all clients if there are any
+        Client.deleteMany({ ownerID: req.params.id }, (err) => {
+            if (err) { return res.status(500).send(err) }
+
+            Event.deleteMany({  ownerID: req.params.id }, (err) => {
+                if (err) { return res.status(500).send(err); }
+
+                res.status(200).json('User and associated data deleted successfully');
+            })
+        })
+    })
+}
+
 const addNewClient = async (req, res) => {
     console.log("Headers: " + req.headers)
     console.log("Data: " + req.body)
@@ -181,6 +197,7 @@ const changePassword = (req, res) => {
 
 module.exports.registerUser = registerUser;
 module.exports.updateUserInfo = updateUserInfo;
+module.exports.deleteUser = deleteUser;
 module.exports.updateClientInfo = updateClientInfo;
 module.exports.addNewClient = addNewClient;
 module.exports.deleteClient = deleteClient;

@@ -49,5 +49,9 @@ router.post('/changepassword',
   validators.validate,
   (req, res) => { handlers.changePassword(req, res) }
 );
+// delete user, for testing purposes only for now
+router.delete('/deleteuser/:id', 
+  (req, res) => { handlers.deleteUser(req, res) }
+);
 
 module.exports = router;
