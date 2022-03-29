@@ -39,8 +39,7 @@ const registerUserValidator = [
     body('phone').trim().escape().isNumeric()
     .withMessage('Invalid phone number.'),
 
-    body('city').trim().escape().isAlpha()
-    .withMessage('Only alphabetical characters are allowed in the city field.'),
+    body('city', 'Invalid characters in the city field').trim().escape(),
 
     body('state').trim().escape().isAlpha().isLength({ min: 2, max: 2 })
     .withMessage('Please enter your states two letter code (i.e. CA, NV)'),
