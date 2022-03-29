@@ -222,7 +222,7 @@ const makeStatement = async (req, res) => {
             console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
 
             try {
-                res.download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+                res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
         
                     if (err) return console.error(err);
                     // delete the pdf from the server after download
