@@ -4,22 +4,6 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
 
-const renderClientPage = async (req, res) => {
-
-    Client.findById(req.params.id, function(err, client) {
-        
-        if (err) return console.error(err)
-
-        Event.find({ clientID: req.params.id },  function(err, events) {
-           
-            if (err) return console.error(err);
-    
-            // res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes, messages: req.flash('error') })
-            
-        }).sort({ date: 1 })
-    })
-}
-
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
     console.log("Add event req.body: \n"); 
@@ -129,19 +113,6 @@ const deleteEvent = (req, res) => {
             })
         })
     } catch (err) { throw err ; }
-}
-
-const renderEventPage = (req, res) => {
-    try {
-        Event.findOne({_id: req.params.eventid}, function(err, event) {
-        
-            if (err) return console.error(err);
-            
-            console.log(event)
-            // res.render('eventpage', { event: event });
-        });    
-    } catch (err) { throw err ; }
-
 }
 
 const makeStatement = async (req, res) => {
@@ -255,7 +226,5 @@ const downloadStatement = async (req, res) => {
 module.exports.addEvent = addEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
-module.exports.renderClientPage = renderClientPage;
-module.exports.renderEventPage = renderEventPage;
 module.exports.makeStatement = makeStatement;
 module.exports.downloadStatement = downloadStatement;
