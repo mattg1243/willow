@@ -28,20 +28,21 @@ import {
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 export default function QuickStatement(props) {
   
-  const stateStr = window.sessionStorage.getItem('persist:root');
-  const state = JSON.parse(stateStr);
-  const user = JSON.parse(state.user);
-  const token = JSON.parse(state.token);
-  const clients = JSON.parse(state.clients);
-  const allEvents = JSON.parse(state.events);
+  // const stateStr = window.sessionStorage.getItem('persist:root');
+  // const state = JSON.parse(stateStr);
+  const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+  const clients = useSelector((state) => state.clients);
+  const allEvents = useSelector((state) => state.events);
 
   const [autoSelection, setAutoSelection] = useState(false);
   const [currentRadio, setCurrentRadio] = useState(null);
-  const [client, setClient] = useState(props.client ? props.client: JSON.stringify(clients[0]));
+  const [client, setClient] = useState(props.client ? props.client: clients[0]);
   const [startdate, setStartdate] = useState(new Date());
   const [enddate, setEnddate] = useState(new Date());
   const [events, setEvents] = useState([]);
@@ -51,19 +52,18 @@ export default function QuickStatement(props) {
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
 
-  const makeStatement = async () => {
+  const data = {
+    user: user,
+    token: token,
+    client: props.client ? client: client,
+    currentRadio: currentRadio,
+    startdate: startdate,
+    enddate: enddate,
+    events: allEvents,
+  }
+  const makeStatement = () => {
     setLoading(true);
-    const response = await axios.post(`/client/makestatement`, 
-    {
-      user: user,
-      token: token,
-      client: props.client ? client: JSON.parse(client),
-      currentRadio: currentRadio,
-      startdate: startdate,
-      enddate: enddate,
-      events: allEvents,
-    }, {responseType: 'arraybuffer' || 'application/json'}
-    )
+    axios.post(`/client/makestatement`, data)
     .then(async (response) => {console.log(response);
       const url = window.URL.createObjectURL(new Blob([response.data],{type: "application/pdf"}));
       var link = document.createElement('a');
@@ -81,9 +81,7 @@ export default function QuickStatement(props) {
   } 
 
   useEffect(() => {
-    console.log("client: \n" + client); 
-    console.log("AllEvents: \n", allEvents);
-    console.log("Events: \n", events)
+    console.log(JSON.stringify(allEvents))
   })
 
   return (
