@@ -1,7 +1,6 @@
 from pprint import pprint
 from logger import set_log_params
-from digest import Digester, Payload
-from core import build_transposed_statement
+from core import Digester, Payload, build_transposed_statement
 
 import sys
 
