@@ -1,67 +1,60 @@
-from util import generate_statement
-from logger import _set_log_params
-import sys
-from digest import get_provider_info, load, get_client_info, parse_dates, parse_types, parse_durations
-from digest import parse_rates, parse_amounts, parse_balances, check_multipage, find_running_balance
+from pprint import pprint
+from logger import set_log_params
+from digest import Digester, Payload
+from core import build_transposed_statement
 
-logger = _set_log_params()
+import sys
+
+logger = set_log_params()
 
 # Main Script
 if __name__ == "__main__":
-    
+
     # Parse Arguments
     try:
-        # Provider info
-        prov = get_provider_info()
-        print(f'PROVIDER -> {prov}\n')
-        
-        # User info
-        header = get_client_info()
-        print('USER INFO -> ', header)
-        
-        # Event log
-        data = load()
-        
-        # Parse dates
-        dates = parse_dates(data)
-        num_events = len(dates)
-        print('NUM DATES -> ', num_events)
-        if(num_events > 101):
-            sys.exit(0)
-        
-        # Parse types
-        types = parse_types(data)
-        
-        # Parse durations
-        durations = parse_durations(data)
-        
-        # Parse rates
-        rates = parse_rates(data)
-        
-        # Parse amounts
-        amounts = parse_amounts(data)
-        
-        # Parse new balances
-        newBalances = parse_balances(data)
-        
-        # Find running balance
-        running_balance = find_running_balance(newBalances)
-        print('RUNNING BALANCE -> ', running_balance)
-    
-    # If Argument Parsing Failed - Log & Terminate     
+        # Digest payload
+        digester = Digester()
+        payload: Payload = Payload(digester)
+        (DATES, TYPES, DURATIONS, RATES, AMOUNTS, REFLECTED) = payload.deconstruct()
+
+    # If Argument Parsing Failed - Log & Terminate
     except Exception as ArgParseError:
         logger.critical("Failed Parsing Arguments!: %s" % ArgParseError)
         exit(0)
-    
+
+    if len(DATES) > 101:
+        sys.exit(0)
+
     # Check if statment is single paged or multipaged
-    multipage = check_multipage(dates)
-    
-    # Generate the statement
+    is_multi = digester.is_multipage_statement()
+
+    # Determine Running Balance
+    running_b = digester.determine_running_balance()
+
+    # Console log params
+    print("DATES ->", DATES)
+    print("DURATIONS ->", DURATIONS)
+    print("RATES ->", RATES)
+    print("AMOUNTS ->", AMOUNTS)
+    print("REFLECTED ->", REFLECTED)
+    print()
+    print("IS_MULTI ->", is_multi)
+    print("RUNNING_BALANCE ->", running_b)
+
     try:
-        generate_statement(header, prov, dates, types, durations, rates, amounts, newBalances, running_balance, multipage)
-   
-    # Log Error & Terminate
+        provider = digester.get_provider_info()
+        client = digester.get_client_info()
+        print(provider, client)
+
+        build_transposed_statement(
+            client,
+            provider,
+            payload,
+            running_b,
+            is_multi,
+        )
+
     except Exception as StatementError:
-        print(StatementError)
-        logger.critical("Failed to Generate Statement!: %s" % StatementError)
+        pprint(StatementError)
+        logger.critical("Failed to generate statement!: %s" % StatementError)
         exit(0)
