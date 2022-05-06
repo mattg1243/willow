@@ -18,30 +18,7 @@ from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.color.color import HexColor, X11Color
 from borb.pdf.canvas.layout.table.table import TableCell
 
-# Util func
-def ensure_payment_info(provider: dict[str, str]) -> bool:
-    if provider["paymentInfo"] == "":
-        return False
-    else:
-        return True
-
-
-# Util Func
-def phone_formatter(n):
-    return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
-
-
-# Util Func
-def table_space(table: Table):
-    table.add(Paragraph(" "))
-
-
-# Util Func
-def std_event(event):
-    if event == "Retainer" or event == "Refund":
-        return False
-    else:
-        return True
+from util import ensure_payment_info, table_space, std_event, phone_formatter
 
 
 # Statement Header
@@ -278,13 +255,14 @@ class DescripTable:
             amount = f"%s{amount}" % ("$")
             self.table.add(TableCell(Paragraph(amount), background_color=even_color))
             # Reflected Balance
-            reflected = f"%s{balance}" % ("$")
-            self.table.add(TableCell(Paragraph(balance), background_color=even_color))
+            reflected = f"{balance}"
+            self.table.add(
+                TableCell(Paragraph("$ " + balance), background_color=even_color)
+            )
 
         # If alloted lines is less than the max available, fill remaining lines with empty rows
-        print(self.size - 1, self.rows)
         if self.size < self.rows:
-            for row_number in range(self.size+1, self.rows):
+            for row_number in range(self.size + 1, self.rows):
                 col_iter = 0
                 while col_iter < 6:
                     self.table.add(TableCell(Paragraph(" ")))
@@ -378,7 +356,6 @@ def DescribeDouble(
             RATES[0:27],
             AMOUNTS[0:27],
             BALANCES[0:27],
-            1,
         )
     )
 
@@ -487,9 +464,5 @@ def build_transposed_statement(
             page_layout, pdf, TYPES, DATES, DURATIONS, RATES, AMOUNTS, BALANCES
         )
 
-    """with open(f"public/invoices/{name}.pdf", "wb") as pdf_file:
-        PDF.dumps(pdf_file, pdf)"""
-
-    # local path
     with open(f"public/invoices/{name}.pdf", "wb") as pdf_file:
         PDF.dumps(pdf_file, pdf)

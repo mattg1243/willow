@@ -1,5 +1,5 @@
 /node_modules
 .env
-*.DS_Store
-Python/src/core/__pycache__
+*/.DS_Store/
 /client/node_modules
+Python/src/core/__pycache__/
