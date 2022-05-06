@@ -71,3 +71,20 @@
 2022-05-05 17:56:21,202 - CRITICAL - Failed to generate statement!: [Errno 2] No such file or directory: '/app/public/invoices/bob @csslmao.pdf'
 2022-05-05 17:57:09,496 - CRITICAL - Failed to generate statement!: [Errno 2] No such file or directory: '/public/invoices/bob @csslmao.pdf'
 2022-05-05 18:06:23,777 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:08:15,776 - CRITICAL - Failed to generate statement!: 'Document' object has no attribute 'append'
+2022-05-05 18:14:12,145 - CRITICAL - Failed to generate statement!: build_descrip_table() takes 7 positional arguments but 8 were given
+2022-05-05 18:16:00,824 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:16:29,573 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:16:42,503 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:19:40,188 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:20:46,153 - CRITICAL - Failed to generate statement!: list index out of range
+2022-05-05 18:29:52,934 - CRITICAL - Failed to generate statement!: 'list' object has no attribute 'size'
+2022-05-05 18:30:41,118 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:32:16,920 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:32:36,798 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:32:53,669 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:33:17,408 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:33:45,079 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:34:08,193 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:34:56,533 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
+2022-05-05 18:35:17,163 - CRITICAL - Failed to generate statement!: min() arg is an empty sequence
