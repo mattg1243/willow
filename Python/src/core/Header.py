@@ -35,6 +35,7 @@ class Header:
             )
         )
         table_space(self.table)
+        return self
 
     # Centered provider street address
     def prov_addr(self):
@@ -56,6 +57,7 @@ class Header:
         )
         table_space(self.table)
         table_space(self.table)
+        return self
 
     def prov_contact(self, phone):
         self.table.add(Paragraph(phone, horizontal_alignment=Alignment.CENTERED))
@@ -70,6 +72,7 @@ class Header:
             )
         )
         table_space(self.table)
+        return self
 
     def client_name(self):
         name = self.client["clientname"]
@@ -79,6 +82,7 @@ class Header:
         )
         table_space(self.table)
         table_space(self.table)
+        return self
 
     def statement_date(self):
         now = datetime.now()
@@ -89,6 +93,7 @@ class Header:
         )
         table_space(self.table)
         table_space(self.table)
+        return self
 
     def running_balance(self):
         running = f"%s{self.running}" % ("$")
@@ -97,6 +102,7 @@ class Header:
         )
         table_space(self.table)
         table_space(self.table)
+        return self
 
     def pad(self):
         self.table.set_padding_on_all_cells(
@@ -107,34 +113,22 @@ class Header:
 
 # Builds and Returns a Statement Header
 def build_statement_header(provider, client, running) -> Table:
-    # Initialize
+    # Init..
     header_table = Table(number_of_rows=11, number_of_columns=3)
     header = Header(provider, client, running, header_table)
-
-    # Centered provider name
-    header.prov_name()
-
-    # Centered provider street address, city, state, zip code
-    header.prov_addr()
 
     # Format Provider Phone Number
     phone = phone_formatter(provider["phone"])
 
-    # Centered provider contact info
-    header.prov_contact(phone)
+    # Write provider name, address, and contact info
+    header.prov_name().prov_addr().prov_contact(phone)
 
     # Empty Lines break
     for _ in range(1, 6):
         table_space(header.table)
 
-    # Left Aligned Client Name
-    header.client_name()
-
-    # Left Aligned Statement Date
-    header.statement_date()
-
-    # Left Aligned Running Balance
-    header.running_balance()
+    # Write client name, statement_date, running balance
+    header.client_name().statement_date().running_balance()
 
     # Line Breaks to Finish Header
     for _ in range(0, 3):
