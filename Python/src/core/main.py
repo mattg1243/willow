@@ -40,6 +40,7 @@ if __name__ == "__main__":
     print()
     print("IS_MULTI ->", is_multi)
     print("RUNNING_BALANCE ->", running_b)
+    print("ROWS -> ", len(DATES))
 
     try:
         provider = digester.get_provider_info()

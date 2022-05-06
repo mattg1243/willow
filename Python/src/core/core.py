@@ -92,7 +92,6 @@ class Header:
         table_space(self.table)
 
     def prov_contact(self, phone):
-        table_space(self.table)
         self.table.add(Paragraph(phone, horizontal_alignment=Alignment.CENTERED))
         table_space(self.table)
 
@@ -108,6 +107,7 @@ class Header:
 
     def client_name(self):
         name = self.client["clientname"]
+        table_space(self.table)
         self.table.add(
             Paragraph(f"Client Name: {name}", horizontal_alignment=Alignment.LEFT)
         )
@@ -171,7 +171,7 @@ def build_statement_header(provider, client, running) -> Table:
     header.running_balance()
 
     # Line Breaks to Finish Header
-    for _ in range(1, 3):
+    for _ in range(0, 3):
         table_space(header.table)
 
     # Padding
@@ -242,7 +242,7 @@ class DescripTable:
             )
 
     def transpose(self, even_color: HexColor, odd_color: HexColor) -> Table:
-        for i in range(0, self.size - 1):
+        for i in range(0, self.size):
             (rate, amount, balance) = (
                 self.hourly[i],
                 self.amounts[i],
@@ -264,7 +264,7 @@ class DescripTable:
             if not standard:
                 self.table.add(TableCell(Paragraph(" "), background_color=even_color))
             else:
-                duration = f"%s{self.durations[i]}" % ("$")
+                duration = f"{self.durations[i]}"
                 self.table.add(
                     TableCell(Paragraph(duration), background_color=even_color)
                 )
@@ -282,8 +282,9 @@ class DescripTable:
             self.table.add(TableCell(Paragraph(balance), background_color=even_color))
 
         # If alloted lines is less than the max available, fill remaining lines with empty rows
-        if self.size - 1 < self.rows:
-            for row_number in range(self.size, self.rows):
+        print(self.size - 1, self.rows)
+        if self.size < self.rows:
+            for row_number in range(self.size+1, self.rows):
                 col_iter = 0
                 while col_iter < 6:
                     self.table.add(TableCell(Paragraph(" ")))
@@ -331,7 +332,7 @@ def StatementInit() -> tuple[Document, SingleColumnLayout]:
 
 def SkeleAppend(pdf: Document) -> Page:
     page_next = Page()
-    pdf.append(page_next)
+    pdf.append_page(page_next)
     return page_next
 
 
