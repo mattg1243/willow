@@ -1,7 +1,7 @@
 import logging
 
 # Setting log params...
-def _set_log_params():
+def set_log_params():
     # Create logger with script name
     logger = logging.getLogger(__name__)
     # Set log level to debug
