@@ -24,8 +24,8 @@ router.post('/deleteevent',
 });
 // generate and download statment
 router.post('/makestatement', 
-  validators.makeStatementValidator,
-  validators.validate,
+  // validators.makeStatementValidator,
+  // validators.validate,
   (req, res) => { handlers.makeStatement(req, res); 
 })
 
