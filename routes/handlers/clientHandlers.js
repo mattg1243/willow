@@ -116,9 +116,7 @@ const deleteEvent = (req, res) => {
 }
 
 const makeStatement = async (req, res) => {
-    console.log("req.body:\n" + JSON.stringify(req.body));
     let start, end;
-    // just need to format the dates for the args and this should work
     // handle automatic date selection 
     if (req.body.currentRadio) {
         if(req.body.currentRadio == "currentMonth") {
@@ -170,9 +168,10 @@ const makeStatement = async (req, res) => {
     // sort the events by date
     eventsArg.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     // keep only the events between the given range of dates
-    eventsArg = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    let filteredEvents = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    console.log(filteredEvents)
     // check for no events in given range
-    if (eventsArg.length == 0) {
+    if (filteredEvents.length == 0) {
         console.log("There are no events in the given range of dates.")
         res.status(503).send("There are no events in");
         return;
@@ -182,7 +181,7 @@ const makeStatement = async (req, res) => {
         console.log("\nEvents Args : \n", eventsArg);
         let options = {
             mode: "text",
-            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(eventsArg)]
+            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(filteredEvents)]
         }
 
         PythonShell.run("Python/src/core/main.py", options, (err, result) => {
@@ -193,7 +192,7 @@ const makeStatement = async (req, res) => {
             console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
 
             try {
-                res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+                res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
         
                     if (err) return console.error(err);
                     // delete the pdf from the server after download
