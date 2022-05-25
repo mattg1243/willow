@@ -5,3 +5,4 @@ Python/src/core/__pycache__
 /client/node_modules
 .deployement
 /.vscode
+/test
