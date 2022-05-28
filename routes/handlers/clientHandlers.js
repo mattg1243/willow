@@ -4,22 +4,6 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
 
-const renderClientPage = async (req, res) => {
-
-    Client.findById(req.params.id, function(err, client) {
-        
-        if (err) return console.error(err)
-
-        Event.find({ clientID: req.params.id },  function(err, events) {
-           
-            if (err) return console.error(err);
-    
-            // res.render('clientpage', { client: client, events: events, meetings: meetingTypes, misc: miscTypes, messages: req.flash('error') })
-            
-        }).sort({ date: 1 })
-    })
-}
-
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
     console.log("Add event req.body: \n"); 
@@ -80,11 +64,11 @@ const updateEvent = (req, res) => {
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
     */
-    if (req.body.type != 'Refund' && req.body.type != 'Retainer' && req.body.type == 'Payment') {
+    if (req.body.type != 'Refund' && req.body.type != 'Retainer' && req.body.type != 'Payment') {
         hrs = parseFloat(req.body.hours)
         mins = parseFloat(req.body.minutes)
         duration = hrs + mins;
-        rate = req.body.rate;
+        rate = parseFloat(req.body.rate);
         amount = -(duration * rate);
     } else {
         hrs, mins, duration, rate = 0;
@@ -101,7 +85,7 @@ const updateEvent = (req, res) => {
     let clientID = ''
 
     try {
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: parseFloat(amount), detail: detail }, function (err, docs) {
+        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
             if (err) return console.error(err)
 
@@ -131,23 +115,8 @@ const deleteEvent = (req, res) => {
     } catch (err) { throw err ; }
 }
 
-const renderEventPage = (req, res) => {
-    try {
-        Event.findOne({_id: req.params.eventid}, function(err, event) {
-        
-            if (err) return console.error(err);
-            
-            console.log(event)
-            // res.render('eventpage', { event: event });
-        });    
-    } catch (err) { throw err ; }
-
-}
-
 const makeStatement = async (req, res) => {
-    console.log("req.body:\n" + JSON.stringify(req.body));
     let start, end;
-    // just need to format the dates for the args and this should work
     // handle automatic date selection 
     if (req.body.currentRadio) {
         if(req.body.currentRadio == "currentMonth") {
@@ -199,9 +168,10 @@ const makeStatement = async (req, res) => {
     // sort the events by date
     eventsArg.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     // keep only the events between the given range of dates
-    eventsArg = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    let filteredEvents = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
+    console.log(filteredEvents)
     // check for no events in given range
-    if (eventsArg.length == 0) {
+    if (filteredEvents.length == 0) {
         console.log("There are no events in the given range of dates.")
         res.status(503).send("There are no events in");
         return;
@@ -211,7 +181,7 @@ const makeStatement = async (req, res) => {
         console.log("\nEvents Args : \n", eventsArg);
         let options = {
             mode: "text",
-            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(eventsArg)]
+            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(filteredEvents)]
         }
 
         PythonShell.run("Python/src/core/main.py", options, (err, result) => {
@@ -222,7 +192,7 @@ const makeStatement = async (req, res) => {
             console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
 
             try {
-                res.download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname} ${req.params.start}-${req.params.end}.pdf`, function (err) {
+                res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
         
                     if (err) return console.error(err);
                     // delete the pdf from the server after download
@@ -255,7 +225,5 @@ const downloadStatement = async (req, res) => {
 module.exports.addEvent = addEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
-module.exports.renderClientPage = renderClientPage;
-module.exports.renderEventPage = renderEventPage;
 module.exports.makeStatement = makeStatement;
 module.exports.downloadStatement = downloadStatement;

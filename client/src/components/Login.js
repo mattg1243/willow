@@ -100,7 +100,7 @@ export default function Login() {
                 ) : (
                     <>
                         <HStack style={{paddingTop: '1rem'}}>
-                        <Button background="#03b126" color="#fff" onClick={() => {loginUser()}}>Login</Button>
+                        <Button background="#03b126" color="#fff" onClick={(e) => { e.preventDefault(); loginUser(); }}>Login</Button>
                         <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
                         </HStack>
                         <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer', color: '#63326E'}}>Reset Password</p>

@@ -4,3 +4,8 @@
 /client/node_modules
 /Python/src/core/__pycache__/
 /extern/target/
+*.DS_Store
+/client/node_modules
+.deployement
+/.vscode
+/test
