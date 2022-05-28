@@ -2,4 +2,5 @@
 .env
 */.DS_Store/
 /client/node_modules
-Python/src/core/__pycache__/
+/Python/src/core/__pycache__/
+/extern/target/
