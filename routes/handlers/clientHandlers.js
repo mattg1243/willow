@@ -183,6 +183,10 @@ const makeStatement = async (req, res) => {
             mode: "text",
             args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(filteredEvents)]
         }
+        // this will set the path to the Python interpreter on the production server
+        if (process.env.ENVIRON != "dev") {
+            options.pythonPath = 'home/localpython/bin'
+        }
 
         PythonShell.run("Python/src/core/main.py", options, (err, result) => {
             if (err) return console.error(err)
