@@ -10,6 +10,7 @@ RUN echo y | apt install software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN echo y | apt install python3.9
 RUN echo y | apt install python3-pip
+RUN echo y | python3 -m pip install --upgrade pip
 # add run for the py venv here
 
 ENV DB_URL='mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority'
@@ -20,7 +21,7 @@ ENV PORT='8081'
 
 COPY . .
 # install python dependencies
+RUN echo y | pip freeze > requirements.txt
 RUN python3 -m pip install -r requirements.txt
-RUN python3 -m pip install borb==2.0.9.1
 EXPOSE 3001
 CMD ["npm", "start"]
