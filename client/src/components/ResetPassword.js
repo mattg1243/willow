@@ -24,7 +24,9 @@ import {
         axios.post("/user/changepassword", {
             password: password,
             username: username,
-            token: token,
+        }, 
+        {
+            headers: { 'Authorization': `Bearer ${token}`}
         }).then((response) => {
             console.log(response);
             navigate('/login');

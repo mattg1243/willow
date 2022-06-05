@@ -44,7 +44,6 @@ export default function Profile() {
         e.preventDefault();
         axios.post('/user/updateinfo', {
             user: user.id,
-            token: token,
             nameForHeader: name,
             street: street,
             city: city,
@@ -53,6 +52,12 @@ export default function Profile() {
             phone: phone,
             state: state,
             paymentInfo: paymentInfo,
+        }, 
+        {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         })
         .then(response => {
             // valid input, go back to the dashboard

@@ -24,16 +24,18 @@ export default function AddClientForm(props) {
     const user = JSON.parse(state.user);
     const dispatch = useDispatch();
 
-    const addClient = async () => {
+    const addClient = () => {
         
-        await axios.post('/user/newclient', {
+        axios.post('/user/newclient', {
             fname: fname,
             lname: lname,
             email: email,
             phonenumber: phone,
             rate: rate,
             user: user.id,
-            token: token,
+        }, 
+        {
+            headers: { 'Authorization': `Bearer ${token}`}
         }).then(response => {
             console.log(response); 
             props.setIsShown();

@@ -14,7 +14,7 @@ import {
     ModalCloseButton
 } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginAction, getClients } from '../actions';
 import BadInputAlert from "./BadInputAlert";
@@ -36,13 +36,16 @@ export default function EditClientsDialog(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const token = useSelector(state => state.token)
+
     const deleteClient = () => {
         axios.post('/user/deleteclient', {
-            token: props.token,
             user: props.user,
             clientID: props.client._id,
-        })
-        .then(response => {
+        }, 
+        {
+            headers: { 'Authorization': `Bearer ${token}`}
+        }).then(response => {
             console.log(response); 
             dispatch(loginAction(response.data));
             props.setEditIsShown(false);
@@ -60,7 +63,6 @@ export default function EditClientsDialog(props) {
 
     const updateClient = () => {
         axios.post('/user/updateclient', {
-            token: props.token,
             user: props.user,
             clientID: props.client._id,
             fname: fname,
@@ -68,8 +70,10 @@ export default function EditClientsDialog(props) {
             email: email,
             phone: phone,
             rate: rate,
-        })
-        .catch(err => {
+        }, 
+        {
+            headers: { 'Authorization': `Bearer ${token}`}
+        }).catch(err => {
             if (err.response.status === 422) {
                 setErrMsg(err.response.data);
                 setBadInput(true);

@@ -43,7 +43,9 @@ function ClientPage(props) {
             clientID: id,
             eventID: eventID, 
             user: user.id,
-            token: token,
+        },
+        {
+            headers: { 'Authorization': `Bearer ${token}`}
         }).then((response) => {
             console.log(response);
             dispatch(loginAction(response.data));

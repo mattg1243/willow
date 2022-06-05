@@ -42,7 +42,7 @@ const verifyJWT = async (req, res, next) => {
     console.log("Token:\n" + req.header('Authorization'));
     const token = req.header('Authorization').split(' ')[1];
 
-    if (!token) {
+    if (!token || token == 'undefined') {
         res.status(401).send("No token found");
     } else {
         try {
