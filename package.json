@@ -13,6 +13,7 @@
     "buildpush": "cd client && npm run build && cd .. && git add . && git commit -m 'new react build' && git push origin react && git push heroku react:main"
   },
   "dependencies": {
+    "async": "^3.2.3",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.5.0",
