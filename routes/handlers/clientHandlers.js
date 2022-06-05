@@ -1,3 +1,4 @@
+const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
@@ -115,101 +116,106 @@ const deleteEvent = (req, res) => {
     } catch (err) { throw err ; }
 }
 
-const makeStatement = async (req, res) => {
-    let start, end;
-    // handle automatic date selection 
-    if (req.body.currentRadio) {
-        if(req.body.currentRadio == "currentMonth") {
-            let date = new Date();
-            start = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
-            end = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
-        }
-        else if (req.body.currentRadio == "currentYear") {
-            let date = new Date();
-            start = new Date(date.getFullYear(), 0, 1).toISOString().split('T')[0];
-            end = date.toISOString().split('T')[0];
-        }
-        else if (req.body.currentRadio == "all") {
-            let date = new Date();
-            start = "1900-01-01";
-            end = date.toISOString().split('T')[0];
-        }
-    } else {
-            start = req.body.startdate;
-            end = req.body.enddate;
-    }
-    console.log(start, " ", end)
+const makeStatement = (req, res) => {
+    // parse the request
+    const start = new Date(req.params.start).toISOString();
+    const end = new Date(req.params.end).toISOString();
+    const userID = req.params.userid;
+    const clientID = req.params.clientid;
+    let eventsList;
     
-    let clientInfo = {  
+    // outline argument objects
+     let clientInfo = {  
 
-        clientname: req.body.client.fname + " " + req.body.client.lname,
-        billingAdd: req.body.user.street ? req.body.user.street + ", " + req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip : "",
-        mailingAdd: "", // this isnt handled client side yet 
-        phone: req.body.user.phone
-    };
+    //     clientname,
+    //     billingAdd,
+    //     mailingAdd: "",  this isnt handled client side yet 
+    //     phone
+     };
 
-    let providerInfo = {
+     let providerInfo = {
 
-        name: req.body.user.nameForHeader ? req.body.user.nameForHeader: req.body.user.fname + " " + req.body.user.lname,
-        address: {
-            street: req.body.user.street, 
-            cityState: req.body.user.city + ", " + req.body.user.state + " " + req.body.user.zip
-        },
-        phone: req.body.user.phone,
-        email: req.body.user.email,
-        paymentInfo: req.body.user.paymentInfo ? req.body.user.paymentInfo: '',
+    //     name,
+    //     address: {
+    //         street,
+    //         cityState,
+    //     phone,
+    //     email,
+    //     paymentInfo
     }
 
-    let providerArg = providerInfo;
-    let clientArg = clientInfo;
-    let eventsArg = req.body.events;
-    // find only the events that belong to the client
-    eventsArg = eventsArg.filter(event => event.clientID === req.body.client['_id'])
-    // sort the events by date
-    eventsArg.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    // keep only the events between the given range of dates
-    let filteredEvents = eventsArg.filter((e) => new Date(e.date).getTime() >= new Date(start).getTime() && new Date(e.date).getTime() <= new Date(end).getTime());
-    console.log(filteredEvents)
-    // check for no events in given range
-    if (filteredEvents.length == 0) {
-        console.log("There are no events in the given range of dates.")
-        res.status(503).send("There are no events in");
-        return;
-    } else {
+    // pull provider info
+    User.findById(`${userID}`, (err, user) => {
+        if (err) { return console.error(err); }
+        // populate the provider obj
+        providerInfo.name = user.nameForHeader ? user.nameForHeader: user.fname + " " + user.lname
+        providerInfo.address = {
+            street: user.street, 
+            cityState: user.city + ", " + user.state + " " + user.zip
+        },
+        providerInfo.phone = user.phone,
+        providerInfo.email = user.email,
+        providerInfo.paymentInfo = user.paymentInfo ? user.paymentInfo: ''
 
-        console.log("\nUser Args : \n", clientArg);
-        console.log("\nEvents Args : \n", eventsArg);
-        let options = {
-            mode: "text",
-            args: [JSON.stringify(providerArg), JSON.stringify(clientArg), JSON.stringify(filteredEvents)]
-        }
-        // this will set the path to the Python interpreter on the production server
-        // if (process.env.ENVIRON != "dev") {
-        //     options.pythonPath = 'home/localpython/bin'
-        // }
+        // pull client info
+        Client.findById(`${clientID}`, (err, client) => {
+            if (err) { return console.error(err); }
+            // populate the client obj
+            clientInfo.clientname = client.fname + " " + client.lname;
+            clientInfo.phone = client.phonenumber;
+            clientInfo.billingAdd = "",
+            clientInfo.mailingAdd = "" // this isnt handled client side yet 
 
-        PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-            if (err) return console.error(err)
+            // pull events
+            Event.find({ clientID: clientID, date: {
+                $gte: start,
+                $lte: end
+            }
+            } , (err, events) => {
+                if (err) { return console.error(err); }
+                console.log("Events from db: \n" + events)
+                eventsList = events;
 
-            console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-            console.log(result)
-            console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
-
-            try {
-                res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
-        
-                    if (err) return console.error(err);
-                    // delete the pdf from the server after download
-                    fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
+                if (eventsList == 0) {
+                    console.log("There are no events in the given range of dates.")
+                    res.status(503).send("There are no events in");
+                    return;
+                } else {
+            
+                    // sort the events by date
+                    eventsList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                    // DEBUG LOGS
+                    console.log("\nUser Args : \n", clientInfo);
+                    console.log("\nEvents Args : \n", eventsList);
+                    let options = {
+                        mode: "text",
+                        args: [JSON.stringify(providerInfo), JSON.stringify(clientInfo), JSON.stringify(eventsList)]
+                    }
+                    // run the statement generator script
+                    PythonShell.run("Python/src/core/main.py", options, (err, result) => {
                         if (err) return console.error(err)
             
-                    });
-                })
-            } catch (err) { throw err; }
-
-        })
-
-    }
+                        console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
+                        console.log(result)
+                        console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
+            
+                        try {
+                            res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
+                    
+                                if (err) return console.error(err);
+                                // delete the pdf from the server after download
+                                fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
+                                    if (err) return console.error(err)
+                        
+                                });
+                            })
+                        } 
+                        catch (err) { throw err; }
+                    })
+                }
+            }).clone()
+        }).clone()
+    }).clone()
 }
 
 const downloadStatement = async (req, res) => {
