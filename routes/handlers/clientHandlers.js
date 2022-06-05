@@ -214,9 +214,9 @@ const makeStatement = (req, res) => {
             PythonShell.run("Python/src/core/main.py", options, (err, result) => {
                 if (err) return console.error(err)
     
-                // console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-                // console.log(result)
-                // console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
+                console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
+                console.log(result)
+                console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
                 console.timeEnd(pyTime);
                 console.log('');
                 try {
@@ -234,78 +234,6 @@ const makeStatement = (req, res) => {
             })
         }
     )
-//     // pull provider info
-//     User.findById(`${userID}`, (err, user) => {
-//         if (err) { return console.error(err); }
-//         // populate the provider obj
-//         providerInfo.name = user.nameForHeader ? user.nameForHeader: user.fname + " " + user.lname
-//         providerInfo.address = {
-//             street: user.street, 
-//             cityState: user.city + ", " + user.state + " " + user.zip
-//         },
-//         providerInfo.phone = user.phone,
-//         providerInfo.email = user.email,
-//         providerInfo.paymentInfo = user.paymentInfo ? user.paymentInfo: ''
-
-//         // pull client info
-//         Client.findById(`${clientID}`, (err, client) => {
-//             if (err) { return console.error(err); }
-//             // populate the client obj
-//             clientInfo.clientname = client.fname + " " + client.lname;
-//             clientInfo.phone = client.phonenumber;
-//             clientInfo.billingAdd = "",
-//             clientInfo.mailingAdd = "" // this isnt handled client side yet 
-
-//             // pull events
-//             Event.find({ clientID: clientID, date: {
-//                 $gte: start,
-//                 $lte: end
-//             }
-//             } , (err, events) => {
-//                 if (err) { return console.error(err); }
-//                 console.log("Events from db: \n" + events)
-//                 eventsList = events;
-
-//                 if (eventsList == 0) {
-//                     console.log("There are no events in the given range of dates.")
-//                     res.status(503).send("There are no events in");
-//                     return;
-//                 } else {
-            
-//                     // sort the events by date
-//                     eventsList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-//                     // DEBUG LOGS
-//                     console.log("\nUser Args : \n", clientInfo);
-//                     console.log("\nEvents Args : \n", eventsList);
-//                     let options = {
-//                         mode: "text",
-//                         args: [JSON.stringify(providerInfo), JSON.stringify(clientInfo), JSON.stringify(eventsList)]
-//                     }
-//                     // run the statement generator script
-//                     PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-//                         if (err) return console.error(err)
-            
-//                         console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-//                         console.log(result)
-//                         console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
-            
-//                         try {
-//                             res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
-                    
-//                                 if (err) return console.error(err);
-//                                 // delete the pdf from the server after download
-//                                 fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
-//                                     if (err) return console.error(err)
-                        
-//                                 });
-//                             })
-//                         } 
-//                         catch (err) { throw err; }
-//                     })
-//                 }
-//             }).clone()
-//         }).clone()
-//     }).clone()
 }
 
 const downloadStatement = async (req, res) => {
