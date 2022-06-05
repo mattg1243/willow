@@ -52,19 +52,18 @@ export default function QuickStatement(props) {
   const { colorMode } = useColorMode();
   const isDark = colorMode === 'dark';
 
-  const data = {
-    user: user,
-    token: token,
-    client: props.client ? client: client,
-    currentRadio: currentRadio,
-    startdate: startdate,
-    enddate: enddate,
-    events: allEvents,
-  }
   const makeStatement = () => {
     setLoading(true);
-    axios.post(`/client/makestatement`, data)
-    .then(async (response) => {console.log(response);
+    axios.post(`/client/makestatement/${user.id}/${client._id}/${startdate}/${enddate}`,
+      {},
+      {
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'content-type': 'text/json',
+      },
+      responseType: 'blob'
+    })
+    .then((response) => {console.log(response);
       const url = window.URL.createObjectURL(new Blob([response.data],{type: "application/pdf"}));
       var link = document.createElement('a');
       link.href = url;
@@ -79,10 +78,6 @@ export default function QuickStatement(props) {
       setMessage("There are no events in the given range of dates.");
     })
   } 
-
-  useEffect(() => {
-    console.log(JSON.stringify(allEvents))
-  })
 
   return (
     <>
@@ -121,7 +116,18 @@ export default function QuickStatement(props) {
               </Box>
                 <RadioGroup onClick={() => { setAutoSelection(true) }}
                  onChange={(val) => {
-                    setCurrentRadio(val); 
+                    setCurrentRadio(val);
+                    // set dates based on input
+                    const date = new Date();
+                    if (val == "currentMonth") {
+                      setStartdate(new Date(date.getFullYear(), date.getMonth(), 1));
+                    }
+                    if (val == "currentYear") {
+                      setStartdate(new Date(date.getFullYear(), 0, 1))
+                    }
+                    if (val == "all") {
+                      setStartdate(new Date("0"))
+                    }
                     setMessage("");
                     }}
                   style={{marginTop: '2rem'}}>
