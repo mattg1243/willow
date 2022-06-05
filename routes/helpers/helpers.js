@@ -39,8 +39,8 @@ function recalcBalance(clientID, req, res) {
 
 const verifyJWT = async (req, res, next) => {
     // extract token from the req header
-    console.log("Token:\n" + req.body.token);
-    const token = req.body.token;
+    console.log("Token:\n" + req.header('Authorization'));
+    const token = req.header('Authorization').split(' ')[1];
 
     if (!token) {
         res.status(401).send("No token found");
