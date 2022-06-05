@@ -74,7 +74,11 @@ export default function AddEventForm(props) {
             amount: parseFloat(amount).toFixed(2), 
             newBalance: 0,
             user: user.id,
-            token: token,
+        },
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         }).then(response => {
             console.log(response); 
             dispatch(loginAction(response.data));
