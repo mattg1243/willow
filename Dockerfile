@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:14-slim
+FROM --platform=linux/arm64 node:14-slim
 
 WORKDIR /app
 
@@ -17,11 +17,11 @@ RUN cd Python-3.9.7 && make install
 
 
 RUN apt update && echo y | apt upgrade
-RUN echo y | apt install python3-pip
 RUN echo y | apt install ssh
 # install python dependencies
-RUN echo y | pip3 freeze > requirements.txt
-RUN pip3 install -r requirements.txt
+# RUN echo y | pip3 freeze > requirements.txt
+COPY requirements.txt /app
+RUN pip3 install -r ./requirements.txt
 
 COPY . .
 
