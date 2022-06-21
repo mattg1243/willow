@@ -27,7 +27,7 @@ import {
   Spinner
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/color-mode';
-import { useEffect } from 'react';
+import { runLogoutTimer } from '../utils';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 

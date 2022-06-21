@@ -16,7 +16,8 @@ import {
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginAction, getClients } from '../actions';
+import { loginAction } from '../actions';
+import { runLogoutTimer } from "../utils";
 import BadInputAlert from "./BadInputAlert";
 import axios from 'axios';
 
@@ -48,6 +49,7 @@ export default function EditClientsDialog(props) {
         }).then(response => {
             console.log(response); 
             dispatch(loginAction(response.data));
+            runLogoutTimer();
             props.setEditIsShown(false);
         })
         .catch(err => {

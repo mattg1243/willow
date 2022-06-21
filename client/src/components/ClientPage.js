@@ -4,6 +4,7 @@ import { VStack, HStack, Stack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, 
 import { useParams } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints';
 import { loginAction } from '../actions';
+import { runLogoutTimer } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -49,6 +50,7 @@ function ClientPage(props) {
         }).then((response) => {
             console.log(response);
             dispatch(loginAction(response.data));
+            runLogoutTimer();
             setTimeout(() => {window.location.reload();}, 10);
         }).catch(err => console.error(err));
     }

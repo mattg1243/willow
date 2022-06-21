@@ -13,6 +13,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { loginAction } from '../actions';
+import { runLogoutTimer } from '../utils';
 
 export default function AddEventForm(props) {
     // set rate depending on how the component is rendered
@@ -80,6 +81,7 @@ export default function AddEventForm(props) {
         }).then(response => {
             console.log(response); 
             dispatch(loginAction(response.data));
+            runLogoutTimer();
             props.setIsShown(false);
         }).catch(err => {
             console.error(err)

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Input, VStack, Button, Divider, FormLabel } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { getClients } from "../actions";
 import BadInputAlert from "./BadInputAlert";
+import { runLogoutTimer } from "../utils";
 
 export default function AddClientForm(props) {
     // states for input fields
@@ -40,6 +41,7 @@ export default function AddClientForm(props) {
             console.log(response); 
             props.setIsShown();
             dispatch(getClients(response.data));
+            runLogoutTimer();
             setInterval(() => {window.location.reload();}, 2000)
         }).catch(err => {
                 if (err.response.status === 422) {

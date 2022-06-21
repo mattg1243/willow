@@ -22,8 +22,9 @@ import {
     Spinner
  } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import axios from "axios"
-import { loginAction } from "../actions"
+import axios from "axios";
+import { loginAction } from "../actions";
+import { runLogoutTimer } from '../utils';
 
 export default function Login() {
     // states for text input
@@ -53,6 +54,7 @@ export default function Login() {
             if (response.data) {
                 dispatch(loginAction(response.data))
                 setTimeout(checkStorage, 1250)
+                runLogoutTimer();
             } else {
                 return <h1>err</h1>
             }

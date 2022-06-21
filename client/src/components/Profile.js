@@ -15,6 +15,7 @@ import { InfoIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginAction } from '../actions';
+import { runLogoutTimer } from "../utils";
 import Header from './Header';
 import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
@@ -62,6 +63,7 @@ export default function Profile() {
         .then(response => {
             // valid input, go back to the dashboard
             dispatch(loginAction(response.data));
+            runLogoutTimer();
             navigate('/clients'); 
         })
         .catch(err => {
