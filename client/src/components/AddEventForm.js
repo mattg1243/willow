@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { loginAction } from '../actions';
 import { runLogoutTimer } from '../utils';
+import BadInputAlert from './BadInputAlert';
 
 export default function AddEventForm(props) {
     // set rate depending on how the component is rendered
@@ -48,6 +49,9 @@ export default function AddEventForm(props) {
     const eventID = props.event ? props.event._id : null;
     // for showing only relevant input fields based on event type
     const [hrlyEvent, setHrlyEvent] = useState(true);
+    // error handling
+    const [badInput, setBadInput] = useState(false);
+    const [errMsg, setErrMsg] = useState("null");
 
     const stateStr = window.sessionStorage.getItem('persist:root');
     const state = JSON.parse(stateStr);
@@ -63,52 +67,66 @@ export default function AddEventForm(props) {
     })
 
     const saveEvent = async () => {
+       
+        try {
+            const response = await axios.post(`/client/${props.id}/addevent`, {
+                clientID: props.id,
+                date: date,
+                type: type,
+                detail: details,
+                hours: parseFloat(hours),
+                minutes: parseFloat(minutes),
+                rate: parseFloat(rate),
+                amount: parseFloat(amount).toFixed(2), 
+                newBalance: 0,
+                user: user.id,
+            },
+            {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            console.log(response); 
+            dispatch(loginAction(response.data));
+            runLogoutTimer();
+            props.setIsShown(false);
         
-        const response = await axios.post(`/client/${props.id}/addevent`, {
-            clientID: props.id,
-            date: date,
-            type: type,
-            detail: details,
-            hours: parseFloat(hours),
-            minutes: parseFloat(minutes),
-            rate: parseFloat(rate),
-            amount: parseFloat(amount).toFixed(2), 
-            newBalance: 0,
-            user: user.id,
-        },
-        {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+        } catch (error) {
+            console.log(error.response.data);
+            setErrMsg(error.response.data);
+            setBadInput(true);
+        }
         
-        console.log(response); 
-        dispatch(loginAction(response.data));
-        runLogoutTimer();
-        props.setIsShown(false);
      
     }
 
     const updateEvent = async () => {
         
-        const response = await axios.post(`/client/event/${eventID}`, 
-        {
-            date: date,
-            type: type,
-            detail: details,
-            hours: parseFloat(hours),
-            minutes: parseFloat(minutes),
-            rate: parseFloat(rate),
-            amount: parseFloat(amount).toFixed(2),
-            newBalance: 0,
-            user: user.id,
-        }, 
-        { 
-            headers: { 'Authorization': `Bearer ${token}`} 
-        })
-            
-        console.log(response); 
-        dispatch(loginAction(response.data));
-        props.setIsShown(false);
-        
+        try {
+            const response = await axios.post(`/client/event/${eventID}`, {
+                date: date,
+                type: type,
+                detail: details,
+                hours: parseFloat(hours),
+                minutes: parseFloat(minutes),
+                rate: parseFloat(rate),
+                amount: parseFloat(amount).toFixed(2),
+                newBalance: 0,
+                user: user.id,
+            }, 
+            { 
+                headers: { 'Authorization': `Bearer ${token}`} 
+            });
+                
+            console.log(response); 
+            dispatch(loginAction(response.data));
+            runLogoutTimer();
+            props.setIsShown(false);
+
+        } catch (error) {
+            console.log(error.response.data);
+            setErrMsg(error.response.data);
+            setBadInput(true);
+        }
     }
 
     return (
@@ -165,12 +183,13 @@ export default function AddEventForm(props) {
                 <FormLabel style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}}>$ Amount</FormLabel>
                 <Input type="number" value={amount} style={{display: !hrlyEvents.includes(type) ? 'flex': 'none'}} onChange={(e) =>{ setAmount(e.target.value) }}/>
                 <Divider style={{paddingTop: '2rem'}} />
+                {badInput ? <BadInputAlert errMsg={errMsg} /> : null}
                 {props.event ? (
                     <Button 
                     variant="outline"
                     color="white" 
                     style={{backgroundColor: isDark? "#63326E" : '#03b126', marginTop: '1rem'}}
-                    onClick={() => { updateEvent(); props.setIsShown(false)}}
+                    onClick={() => { updateEvent(); }}
                     >Update</Button>
                 ):(
                     <Button 

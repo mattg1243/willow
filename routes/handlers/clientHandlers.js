@@ -45,7 +45,10 @@ const addEvent = async (req, res) => {
         });
         // saving event to db
         event.save((err, event) => {
-        if (err) return console.error(err);
+        if (err) {
+            console.error(err)
+            return res.status(503).end("There was a problem saving your event, please try again");
+        }
         console.log(event);
        
         Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
@@ -89,7 +92,10 @@ const updateEvent = (req, res) => {
     try {
         Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
 
-            if (err) return console.error(err)
+            if (err) {
+                console.error(err);
+                return res.status(503).end("There was a problem updating the event, please try again")
+            }
 
             clientID = docs.clientID
             //find all events that belong to this client so the new balance can be calculated
