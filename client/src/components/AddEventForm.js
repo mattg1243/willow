@@ -62,9 +62,9 @@ export default function AddEventForm(props) {
         console.log('Hours: ' + typeof hours + '\nMinutes : ' + typeof minutes + '\nRate: ' + typeof rate + '\n');
     })
 
-    const saveEvent = () => {
-        axios.post(`/client/${props.id}/addevent`,
-        {
+    const saveEvent = async () => {
+        
+        const response = await axios.post(`/client/${props.id}/addevent`, {
             clientID: props.id,
             date: date,
             type: type,
@@ -78,18 +78,18 @@ export default function AddEventForm(props) {
         },
         {
             headers: { 'Authorization': `Bearer ${token}` }
-        }).then(response => {
-            console.log(response); 
-            dispatch(loginAction(response.data));
-            runLogoutTimer();
-            props.setIsShown(false);
-        }).catch(err => {
-            console.error(err)
-        })
+        });
+        
+        console.log(response); 
+        dispatch(loginAction(response.data));
+        runLogoutTimer();
+        props.setIsShown(false);
+     
     }
 
-    const updateEvent = () => {
-        axios.post(`/client/event/${eventID}`, 
+    const updateEvent = async () => {
+        
+        const response = await axios.post(`/client/event/${eventID}`, 
         {
             date: date,
             type: type,
@@ -103,13 +103,12 @@ export default function AddEventForm(props) {
         }, 
         { 
             headers: { 'Authorization': `Bearer ${token}`} 
-        }).then(response => {
-            console.log(response); 
-            dispatch(loginAction(response.data));
-            props.setIsShown(false);
-        }).catch(err => {
-            console.error(err)
         })
+            
+        console.log(response); 
+        dispatch(loginAction(response.data));
+        props.setIsShown(false);
+        
     }
 
     return (
