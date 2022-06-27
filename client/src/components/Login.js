@@ -58,23 +58,6 @@ export default function Login() {
                 setLoading(false);
             })
         } 
-        
-        // .then((response) => {
-        //     if (response.data) {
-        //         dispatch(loginAction(response.data))
-        //         setTimeout(checkStorage, 1250)
-        //         runLogoutTimer();
-        //     } else {
-        //         return <h1>err</h1>
-        //     }
-        // })
-        // .catch(err => {
-        //     console.log(err.response); 
-        //     if (err.response.data === "Unauthorized") {
-        //         setMessage("Invalid login credentials");
-        //         setLoading(false);
-        //     }
-        // })
 
     window.loginUser = loginUser;
 
