@@ -38,35 +38,44 @@ export default function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const checkStorage = () => {
-        if(window.sessionStorage.getItem('persist:root') != null) {
-            navigate('/clients')
-        }
-    }
-
-    const loginUser = async () => {
+    const loginUser = () => {
+        // display loading spinner
         setLoading(true);
-        axios.post("/login", {
-            username: username,
-            password: password,
-        })
-        .then((response) => {
-            if (response.data) {
-                dispatch(loginAction(response.data))
-                setTimeout(checkStorage, 1250)
-                runLogoutTimer();
-            } else {
-                return <h1>err</h1>
-            }
-        })
-        .catch(err => {
-            console.log(err.response); 
-            if (err.response.data === "Unauthorized") {
-                setMessage("Invalid login credentials");
+        // send login request to the server
+            axios.post("/login", {
+                username: username,
+                password: password,
+            })
+            .then(response => dispatch(loginAction(response.data)))
+            .then(() => runLogoutTimer())
+            .then(() => navigate('/clients'))
+            .catch(err => {
+                if (err.response.status === 401) {
+                    setMessage("Invalid login credentials");
+                } else {
+                    setMessage("Unknown error occured with code " + err.response.status);
+                }
                 setLoading(false);
-            }
-        })
-    }
+            })
+        } 
+        
+        // .then((response) => {
+        //     if (response.data) {
+        //         dispatch(loginAction(response.data))
+        //         setTimeout(checkStorage, 1250)
+        //         runLogoutTimer();
+        //     } else {
+        //         return <h1>err</h1>
+        //     }
+        // })
+        // .catch(err => {
+        //     console.log(err.response); 
+        //     if (err.response.data === "Unauthorized") {
+        //         setMessage("Invalid login credentials");
+        //         setLoading(false);
+        //     }
+        // })
+
     window.loginUser = loginUser;
 
     const resetPassword = () => {
