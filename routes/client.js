@@ -3,7 +3,6 @@ const handlers = require('./handlers/clientHandlers');
 const helpers = require('./helpers/helpers');
 const validators = require('./validators/clientValidators');
 
-// need to add jwt verification for these routes
 // add new event to clients record
 router.post('/:id/addevent', 
   validators.addEventValidator,
