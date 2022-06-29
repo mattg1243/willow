@@ -6,3 +6,4 @@ Python/src/core/__pycache__
 .deployement
 /.vscode
 /test
+mockData.js

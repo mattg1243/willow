@@ -16,10 +16,10 @@ const cors = require('cors');
 require('dotenv').config();
 // check for production or dev env
 
-const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
 const clientRouter = require('./routes/client');
+const apiRouter = require('./routes/api');
 const port = process.env.PORT || 3001;
 
 var app = express();
@@ -33,9 +33,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
 // render from React build
 app.use(express.static(path.resolve(__dirname, "./client/build")));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-})
 
 // set view engine to satisify error codes
 app.set('view engine', 'jade');
@@ -101,10 +98,15 @@ app.use(function(req, res, next) {
 })
 
 // Base routes
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
+app.use('/api', helpers.verifyJWT, apiRouter);
 app.use('/client', helpers.verifyJWT, clientRouter);
+// rendering from react build
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

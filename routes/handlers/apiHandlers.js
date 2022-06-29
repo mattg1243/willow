@@ -11,6 +11,7 @@ const getEventsList = async (req, res) => {
   } 
   
   catch (err) {
+    console.error(err);
     return res.status(503).json("Error: " + err);
   }
 }
@@ -25,16 +26,39 @@ const getClientsList = async (req, res) => {
   } 
   
   catch (err) {
+    console.error(err);
     return res.status(503).json("Error: " + err);
   }
 }
 
-const getEvent = (req, res) => {
-  
+const getEvent = async (req, res) => {
+  // save eventID
+  const eventID = req.query.id;
+  // query database
+  try {
+    const event = await Event.findOne({ _id: eventID });
+    res.status(200).json(event);
+  }
+
+  catch (err) {
+    console.error(err);
+    return res.status(503).json("Error: " + err);
+  }
 }
 
-const getClient = (req, res) => {
+const getClient = async (req, res) => {
+  // save clientID
+  const clientID = req.query.id;
+  // query databse
+  try {
+    const client = await Client.findOne({ _id: clientID });
+    res.status(200).json(client);
+  }
 
+  catch (err) {
+    console.error(err);
+    return res.status(503).json("Error: " + err);
+  }
 }
 
 module.exports = {
