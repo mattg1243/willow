@@ -1,9 +1,9 @@
 const { Double } = require('bson');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+// this function needs to be defined in a different file...
 const numberGetter = (num) => {
-    return `${Number.parseFloat(num.toString()).toFixed(2)}`;
+    return `${Number.parseFloat(`${num}`).toFixed(2)}`;
 }
 
 const EventSchema = new Schema({

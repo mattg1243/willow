@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const numberGetter = (num) => {
-    return `${Number.parseFloat(num.toString()).toFixed(2)}`;
+    return `${Number.parseFloat(`${num}`).toFixed(2)}`;
 }
 
 const ClientSchema = new Schema({
@@ -14,7 +14,7 @@ const ClientSchema = new Schema({
     email: {type: String, required: false, maxLength: 100},
     sessions: [{type: mongoose.Schema.Types.ObjectId, ref: 'events'}], // this needs to be changed to an array of IDs and refactored to "events"
     balance: {type: mongoose.Schema.Types.Decimal128, get: numberGetter },
-    rate: {type: mongoose.Schema.Types.Decimal128, get: numberGetter}
+    rate: {type: mongoose.Schema.Types.Decimal128, get: numberGetter }
 
 }, {toObject: { getters: true, setters: true }, toJSON: { getters: true, setters: true }, runSettersOnQuery: true})
 
