@@ -117,7 +117,7 @@ const deleteEvent = (req, res) => {
                     
                 if (err) console.error(err);
     
-                else {console.log(result); helpers.getAllData(req, res);}
+                else {console.log(result); helpers.recalcBalance(req.body.clientID, req, res);}
             })
         })
     } catch (err) { throw err ; }
