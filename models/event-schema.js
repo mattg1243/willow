@@ -20,5 +20,3 @@ const EventSchema = new Schema({
 }, {toObject: { getters: true, setters: true }, toJSON: { getters: true, setters: true }, runSettersOnQuery: true})
 
 module.exports = mongoose.model('EventModel', EventSchema, 'events');
-
-// { '$numberDecimal': `${Number.parseFloat(v.toString()).toFixed(2)}`}}
