@@ -108,7 +108,7 @@ const getAllData = (req, res) => {
         response.user.city = user.city;
         response.user.paymentInfo = user.paymentInfo;
         // create token from the user ID
-        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '1800s' })
+        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
         // then, populate the client array
         Client.find({ ownerID: user._id }, (err, clients) => {
             if (err) { return console.error(err); }
