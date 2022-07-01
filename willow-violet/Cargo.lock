@@ -1310,6 +1310,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
+name = "violet"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "dotenv",
+ "log",
+ "matches",
+ "mongodb",
+ "pretty_env_logger",
+ "serde",
+ "serde_json",
+ "tokio",
+ "wkhtmltopdf",
+]
+
+[[package]]
 name = "wasi"
 version = "0.10.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1409,19 +1425,6 @@ name = "widestring"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17882f045410753661207383517a6f62ec3dbeb6a4ed2acce01f0728238d1983"
-
-[[package]]
-name = "willow-violet"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dotenv",
- "log",
- "mongodb",
- "pretty_env_logger",
- "tokio",
- "wkhtmltopdf",
-]
 
 [[package]]
 name = "winapi"
