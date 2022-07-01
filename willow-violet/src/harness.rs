@@ -5,8 +5,8 @@ pub async fn backup_remote() {
     pretty_env_logger::try_init().ok();
     dotenv::dotenv().ok();
 
-    let backup_path = format!("-o {}-BACKUP", chrono::Utc::now());
     // Parse connection string into an options struct
+    #[allow(unused_mut)]
     let mut client_opts = ClientOptions::parse(dotenv::var("DB_URL").unwrap())
         .await
         .unwrap();
