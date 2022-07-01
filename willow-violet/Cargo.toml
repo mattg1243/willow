@@ -1,0 +1,14 @@
+[package]
+name = "willow-violet"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.19"
+dotenv = "0.15.0"
+log = "0.4.17"
+mongodb = "2.2.2"
+pretty_env_logger = "0.4.0"
+tokio = "1.19.2"
