@@ -1,2 +1,0 @@
-[alias]
-backup = "test -- --test harness::mongo_cd::backup_rem"
