@@ -1,1 +1,1 @@
-export const TOKEN_LIFE = 30 * 60 * 1000;
+export const TOKEN_LIFE = 60 * 60 * 1000;

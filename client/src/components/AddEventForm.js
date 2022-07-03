@@ -44,7 +44,7 @@ export default function AddEventForm(props) {
         "0.0" : 
         0);
     const [rate, setRate] = useState(billRate);
-    const [amount, setAmount] = useState(props.event ? props.event.amount['$numberDecimal'].toString() : 0);
+    const [amount, setAmount] = useState(props.event ? props.event.amount : 0);
     // save event if this component is being used to update and existing event
     const eventID = props.event ? props.event._id : null;
     // for showing only relevant input fields based on event type

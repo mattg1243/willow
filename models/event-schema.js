@@ -1,6 +1,10 @@
 const { Double } = require('bson');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+// this function needs to be defined in a different file...
+const numberGetter = (num) => {
+    return `${Number.parseFloat(`${num}`).toFixed(2)}`;
+}
 
 const EventSchema = new Schema({
 
@@ -11,9 +15,8 @@ const EventSchema = new Schema({
     detail: {type: String, required: false, maxLength: 100},
     duration: {type: Number, required: false, maxLength: 100},
     rate: {type: Number, required: false, maxLength: 10},
-    amount: {type: mongoose.Schema.Types.Decimal128, required: false,
-            get: v => {return { '$numberDecimal': `${Number.parseFloat(v.toString()).toFixed(2)}`}}},
-    newBalance: {type: mongoose.Schema.Types.Decimal128, required: true}
-}, {toJSON: {getters: true}})
+    amount: {type: mongoose.Schema.Types.Decimal128, required: false, get: numberGetter },
+    newBalance: {type: mongoose.Schema.Types.Decimal128, required: true, get: numberGetter }
+}, {toObject: { getters: true, setters: true }, toJSON: { getters: true, setters: true }, runSettersOnQuery: true})
 
 module.exports = mongoose.model('EventModel', EventSchema, 'events');

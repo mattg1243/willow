@@ -76,14 +76,14 @@ class Digester:
     def push_and_pull_amounts(self):
         amounts = []
         for i in range(0, len(self.payload)):
-            amounts.append(self.payload[i]["amount"]["$numberDecimal"])
+            amounts.append(self.payload[i]["amount"])
         self.AMOUNTS = amounts
         return amounts
 
     def push_and_pull_reflected_balances(self):
         reflected_balances = []
         for i in range(0, len(self.payload)):
-            reflected_balances.append(self.payload[i]["newBalance"]["$numberDecimal"])
+            reflected_balances.append(self.payload[i]["newBalance"])
         self.REFLECTED = reflected_balances
         return reflected_balances
 
