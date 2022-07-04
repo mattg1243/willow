@@ -1,14 +1,15 @@
 /// Contains lowlevel functions for accepting environement JSON data,
 /// converting it to a model, and embedding it into an HTML rowcol schema.
 use super::*;
+use model::event::Event;
 
 /// Parses command line arguments into a Vec<Event>
-pub fn parse_deps(args: Vec<String>) -> Result<Vec<model::Event>, anyhow::Error> {
-    let mut deps: Vec<model::Event> = vec![];
+pub fn parse_deps(args: Vec<String>) -> Result<Vec<Event>, anyhow::Error> {
+    let mut deps: Vec<Event> = vec![];
     for s in args.iter() {
         // Here, our TryFrom<String> implementations for the Event type attempts
         // to deserialize the command-line passed json String into a model::Event.
-        let e = model::Event::try_from(s.to_string())?;
+        let e = Event::try_from(s.to_string())?;
         deps.push(e);
     }
     Ok(deps)
@@ -28,7 +29,7 @@ pub fn parse_deps(args: Vec<String>) -> Result<Vec<model::Event>, anyhow::Error>
 ///      for our statements
 /// - 2. Header/footer components are then appended to the rowcol components.
 /// - 3. The algorithm returns a fully-formed HTML statement as Ok(String)     
-pub fn make_html(deps: Vec<model::Event>) -> Result<String, anyhow::Error> {
+pub fn make_html(deps: Vec<Event>) -> Result<String, anyhow::Error> {
     let mut html = String::new();
     html.push_str("<html><body>");
     for event in deps.iter() {

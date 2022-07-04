@@ -17,7 +17,7 @@ pub mod engine;
 #[cfg(test)]
 mod tests {
     use crate::gen::make_gen;
-    use crate::model;
+    use crate::model::event::*;
 
     #[test]
     fn parse_deps_test() {
@@ -25,18 +25,10 @@ mod tests {
 
         pretty_env_logger::try_init().ok();
 
-        let args = model::Event::mock_args();
+        let args = Event::mock_args();
 
         let deps = engine::parse_deps(args);
         matches!(deps, Ok(_));
         log::info!("{:#?}", deps.unwrap());
-    }
-
-    #[test]
-    fn mock_html_from_deps() {
-        let mock_deps = vec![model::Event::mock(), model::Event::mock()];
-        let mock_html = crate::engine::make_html(mock_deps).unwrap();
-        log::info!("{}", mock_html);
-        make_gen(mock_html, "mock_engine.pdf").unwrap();
     }
 }
