@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Event","The schema for the willow::Event record."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["make_html","Generates a HTML representation from a Vec MOCK IMPLEMENTATION"],["parse_deps","Parses command line arguments into a Vec"]]});

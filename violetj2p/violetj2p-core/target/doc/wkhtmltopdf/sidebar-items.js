@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["error",""],["image","Generate images from HTML safely using wkhtmltopdf"],["pdf","Generate PDFs from HTML safely using wkhtmltopdf"]]});

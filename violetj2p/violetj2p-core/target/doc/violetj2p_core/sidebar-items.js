@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["engine","Contains the core engine that performs the logic encapsulated in `willow-gen`"],["gen","Contains core functions for `willow-gen`, i.e. statement generation"],["model","Contains the schema interfaces to be used by `willow-gen`"]]});
