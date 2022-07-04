@@ -4,7 +4,7 @@ use serde_json::Value as JsonValue;
 #[macro_use]
 use violetj2p_macro::j2phtml;
 #[macro_use]
-use violetj2p_macro_util::J2PdfHtml;
+use violetj2p_macro_util::{J2RowCol, J2Header, J2Footer};
 
 /// The schema for the willow::Event record.
 #[derive(Debug, Deserialize, j2phtml, Serialize)]

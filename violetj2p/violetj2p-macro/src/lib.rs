@@ -3,7 +3,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 
 #[allow(unused_imports)]
-use violetj2p_macro_util::J2PdfHtml;
+use violetj2p_macro_util::J2RowCol;
 
 #[proc_macro_derive(j2phtml)]
 pub fn derive_j2phtml(input: TokenStream) -> TokenStream {
@@ -16,7 +16,7 @@ pub fn derive_j2phtml(input: TokenStream) -> TokenStream {
 fn impl_derive_j2phtml(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let gen = quote! {
-        impl J2PdfHtml for #name {
+        impl J2RowCol for #name {
             fn j2phtml(&self) -> String {
                 unimplemented!()
             }
