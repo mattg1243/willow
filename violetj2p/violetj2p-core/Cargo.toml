@@ -20,12 +20,6 @@ serde = { version = "1.0.137", features = ["derive"] }
 serde_json = "1.0.82"
 wkhtmltopdf = "0.4.0"
 
-[dependencies.violetj2p-macro]
-path = "../violetj2p-macro"
-
-[dependencies.violetj2p-macro-util]
-path = "../violetj2p-macro-util"
-
 [profile.dev]
 incremental = true
 opt-level = 0

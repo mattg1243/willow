@@ -1,5 +1,5 @@
 [workspace]
-members = ["violetj2p-core", "violetj2p-macro", "violetj2p-macro-util"]
+members = ["violetj2p-core"]
 
 [profile.dev]
 incremental = true

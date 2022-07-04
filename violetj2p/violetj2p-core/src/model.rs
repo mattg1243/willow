@@ -1,13 +1,60 @@
+#![allow(dead_code)]
+
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
-#[macro_use]
-use violetj2p_macro::j2phtml;
-#[macro_use]
-use violetj2p_macro_util::{J2RowCol, J2Header, J2Footer};
+/// A rowcol component must impl this trait
+#[allow(missing_docs)]
+pub trait RowCol {
+    fn j2phtml(&self) -> String;
+}
+
+/// A header component must impl this trait
+#[allow(missing_docs)]
+pub trait Header {
+    fn j2phtml(&self) -> String;
+}
+
+/// A footer component must impl this trait
+#[allow(missing_docs)]
+pub trait Footer {
+    fn j2phtml(&self) -> String;
+}
+
+/// A finalized statement in HTML repr
+#[derive(Debug, Deserialize, Serialize)]
+pub struct HtmlStatement<H, R, F>
+where
+    H: Header,
+    R: RowCol,
+    F: Footer,
+{
+    /// The header component
+    pub header: H,
+    /// The body component
+    pub rows: Vec<R>,
+    /// The footer component
+    pub footer: F,
+}
+
+impl<H, R, F> HtmlStatement<H, R, F>
+where
+    H: Header,
+    R: RowCol,
+    F: Footer,
+{
+    /// Construct a finalized statement from parts
+    pub fn new(header: H, rows: Vec<R>, footer: F) -> Self {
+        HtmlStatement {
+            header,
+            rows,
+            footer,
+        }
+    }
+}
 
 /// The schema for the willow::Event record.
-#[derive(Debug, Deserialize, j2phtml, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[allow(missing_docs)]
 pub struct Event {
     #[serde(rename = "ownerID")]
@@ -22,6 +69,14 @@ pub struct Event {
     amount: JsonValue,
     #[serde(rename = "newBalance")]
     new_balance: f64,
+}
+
+impl RowCol for Event {
+    fn j2phtml(&self) -> String {
+        // HTML rowcol schema goes here:
+
+        unimplemented!()
+    }
 }
 
 /// Event Accessors:

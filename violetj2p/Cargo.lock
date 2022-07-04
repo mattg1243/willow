@@ -314,23 +314,8 @@ dependencies = [
  "pretty_env_logger",
  "serde",
  "serde_json",
- "violetj2p-macro",
- "violetj2p-macro-util",
  "wkhtmltopdf",
 ]
-
-[[package]]
-name = "violetj2p-macro"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn",
- "violetj2p-macro-util",
-]
-
-[[package]]
-name = "violetj2p-macro-util"
-version = "0.1.0"
 
 [[package]]
 name = "winapi"
