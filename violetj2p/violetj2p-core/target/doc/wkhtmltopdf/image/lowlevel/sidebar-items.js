@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["image_init","Initializes wkhtmltoimage"]],"struct":[["ImageConverter","Safe wrapper for working with the wkhtmltoimage converter"],["ImageGlobalSettings","Safe wrapper for managing wkhtmltoimage global settings"],["ImageGuard","Handles initialization and deinitialization of wkhtmltoimage"]]});

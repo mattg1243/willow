@@ -1,0 +1,11 @@
+/Users/ethangallucci/Desktop/willow/willow-violet/target/debug/deps/quote-45840684dff3838e.rmeta: /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/lib.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ext.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/format.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ident_fragment.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/to_tokens.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/runtime.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/spanned.rs
+
+/Users/ethangallucci/Desktop/willow/willow-violet/target/debug/deps/quote-45840684dff3838e.d: /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/lib.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ext.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/format.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ident_fragment.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/to_tokens.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/runtime.rs /Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/spanned.rs
+
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/lib.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ext.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/format.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/ident_fragment.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/to_tokens.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/runtime.rs:
+/Users/ethangallucci/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.20/src/spanned.rs:

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","The error type for wkhtmltopdf generation"]],"type":[["Result","A specialized `Result` type for wkhtmltopdf generation"]]});

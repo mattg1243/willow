@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["engine","Contains lowlevel functions for accepting environement JSON data, converting it to a model, and embedding it into an HTML rowcol schema."],["gen","Contains functions for building PDFs from HTML."],["model","Contains the data model for events."]]});

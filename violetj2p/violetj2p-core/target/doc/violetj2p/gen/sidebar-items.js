@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["example_html_pdf","Example HTML -> PDF using wkhtmltopdf."],["make_gen","Generates a PDF repr from a String repr HTML"]]});
