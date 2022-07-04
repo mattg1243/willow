@@ -16,10 +16,10 @@ function recalcBalance(clientID, req, res) {
         console.log(events)
 
         for (let i = 0; i < events.length; i++) {
-            if (isNaN(events[i].amount['$numberDecimal'])) {
+            if (isNaN(events[i].amount)) {
                 throw new Error("NaN amount found in event" + i);
             };
-            balance += parseFloat(events[i].amount['$numberDecimal'])
+            balance += parseFloat(events[i].amount)
             
             Event.findOneAndUpdate({ _id: events[i]._id }, { newBalance: balance }, (err) => {
                 if (err) console.error(err)
@@ -108,7 +108,7 @@ const getAllData = (req, res) => {
         response.user.city = user.city;
         response.user.paymentInfo = user.paymentInfo;
         // create token from the user ID
-        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '1800s' })
+        response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
         // then, populate the client array
         Client.find({ ownerID: user._id }, (err, clients) => {
             if (err) { return console.error(err); }

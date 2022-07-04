@@ -27,7 +27,7 @@ export default function EditClientsDialog(props) {
     const [lname, setLname] = useState(`${props.client.lname}`);
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
-    const [rate, setRate] = useState(`${props.client.rate ? props.client.rate['$numberDecimal'] : 0}`);
+    const [rate, setRate] = useState(`${props.client.rate ? props.client.rate : 0}`);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState([]);

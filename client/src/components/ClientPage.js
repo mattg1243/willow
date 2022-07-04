@@ -63,7 +63,7 @@ function ClientPage(props) {
                     <VStack style={{display: 'flex', flexDirection: 'column', alignItems: 'start'}}>
                         <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                         <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
-                            Balance: ${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            Balance: ${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         </Text>
                     </VStack>
                         <VStack style={{flexDirection: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'row': 'column', alignItems: 'end', justifyContent: 'end'}}>
@@ -110,7 +110,7 @@ function ClientPage(props) {
                                         <Td style={{textAlign: 'center'}}>{event.duration ? event.duration : '-'}</Td>
                                         </>): null}
                                         <Td style={{textAlign: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'center': 'end'}}>
-                                            ${parseFloat(event.amount['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                            ${event.amount.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                         </Td>
                                         {breakpoints[currentBreakpoint] > breakpoints.mobile ? (
                                         <Td style={{textAlign: 'end'}}>
@@ -139,7 +139,7 @@ function ClientPage(props) {
                             <ModalHeader>New Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm id={ id } rate={client.rate ? client.rate['$numberDecimal']: "Not specified"} setIsShown={ setAddIsShown }/>
+                                    <AddEventForm id={ id } rate={client.rate ? client.rate: "Not specified"} setIsShown={ setAddIsShown }/>
                             </ModalBody>
                         </ModalContent>
                     </Modal>
@@ -174,7 +174,7 @@ function ClientPage(props) {
                             <ModalHeader>Edit Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm event={toEdit} rate={client.rate ? client.rate['$numberDecimal']: "Not specified"} edit={true} setIsShown={setEditEventIsShown} />
+                                    <AddEventForm event={toEdit} rate={client.rate ? client.rate: "Not specified"} edit={true} setIsShown={setEditEventIsShown} />
                             </ModalBody>
                         </ModalContent>
                     </Modal>

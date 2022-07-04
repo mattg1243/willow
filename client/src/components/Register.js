@@ -100,7 +100,7 @@ export default function Register() {
                         <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setState(e.target.value);}}/>
                         <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="#03b126" onChange={(e) => {setZip(e.target.value);}}/>
                     </InputGroup>
-                    <Button background="#03b126" color="#fff" onClick={() => { registerUser(); }}>Sign Up</Button>
+                    <Button background="#63326E" color="#fff" onClick={() => { registerUser(); }}>Register</Button>
                 </VStack>
             </Container>
         </>

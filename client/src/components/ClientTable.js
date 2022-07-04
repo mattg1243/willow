@@ -22,7 +22,7 @@ export default function ClientTable() {
                     {clients.map(client => {return (
                         <Tr key={client._id} onClick={() => { navigate(`/client/${client._id}`) }}>
                             <Td>{client.fname + " " + client.lname}</Td>
-                            <Td isNumeric>${parseFloat(client.balance['$numberDecimal'].toString()).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
+                            <Td isNumeric>${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                         </Tr>
                         )}
                     )}

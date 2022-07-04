@@ -112,12 +112,12 @@ const deleteEvent = (req, res) => {
             if (err) return console.error(err);
             console.log("Event:\n");
             console.dir(event);
-            console.log('\nThe events amount with index:\n' + event.amount['$numberDecimal']);
-            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount['$numberDecimal'] }}, function(err, result) {
+            console.log('\nThe events amount with index:\n' + event.amount);
+            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount }}, function(err, result) {
                     
                 if (err) console.error(err);
     
-                else {console.log(result); helpers.recalcBalance(req.body.clientID, req, res);}
+                else {console.log(result); helpers.recalcBalance(req.body.clientID, req, res); }
             })
         })
     } catch (err) { throw err ; }
