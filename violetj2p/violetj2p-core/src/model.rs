@@ -357,6 +357,7 @@ pub mod footer {
 #[cfg(test)]
 mod model_test_core {
     use super::{event::Event, footer::WillowFooter, header::WillowHeader, HtmlStatement};
+    #[allow(unused_imports)]
     use super::{Footer, Header, RowCol};
 
     #[test]

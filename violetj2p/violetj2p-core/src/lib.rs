@@ -16,7 +16,6 @@ pub mod engine;
 
 #[cfg(test)]
 mod tests {
-    use crate::gen::make_gen;
     use crate::model::event::*;
 
     #[test]
