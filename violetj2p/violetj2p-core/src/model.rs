@@ -1,8 +1,13 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
+#[macro_use]
+use violetj2p_macro::j2phtml;
+#[macro_use]
+use violetj2p_macro_util::J2PdfHtml;
+
 /// The schema for the willow::Event record.
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, j2phtml, Serialize)]
 #[allow(missing_docs)]
 pub struct Event {
     #[serde(rename = "ownerID")]

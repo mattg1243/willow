@@ -14,14 +14,6 @@ pub mod model;
 /// converting it to a model, and embedding it into an HTML rowcol schema.
 pub mod engine;
 
-/// Example macros
-#[macro_use]
-use violetj2p_macro::streams;
-
-/// Example usage of the attribute macro `streams` defined in violetj2p_macro
-#[streams]
-fn invoke1() {}
-
 #[cfg(test)]
 mod tests {
     use crate::gen::make_gen;
@@ -46,10 +38,5 @@ mod tests {
         let mock_html = crate::engine::make_html(mock_deps).unwrap();
         log::info!("{}", mock_html);
         make_gen(mock_html, "mock_engine.pdf").unwrap();
-    }
-
-    #[test]
-    fn attrib_macro() {
-        super::invoke1()
     }
 }

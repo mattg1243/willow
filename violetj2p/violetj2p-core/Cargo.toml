@@ -23,11 +23,14 @@ wkhtmltopdf = "0.4.0"
 [dependencies.violetj2p-macro]
 path = "../violetj2p-macro"
 
+[dependencies.violetj2p-macro-util]
+path = "../violetj2p-macro-util"
+
 [profile.dev]
 incremental = true
 opt-level = 0
 
-[provile.release]
+[profile.release]
 incremental = false
 opt-level = 3
 debug-assertions = false

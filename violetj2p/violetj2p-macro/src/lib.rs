@@ -1,12 +1,28 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
-use syn::{parse, token::Token};
+use quote::quote;
 
-#[proc_macro_attribute]
-pub fn streams(attr: TokenStream, item: TokenStream) -> TokenStream {
-    println!("attr: {}", attr);
-    println!("item: {}", item);
-    item
+#[allow(unused_imports)]
+use violetj2p_macro_util::J2PdfHtml;
+
+#[proc_macro_derive(j2phtml)]
+pub fn derive_j2phtml(input: TokenStream) -> TokenStream {
+    // Construct a repr of Rust code as syntax tree.
+    let ast = syn::parse(input).unwrap();
+    // Build the trait impl.
+    impl_derive_j2phtml(&ast)
+}
+
+fn impl_derive_j2phtml(ast: &syn::DeriveInput) -> TokenStream {
+    let name = &ast.ident;
+    let gen = quote! {
+        impl J2PdfHtml for #name {
+            fn j2phtml(&self) -> String {
+                unimplemented!()
+            }
+        }
+    };
+    gen.into()
 }
 
 #[cfg(test)]
