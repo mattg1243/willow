@@ -56,7 +56,7 @@ export default function ClientSortMenu(props) {
       <MenuList>
         <MenuItem onClick={() => { props.setClients(sortClients(clientsSorted, 0)); }}>A-Z</MenuItem>
         <MenuItem onClick={() => { props.setClients(sortClients(clientsSorted, 1)); }}>Z-A</MenuItem>
-        <MenuItem onClick={() => { props.setClients(sortClients(clientsSorted, 2)) }}>Custom</MenuItem>
+        <MenuItem onClick={() => { props.setClients(sortClients(clientsSorted, 2)); }}>Custom</MenuItem>
       </MenuList>
     </Menu>
   )
