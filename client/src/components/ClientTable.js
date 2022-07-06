@@ -1,16 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
+import { 
+    Button,
+    Table, 
+    Thead,
+    Tr, 
+    Th, 
+    Td, 
+    Tbody,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    MenuItemOption,
+    MenuGroup,
+    MenuOptionGroup,
+    MenuDivider,
+} from '@chakra-ui/react';
+import ClientSortMenu from "./ClientSortMenu";
 
 export default function ClientTable() {
-    
-    const clients = useSelector(state => state.clients) || [];
+
+    const clientsFromStore = useSelector(state => state.clients)
     const navigate = useNavigate();
+
+    const [clients, setClients] = useState(clientsFromStore);
 
     useEffect(() => {console.log("ClientTable mounted")});
 
     return (
+        <>
             <Table size='lg' style={{marginBottom: '2rem', tableLayout: 'fixed'}} variant='striped'>
                 <Thead style={{textAlign: 'center'}}>
                     <Tr>
@@ -28,6 +48,7 @@ export default function ClientTable() {
                     )}
                 </Tbody>
             </Table>
-        
+            <ClientSortMenu clients={clients} setClients={setClients} />
+       </> 
     )
 }
