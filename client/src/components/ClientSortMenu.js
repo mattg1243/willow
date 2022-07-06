@@ -43,11 +43,11 @@ export default function ClientSortMenu(props) {
       const name1 = a.fname.toUpperCase();
       const name2 = b.fname.toUpperCase(); 
       // sort it!
-      sortFunc(name1, name2);
+      return sortFunc(name1, name2);
     })
     return clientsArr;
   }
-
+  
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
