@@ -26,8 +26,48 @@ export default function ClientTable() {
     const navigate = useNavigate();
 
     const [clients, setClients] = useState(clientsFromStore);
+    const [sorting, setSorting] = useState(0);
+    // copy of array so setState call causes rerender
+    const clientsSorted = [...clients];
+    // sorting functions
+    const sortAtoZ = (name1, name2) => {
+      if (name1 < name2) return -1;
+      if (name1 > name2) return 1;
+      // names must be equal
+      return 0;
+    }
+  
+    const sortZtoA = (name1, name2) => {
+        if (name1 > name2) return -1;
+        if (name1 < name2) return 1;
+        // names must be equal
+        return 0;
+    }
 
-    useEffect(() => {console.log("ClientTable mounted")});
+    const sortCustom = (name1, name2) => {
+        // not yet implemented
+    }
+
+    const sortClients = (clientsArr, sortMethod) => {
+        // check for sortMethod before iterating through array
+        let sortFunc;
+        if (sortMethod === 0) sortFunc = sortAtoZ;
+        if (sortMethod === 1) sortFunc = sortZtoA;
+        if (sortMethod === 2) sortFunc = sortCustom;
+        clientsArr.sort((a, b) => {
+          // ignore case
+          const name1 = a.fname.toUpperCase();
+          const name2 = b.fname.toUpperCase(); 
+          // sort it!
+          return sortFunc(name1, name2);
+        })
+        return clientsArr;
+      }
+    // sort the client array, fname A-Z by default
+    useEffect(() => {
+        const sortedClients = sortClients(clientsSorted, sorting);
+        setClients(sortedClients);
+    });
 
     return (
         <>
@@ -48,7 +88,7 @@ export default function ClientTable() {
                     )}
                 </Tbody>
             </Table>
-            <ClientSortMenu clients={clients} setClients={setClients} />
+            <ClientSortMenu clients={clients} setSorting={setSorting} />
        </> 
     )
 }
