@@ -1,16 +1,12 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { HStack, VStack, Button, Box, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Heading } from '@chakra-ui/react';
+import { useState } from "react";
+import { HStack, VStack, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Heading } from '@chakra-ui/react';
 import { withBreakpoints } from 'react-breakpoints';
 import ClientTable from "./ClientTable"
 import AddClientForm from "./AddClientForm";
 import Header from "./Header";
-import { useColorMode } from '@chakra-ui/color-mode';
 
 function Dashboard(props) {
-
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
     
     const [isShown, setIsShown] = useState(false);
     const { breakpoints, currentBreakpoint } = props;
