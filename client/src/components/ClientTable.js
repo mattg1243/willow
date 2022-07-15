@@ -60,7 +60,8 @@ export default function ClientTable(props) {
         }
     // states
     const [sorting, setSorting] = useState(0);
-    const [clients, setClients] = useState(sortClients(clientsSorted, sorting));
+    // mock state for clients so as to prevent
+    const clients = sortClients(clientsSorted, sorting);
 
     return (
         <>
