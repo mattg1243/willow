@@ -19,15 +19,9 @@ function Dashboard(props) {
         <>
             <Header />
             <VStack style={{height: '100%', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': '70%', paddingTop: '1rem'}}>
-            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', marginBottom: '2rem'}}>Clients</Heading>
-                <ClientTable />
+                <ClientTable addClientShown={setIsShown} breakpoints={breakpoints} currentBreakpoint={currentBreakpoint}/>
                 <HStack style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                    <Button 
-                    color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginBottom: '2rem'}} 
-                    onClick={() => { setIsShown(true) }} >
-                        Add
-                    </Button>
+               
                 </HStack>
                 <Modal motionPreset="slideInBottom" onClose={() => {setIsShown(false)}} isOpen={isShown}>
                     <ModalOverlay />

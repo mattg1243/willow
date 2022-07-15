@@ -9,21 +9,21 @@ import {
     Th, 
     Td, 
     Tbody,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
+    HStack,
+    VStack,
+    Heading,
+    Flex,
+    Spacer
 } from '@chakra-ui/react';
+import { useColorMode } from "@chakra-ui/react";
 import ClientSortMenu from "./ClientSortMenu";
 
-export default function ClientTable() {
+export default function ClientTable(props) {
 
     const clientsFromStore = useSelector(state => state.clients)
     const navigate = useNavigate();
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
 
     const [clients, setClients] = useState(clientsFromStore);
     const [sorting, setSorting] = useState(0);
@@ -63,7 +63,8 @@ export default function ClientTable() {
         })
         return clientsArr;
       }
-    // sort the client array, fname A-Z by default
+    // sort the client array on component mount, 
+    // fname A-Z by default
     useEffect(() => {
         const sortedClients = sortClients(clientsSorted, sorting);
         setClients(sortedClients);
@@ -71,6 +72,20 @@ export default function ClientTable() {
 
     return (
         <>
+        {/* top stack, "Client", Add button, Sort menu */}
+        <HStack spacing={10} style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '90%'}}>
+            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute'}}>Clients</Heading>
+            <VStack style={{flexDirection: props.breakpoints[props.currentBreakpoint] > props.breakpoints.tablet ? 'row': 'column', alignItems: 'end', marginLeft: "95%"}}>
+                <Button 
+                    variant="outline"
+                    color="white" 
+                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginRight: props.breakpoints[props.currentBreakpoint] > props.breakpoints.tablet ? '1rem': null}}
+                    onClick={() => {props.addClientShown(true)}}
+                    >Add Client</Button>
+                <ClientSortMenu setSorting={setSorting}/>
+            </VStack>
+        </HStack>
+        {/* table */}
             <Table size='lg' style={{marginBottom: '2rem', tableLayout: 'fixed'}} variant='striped'>
                 <Thead style={{textAlign: 'center'}}>
                     <Tr>
@@ -88,7 +103,6 @@ export default function ClientTable() {
                     )}
                 </Tbody>
             </Table>
-            <ClientSortMenu clients={clients} setSorting={setSorting} />
        </> 
     )
 }
