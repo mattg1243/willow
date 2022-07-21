@@ -22,6 +22,10 @@ export default function ClientTable(props) {
     const navigate = useNavigate();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    // store the breakpoints from props
+    const breakpoints = props.breakpoints;
+    const currBreakpoint = props.currentBreakpoint
+    const isDesktop = breakpoints[currBreakpoint] > breakpoints.tablet;
     // copy of array so setState call causes rerender
     const clientsSorted = [...clientsFromStore];
     // sorting functions
@@ -66,16 +70,17 @@ export default function ClientTable(props) {
     return (
         <>
         {/* top stack, "Client", Add button, Sort menu */}
-        <HStack spacing={10} style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
-            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute'}}>Clients</Heading>
-                <VStack style={{flexDirection: props.breakpoints[props.currentBreakpoint] > props.breakpoints.tablet ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
+        <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
+        {isDesktop ? null : <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>}
+            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>Clients</Heading>
+                <VStack style={{flexDirection: isDesktop ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
                 <Button 
                     variant="outline"
                     color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginRight: props.breakpoints[props.currentBreakpoint] > props.breakpoints.tablet ? '1rem': null}}
+                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginRight: isDesktop ? '1rem': null}}
                     onClick={() => {props.addClientShown(true)}}
                     >Add</Button>
-                    <ClientSortMenu setSorting={setSorting}/>
+                   {isDesktop ? <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>: null} 
             </VStack>
         </HStack>
         {/* table */}
