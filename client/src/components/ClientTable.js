@@ -71,7 +71,7 @@ export default function ClientTable(props) {
         <>
         {/* top stack, "Client", Add button, Sort menu */}
         <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
-        {isDesktop ? null : <ClientSortMenu setSorting={setSorting} isDesktop={isDesktop}/>}
+        {isDesktop ? null : <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>}
             <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>Clients</Heading>
                 <VStack style={{flexDirection: isDesktop ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
                 <Button 
@@ -80,7 +80,7 @@ export default function ClientTable(props) {
                     style={{backgroundColor: isDark? "#63326E" : '#03b126', marginRight: isDesktop ? '1rem': null}}
                     onClick={() => {props.addClientShown(true)}}
                     >Add</Button>
-                   {isDesktop ? <ClientSortMenu setSorting={setSorting} isDesktop={isDesktop}/>: null} 
+                   {isDesktop ? <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>: null} 
             </VStack>
         </HStack>
         {/* table */}
