@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { BiLogOut, BiHome } from 'react-icons/bi';
-import { FaFileInvoiceDollar, FaUserCircle } from 'react-icons/fa';
+import { FaFileInvoiceDollar, FaUserCircle, FaRegFileArchive } from 'react-icons/fa';
 import { BsFillPersonLinesFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import QuickStatement from './QuickStatement';
@@ -45,6 +45,9 @@ export default function HamburgerMenu() {
                 </MenuItem>
                 <MenuItem icon={<BsFillPersonLinesFill color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/clients') }} >
                     Clients
+                </MenuItem>
+                <MenuItem icon={<FaRegFileArchive color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/client-archive') }} >
+                    Client Archive
                 </MenuItem>
                 <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true); }}>
                     Quick Statement

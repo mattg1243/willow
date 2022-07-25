@@ -19,6 +19,18 @@ import ClientSortMenu from "./ClientSortMenu";
 export default function ClientTable(props) {
 
     const clientsFromStore = useSelector(state => state.clients)
+    // function to sort out which clients to take from state
+    const clientFilter = (client) => {
+        if (props.archiveMode && client.isArchived) {
+            return true;
+        }
+        else if (!props.archiveMode && !client.isArchived) {
+            return true;
+        }
+        return false;
+    }
+    // filter the clients
+    const filteredClients = clientsFromStore.filter(clientFilter);
     const navigate = useNavigate();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -27,7 +39,7 @@ export default function ClientTable(props) {
     const currBreakpoint = props.currentBreakpoint
     const isDesktop = breakpoints[currBreakpoint] > breakpoints.tablet;
     // copy of array so setState call causes rerender
-    const clientsSorted = [...clientsFromStore];
+    const clientsSorted = [...filteredClients];
     // sorting functions
     const sortAtoZ = (name1, name2) => {
         if (name1 < name2) return -1;
@@ -72,7 +84,9 @@ export default function ClientTable(props) {
         {/* top stack, "Client", Add button, Sort menu */}
         <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
         {isDesktop ? null : <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>}
-            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>Clients</Heading>
+            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>
+                {props.archiveMode ? <>Client Archive</>: <>Clients</>}
+            </Heading>
                 <VStack style={{flexDirection: isDesktop ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
                 <Button 
                     variant="outline"
@@ -93,12 +107,12 @@ export default function ClientTable(props) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {clients.map(client => {if (!client.isArchived) { return (
+                    {clients.map(client => { return (
                         <Tr key={client._id} onClick={() => { navigate(`/client/${client._id}`) }}>
                             <Td>{client.fname + " " + client.lname}</Td>
                             <Td isNumeric>${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                         </Tr>
-                        )}}
+                        )}
                     )}
                 </Tbody>
             </Table>

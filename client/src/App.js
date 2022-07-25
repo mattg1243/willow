@@ -40,6 +40,7 @@ function App() {
                 {/* All routes below are priveleged and need to be wrapped in a PrivateRoutes component */}
                 <Route path='/profile' element={<ProtectedRoute component={Profile} />} />
                 <Route path='/clients' element={<ProtectedRoute component={Dashboard} />} />
+                <Route path='/client-archive' element={<ProtectedRoute archiveMode={true} component={Dashboard} />} />
                 <Route path='/client/:id' element={<ProtectedRoute component={ClientPage} />} />
               </Routes>
             </Router>
