@@ -14,7 +14,8 @@ const ClientSchema = new Schema({
     email: {type: String, required: false, maxLength: 100},
     sessions: [{type: mongoose.Schema.Types.ObjectId, ref: 'events'}], // this needs to be changed to an array of IDs and refactored to "events"
     balance: {type: mongoose.Schema.Types.Decimal128, get: numberGetter },
-    rate: {type: mongoose.Schema.Types.Decimal128, get: numberGetter }
+    rate: {type: mongoose.Schema.Types.Decimal128, get: numberGetter },
+    isArchived: {type: Boolean, default: false}
 
 }, {toObject: { getters: true, setters: true }, toJSON: { getters: true, setters: true }, runSettersOnQuery: true})
 
