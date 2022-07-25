@@ -1,0 +1,12 @@
+[workspace]
+members = ["violetj2p-core"]
+
+[profile.dev]
+incremental = true
+overflow-checks = true
+
+[profile.release]
+opt-level = 3
+lto = true
+debug-assertions = false
+overflow-checks = false

@@ -6,4 +6,8 @@ Python/src/core/__pycache__
 .deployement
 /.vscode
 /test
+violetj2p/dump
+violetj2p/target
+violetj2p-core/target
+violetj2p-macro/target
 mockData.js
