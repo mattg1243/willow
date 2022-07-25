@@ -4,7 +4,6 @@
 extern crate violetj2p;
 extern crate test;
 
-use std::mem::replace;
 use std::time::{Duration, Instant};
 use test::Bencher;
 use violetj2p::model::{header::WillowHeader, Header};
@@ -24,7 +23,7 @@ fn bench_full_header(b: &mut Bencher) {
     let html_header = test::black_box(new_header.make_header());
     log::info!("Made html header: {}", html_header);
     log::debug!("Benching make_gen...");
-    test::black_box(violetj2p::gen::make_gen(html_header, "header_bench.pdf").unwrap());
+    test::black_box(violetj2p::gen::make_gen(html_header, "etc/header_bench.pdf").unwrap());
     let runtime = start.elapsed();
 
     println!("\n");

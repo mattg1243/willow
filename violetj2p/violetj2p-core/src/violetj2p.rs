@@ -8,13 +8,7 @@ mod engine;
 mod gen;
 mod model;
 
-use model::event::*;
-
 fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
-    let args = Event::mock_args();
-    let html = engine::make_html(engine::parse_deps(args)?)?;
-    log::info!("{}", html);
-    gen::make_gen(html, "mock_engine.pdf")?;
     Ok(())
 }

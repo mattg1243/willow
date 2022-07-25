@@ -9,15 +9,78 @@ pub mod gen;
 
 /// Contains the data model for events.
 pub mod model;
-use model::{
-    header::WillowHeader,
-    footer::WillowFooter,
-    Header,
-};
+use model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol};
 
 /// Contains lowlevel functions for accepting environement JSON data,
 /// converting it to a model, and embedding it into an HTML rowcol schema.
 pub mod engine;
+
+/// The closing tags to our HTML statement that will be appended at the end of the 'full_make_html()' function
+static CLOSING_TAGS: &str = "</body>
+  <script
+    src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\"
+    integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\"
+    crossorigin=\"anonymous\"
+  ></script>
+</html>";
+
+/// This is the core function that accepts all params necessary to generate a full statement
+///
+/// params:
+/// h: WillowHeader
+/// r: Vec<Event>
+/// f: WillowFooter
+///
+/// The procedure relies on the trait implementations. It first constructs a mutable String:
+/// 'html_str', uses the make_header function on the WillowHeader struct to create and push
+/// the HTML header. Then it loops through r (Vec<Event>), constructing a RowCol object
+/// for each Event in r, pushing each row as they are made. Finally, a WillowFooter is converted
+/// into a generic Footer object then pushed to the 'html_str', and a final '</html>' closing tag
+/// is appended.
+pub fn full_make_html(h: WillowHeader, r: Vec<Event>, f: WillowFooter) -> String {
+  // Set up the logger environement
+  pretty_env_logger::try_init().ok();
+  // Start the runtime clock
+  let start = std::time::Instant::now();
+
+  // Construct a mutable string to push our HTML to
+  let mut html_str = String::new();
+  log::debug!("{:?}", h);
+  // Use the Header trait impl to construct the HTML header from the WillowHeader
+  // struct that was passed into this function
+  let header: String = h.make_header();
+  log::debug!("{:?}", header);
+  // Push the HTML header to our string
+  html_str.push_str(header.as_str());
+
+  // Iteratively construct our description tables rows using
+  // the RowCol impl. This current impl will construct as many rows
+  // as there are 'Event' in 'r'. May want to think about this later because
+  // if there are an irrational amount of events being passed then the function
+  // may want to decide a breaking point to suspend any further rows from being
+  // constructed. (i.e. maybe a constraint on how many events can be used to construct)
+  // a statement in order to prevent a DOS attack. But a constraint limits the users
+  // freedom so I think it's a tricky thing.
+  for e in r {
+      log::debug!("{:?}", e);
+      let row = e.make_row();
+      log::debug!("{:?}", row);
+      html_str.push_str(row.as_str());
+  }
+
+  // Construct the HTML statement footer
+  let footer: String = f.make_footer();
+  log::debug!("{:?}", footer);
+  html_str.push_str(footer.as_str());
+  // Push the closing body tag and script field. Close the HTML tag to finalize our HTML statement
+  html_str.push_str(CLOSING_TAGS);
+
+  // Stop the runtime timer
+  let runtime = start.elapsed();
+  // Log results
+  log::info!("returning html_str (after {:?}): {:?}", runtime, html_str);
+  return html_str;
+}
 
 /// Impl Header trait
 impl Header for WillowHeader {
@@ -101,12 +164,25 @@ impl Header for WillowHeader {
             src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\"
             crossorigin=\"anonymous\"
-          ></script>
-        </html>",
+          ></script>",
             prov = self.provider(),
             client = self.client()
         ));
         return html;
+    }
+}
+
+/// Impl RowCol trait (i.e. Description table)
+impl RowCol for Event {
+    fn make_row(&self) -> String {
+        String::new()
+    }
+}
+
+/// Impl Footer trait (i.e. The statement footer)
+impl Footer for WillowFooter {
+    fn make_footer(&self) -> String {
+        String::new()
     }
 }
 
@@ -130,7 +206,7 @@ mod tests {
     #[test]
     fn make_header_test() {
         use super::{Header, WillowHeader};
-        
+
         pretty_env_logger::try_init().ok();
 
         let new_header = WillowHeader::new(

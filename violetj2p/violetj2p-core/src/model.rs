@@ -69,7 +69,7 @@ where
 
 /// Defines an event
 pub mod event {
-    use super::{Deserialize, JsonValue, RowCol, Serialize};
+    use super::{Deserialize, JsonValue, Serialize};
 
     /// The schema for the willow::Event record.
     #[derive(Debug, Deserialize, Serialize)]
@@ -87,40 +87,6 @@ pub mod event {
         amount: JsonValue,
         #[serde(rename = "newBalance")]
         new_balance: f64,
-    }
-
-    /// This is where we define the HTML schema for the rowcol objects
-    /// i.e. the events
-    impl RowCol for Event {
-        fn make_row(&self) -> String {
-            let mut html = String::new();
-            html.push_str(&format!(
-                "<div class=\"rowcol\">
-                        <div class=\"header\">
-                            <div class=\"owner\">{}</div>
-                            <div class=\"client\">{}</div>
-                            <div class=\"date\">{}</div>
-                            <div class=\"type\">{}</div>
-                        </div>
-                        <div class=\"body\">
-                            <div class=\"duration\">{}</div>
-                            <div class=\"rate\">{}</div>
-                            <div class=\"amount\">{}</div>
-                            <div class=\"new-balance\">{}</div>
-                        </div>
-                    </div>",
-                self.owner_id(),
-                self.client_id(),
-                self.date(),
-                self.event_type(),
-                self.duration(),
-                self.rate(),
-                self.amount(),
-                self.new_balance()
-            ));
-
-            html
-        }
     }
 
     /// Event Accessors:
@@ -238,7 +204,7 @@ pub mod event {
 
 #[allow(missing_docs)]
 pub mod header {
-    use super::{Deserialize, Header, Serialize};
+    use super::{Deserialize, Serialize};
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
@@ -307,7 +273,7 @@ pub mod header {
 
 #[allow(missing_docs)]
 pub mod footer {
-    use super::{Deserialize, Footer, Serialize};
+    use super::{Deserialize, Serialize};
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowFooter {
@@ -328,25 +294,4 @@ pub mod footer {
             serde_json::to_string_pretty(self).unwrap()
         }
     }
-
-    impl Footer for WillowFooter {
-        fn make_footer(&self) -> String {
-            let mut html = String::new();
-            html.push_str(&format!(
-                "<div class=\"footer\">
-                        <div class=\"balance\">{}</div>
-                    </div>",
-                self.balance()
-            ));
-            html
-        }
-    }
 }
-
-#[cfg(test)]
-mod model_test_core {
-    use super::{event::Event, footer::WillowFooter, header::WillowHeader, HtmlStatement};
-    #[allow(unused_imports)]
-    use super::{Footer, Header, RowCol};
-
-} 
