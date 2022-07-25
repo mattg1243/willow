@@ -15,16 +15,48 @@
 //! Header, RowCol, and Footer).
 //!
 //! - once the HMTL string is acquired from the `full_make_html(h,r,f)` call,
-//! the string is then passed into `gen::make_gen(html_str, output_path)`. This `make_gen()` 
+//! the string is then passed into `gen::make_gen(html_str, output_path)`. This `make_gen()`
 //! function returns: `Result<(), std::io::Error>` because the Ok result can be safely discarded
 //! (i.e. we only care about the return value of this function if it has failed).
 //!
 //! Further documentation of each Trait, Struct, and Function can be found by viewing the source
 //! for the library, or by clicking on each module seperately.
+//!
+//! An example main.rs utilizing violetj2p for our statement engine may look like this:
+//!
+//! This test will currently fail, as the `parse_deps` function hasn't been properly impl yet.
+//! ```rust
+//! extern crate violetj2p;
+//!
+//! use violetj2p::{
+//!     WillowHeader, WillowFooter, Event,
+//!     Header, Footer, RowCol,
+//!     parse_deps, full_make_html, make_gen, mock_env
+//! };
+//!
+//! fn main() -> Result<(), std::io::Error> {
+//!     let args: Vec<String> = std::env::args().collect();
+//!     // This will collect the environment arguments and deserialize the JSON
+//!     // dumps into their respected objects.
+//!     //
+//!     // It is commented out because the doc test cannot acquire environment arguments.
+//!     // let (header, events, footer):
+//!     // (WillowHeader, Vec<Event>, WillowFooter) = parse_deps().unwrap();
+//!
+//!     // Here we use the 'mock_env' function to mock the deps that we would (in a real
+//!     // environment) acquire from the above code (i.e. the invocation of 'parse_deps')
+//!     let (header, events, footer) = mock_env(); 
+//!     let html_str: String = full_make_html(header, events, footer);
+//!     make_gen(html_str, "example_output.pdf")
+//! }
+//! ```
 
 #![warn(missing_docs)]
 #![warn(unused_imports)]
 #![forbid(unused_mut)]
+
+/// Re-exports
+pub use self::mock_args as mock_env;
 
 /// Contains functions for building PDFs from HTML.
 pub mod gen;
@@ -32,7 +64,9 @@ pub use self::gen::make_gen;
 
 /// Contains the data model for events.
 pub mod model;
-pub use self::model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol};
+pub use self::model::{
+    event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol,
+};
 
 /// Contains lowlevel functions for accepting environement JSON data,
 /// converting it to a model, and embedding it into an HTML rowcol schema.
@@ -62,48 +96,48 @@ static CLOSING_TAGS: &str = "</body>
 /// into a generic Footer object then pushed to the 'html_str', and a final '</html>' closing tag
 /// is appended.
 pub fn full_make_html(h: WillowHeader, r: Vec<Event>, f: WillowFooter) -> String {
-  // Set up the logger environement
-  pretty_env_logger::try_init().ok();
-  // Start the runtime clock
-  let start = std::time::Instant::now();
+    // Set up the logger environement
+    pretty_env_logger::try_init().ok();
+    // Start the runtime clock
+    let start = std::time::Instant::now();
 
-  // Construct a mutable string to push our HTML to
-  let mut html_str = String::new();
-  log::debug!("{:?}", h);
-  // Use the Header trait impl to construct the HTML header from the WillowHeader
-  // struct that was passed into this function
-  let header: String = h.make_header();
-  log::debug!("{:?}", header);
-  // Push the HTML header to our string
-  html_str.push_str(header.as_str());
+    // Construct a mutable string to push our HTML to
+    let mut html_str = String::new();
+    log::debug!("{:?}", h);
+    // Use the Header trait impl to construct the HTML header from the WillowHeader
+    // struct that was passed into this function
+    let header: String = h.make_header();
+    log::debug!("{:?}", header);
+    // Push the HTML header to our string
+    html_str.push_str(header.as_str());
 
-  // Iteratively construct our description tables rows using
-  // the RowCol impl. This current impl will construct as many rows
-  // as there are 'Event' in 'r'. May want to think about this later because
-  // if there are an irrational amount of events being passed then the function
-  // may want to decide a breaking point to suspend any further rows from being
-  // constructed. (i.e. maybe a constraint on how many events can be used to construct)
-  // a statement in order to prevent a DOS attack. But a constraint limits the users
-  // freedom so I think it's a tricky thing.
-  for e in r {
-      log::debug!("{:?}", e);
-      let row = e.make_row();
-      log::debug!("{:?}", row);
-      html_str.push_str(row.as_str());
-  }
+    // Iteratively construct our description tables rows using
+    // the RowCol impl. This current impl will construct as many rows
+    // as there are 'Event' in 'r'. May want to think about this later because
+    // if there are an irrational amount of events being passed then the function
+    // may want to decide a breaking point to suspend any further rows from being
+    // constructed. (i.e. maybe a constraint on how many events can be used to construct)
+    // a statement in order to prevent a DOS attack. But a constraint limits the users
+    // freedom so I think it's a tricky thing.
+    for e in r {
+        log::debug!("{:?}", e);
+        let row = e.make_row();
+        log::debug!("{:?}", row);
+        html_str.push_str(row.as_str());
+    }
 
-  // Construct the HTML statement footer
-  let footer: String = f.make_footer();
-  log::debug!("{:?}", footer);
-  html_str.push_str(footer.as_str());
-  // Push the closing body tag and script field. Close the HTML tag to finalize our HTML statement
-  html_str.push_str(CLOSING_TAGS);
+    // Construct the HTML statement footer
+    let footer: String = f.make_footer();
+    log::debug!("{:?}", footer);
+    html_str.push_str(footer.as_str());
+    // Push the closing body tag and script field. Close the HTML tag to finalize our HTML statement
+    html_str.push_str(CLOSING_TAGS);
 
-  // Stop the runtime timer
-  let runtime = start.elapsed();
-  // Log results
-  log::info!("returning html_str (after {:?}): {:?}", runtime, html_str);
-  return html_str;
+    // Stop the runtime timer
+    let runtime = start.elapsed();
+    // Log results
+    log::info!("returning html_str (after {:?}): {:?}", runtime, html_str);
+    return html_str;
 }
 
 /// Impl Header trait
@@ -210,23 +244,22 @@ impl Footer for WillowFooter {
     }
 }
 
+/// A util function for mocking environment arguments, handy for testing & benches
+pub fn mock_args() -> (WillowHeader, Vec<Event>, WillowFooter) {
+    (
+        WillowHeader::new(
+            "Anne Proxy".to_string(),
+            "anneproxy@skiff.com".to_string(),
+            "venmo: 908278409274".to_string(),
+            "Brandon Belt".to_string()
+        ),
+        Event::mock_deps(),
+        WillowFooter::new(200.50),
+    )
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::model::event::*;
-
-    #[test]
-    fn parse_deps_test() {
-        use super::engine;
-
-        pretty_env_logger::try_init().ok();
-
-        let args = Event::mock_args();
-
-        let deps = engine::parse_deps(args);
-        matches!(deps, Ok(_));
-        log::info!("{:#?}", deps.unwrap());
-    }
-
     #[test]
     fn make_header_test() {
         use super::{Header, WillowHeader};

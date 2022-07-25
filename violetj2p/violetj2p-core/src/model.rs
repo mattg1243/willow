@@ -79,6 +79,45 @@ pub mod event {
     /// Event Accessors:
     #[allow(missing_docs, dead_code)]
     impl Event {
+        pub fn new(
+            oid: &str,
+            cid: &str,
+            date: &str,
+            etype: &str,
+            duration: u8,
+            rate: u16,
+            amount: JsonValue,
+            new_balance: f64,
+        ) -> Self {
+            Self {
+                owner_id: oid.to_owned(),
+                client_id: cid.to_owned(),
+                date: date.to_owned(),
+                event_type: etype.to_owned(),
+                duration,
+                rate,
+                amount,
+                new_balance
+            }
+        }
+
+        pub fn mock_deps() -> Vec<Self> {
+            let mut mock: Vec<Self> = vec![];
+            for _ in 0..10 {
+                mock.push(Self::new(
+                        "f901309830913",
+                        "4790194704971",
+                        "07/22/2022",
+                        "Meeting",
+                        2,
+                        90,
+                        serde_json::json!("amount: {200}"),
+                        200.50,
+                ))
+            }
+            return mock
+        }
+
         pub fn owner_id(&self) -> &str {
             &self.owner_id
         }
@@ -135,7 +174,7 @@ pub mod event {
         }
 
         /// Returns a mock Vec<Event>.
-        pub fn mock_deps() -> Vec<Event> {
+        pub fn mock_three() -> Vec<Event> {
             vec![Event::mock(), Event::mock(), Event::mock()]
         }
 
