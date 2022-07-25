@@ -93,12 +93,12 @@ export default function ClientTable(props) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {clients.map(client => {return (
+                    {clients.map(client => {if (!client.isArchived) { return (
                         <Tr key={client._id} onClick={() => { navigate(`/client/${client._id}`) }}>
                             <Td>{client.fname + " " + client.lname}</Td>
                             <Td isNumeric>${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                         </Tr>
-                        )}
+                        )}}
                     )}
                 </Tbody>
             </Table>
