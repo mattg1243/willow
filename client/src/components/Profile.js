@@ -121,8 +121,8 @@ export default function Profile() {
                     </InputRightElement>
                 </InputGroup>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '3rem'}} width="100%">
-                    <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={(e) => { updateInfo(e); }}>Save</Button>
-                    <Button style={{backgroundColor: isDark? "#EC4E20" : '#58A4B0', color: 'white'}}>Cancel</Button>
+                    <Button bg={isDark? "brand.dark.purple" : 'brand.green'} color='white' onClick={(e) => { updateInfo(e); }}>Save</Button>
+                    <Button bg={isDark? "brand.dark.red" : 'brand.grey'} color='white' >Cancel</Button>
                 </HStack>
             </VStack>
         </>

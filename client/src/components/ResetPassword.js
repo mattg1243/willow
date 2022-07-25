@@ -35,7 +35,7 @@ import {
 
     return (
         <>
-            <header className="navbar" style={{backgroundColor: "#03b126", display: "flex", flexDirection: "column"}}>
+            <header className="navbar" style={{backgroundColor: "brand.green", display: "flex", flexDirection: "column"}}>
                 <h3 className="willowCursive" style={{color: 'white', fontSize: '3rem', padding: '.5rem'}}>Willow</h3>
             </header>
             <VStack style={{width: '60%', paddingTop: '10rem'}} spacing={5}>
@@ -49,7 +49,7 @@ import {
                     } else { setPasswordsDontMatch(true); }
                     }}/>
                 <p style={{display: passwordsDontMatch ? 'flex': 'none', color: 'red'}}>Passwords dont match</p>
-                <Button style={{backgroundColor: "#03b126", color: 'white'}} isDisabled={passwordsDontMatch ? true: false} onClick={() => { changePassword(); }}>Change Password</Button>
+                <Button bg='brand.green' color='white' isDisabled={passwordsDontMatch ? true: false} onClick={() => { changePassword(); }}>Change Password</Button>
             </VStack>
         </>
     )

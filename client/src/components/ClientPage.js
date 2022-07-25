@@ -70,13 +70,15 @@ function ClientPage(props) {
                             <Button 
                                 variant="outline"
                                 color="white" 
-                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                                style={{margin: '1rem', padding: '20px'}}
                                 onClick={() => {setAddIsShown(true)}}
                                 >New Event</Button>
                             <Button 
                                 variant="outline"
-                                color="white" 
-                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                color="white"
+                                bg={isDark ? 'brand.dark.purple': 'brand.green'}  
+                                style={{margin: '1rem', padding: '20px'}}
                                 onClick={() => {setStatementDrawerOpen(true)}}
                             >Statement</Button>
                         </VStack>

@@ -6,6 +6,7 @@ import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
 import Splash from './components/Splash';
 import ProtectedRoute from './components/ProtectedRoute';
+import { theme } from './theme';
 import './style.css';
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -27,7 +28,7 @@ function App() {
 
   return (
     <>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <Router>

@@ -77,7 +77,8 @@ export default function ClientTable(props) {
                 <Button 
                     variant="outline"
                     color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginRight: isDesktop ? '1rem': null}}
+                    bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                    style={{marginRight: isDesktop ? '1rem': null}}
                     onClick={() => {props.addClientShown(true)}}
                     >Add</Button>
                    {isDesktop ? <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>: null} 

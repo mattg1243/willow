@@ -11,7 +11,8 @@ import {
     ModalHeader,
     ModalFooter,
     ModalBody,
-    ModalCloseButton
+    ModalCloseButton,
+    Switch
 } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ export default function EditClientsDialog(props) {
     const [lname, setLname] = useState(`${props.client.lname}`);
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
+    const [archived, setArchived] = useState(`${props.client.isArchived}`)
     const [rate, setRate] = useState(`${props.client.rate ? props.client.rate : 0}`);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [badInput, setBadInput] = useState(false);
@@ -72,6 +74,7 @@ export default function EditClientsDialog(props) {
             email: email,
             phone: phone,
             rate: rate,
+            isArchived: archived,
         }, 
         {
             headers: { 'Authorization': `Bearer ${token}`}
@@ -103,8 +106,11 @@ export default function EditClientsDialog(props) {
             <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
             <FormLabel>Billing Rate</FormLabel>
             <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
+            <FormLabel>Archived</FormLabel>
+            {/* need to match the colorScheme for this switch w Willow Green */}
+            <Switch size="lg" />
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
-                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white'}} onClick={() => { updateClient(); }}>Save</Button>
+                <Button bg={isDark? 'brand.dark.purple': 'brand.green'} style={{ color: 'white'}} onClick={() => { updateClient(); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>
             </HStack>
             <Modal onClose={() => {setDeleteIsShown(false)}} isOpen={deleteIsShown}>
