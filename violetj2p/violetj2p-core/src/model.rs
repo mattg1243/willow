@@ -1,24 +1,25 @@
 #![allow(dead_code)]
+#![warn(missing_docs)]
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
 /// A rowcol component must impl this trait
-#[allow(missing_docs)]
 pub trait RowCol {
-    fn j2phtml(&self) -> String;
+    /// Convert an Event into a statement row
+    fn make_row(&self) -> String;
 }
 
 /// A header component must impl this trait
-#[allow(missing_docs)]
 pub trait Header {
-    fn j2phtml(&self) -> String;
+    /// Convert client/provider info into a statement header
+    fn make_header(&self) -> String;
 }
 
 /// A footer component must impl this trait
-#[allow(missing_docs)]
 pub trait Footer {
-    fn j2phtml(&self) -> String;
+    /// Construct a statement footer
+    fn make_footer(&self) -> String;
 }
 
 /// A finalized statement in HTML repr
@@ -43,7 +44,7 @@ where
     R: RowCol,
     F: Footer,
 {
-    /// Construct a finalized statement from parts
+    /// Construct a new statement from parts
     pub fn new(header: H, rows: Vec<R>, footer: F) -> Self {
         HtmlStatement {
             header,
@@ -55,11 +56,11 @@ where
     /// Generate a finalized statement from a header, vector of events, and a footer
     pub fn finalize(&self, path: &str) -> Result<(), anyhow::Error> {
         let mut html = String::new();
-        html.push_str(&self.header.j2phtml());
+        html.push_str(&self.header.make_header());
         for row in self.rows.iter() {
-            html.push_str(&row.j2phtml());
+            html.push_str(&row.make_row());
         }
-        html.push_str(&self.footer.j2phtml());
+        html.push_str(&self.footer.make_footer());
 
         crate::gen::make_gen(html, path)?;
         Ok(())
@@ -88,9 +89,10 @@ pub mod event {
         new_balance: f64,
     }
 
+    /// This is where we define the HTML schema for the rowcol objects
+    /// i.e. the events
     impl RowCol for Event {
-        fn j2phtml(&self) -> String {
-            // HTML rowcol schema goes here:
+        fn make_row(&self) -> String {
             let mut html = String::new();
             html.push_str(&format!(
                 "<div class=\"rowcol\">
@@ -274,7 +276,7 @@ pub mod header {
 
     /// Defines how to embed the header component in the HTML repr.
     impl Header for WillowHeader {
-        fn j2phtml(&self) -> String {
+        fn make_header(&self) -> String {
             // The HTML schema for a statement Header goes here:
             let mut html_header = String::new();
             html_header.push_str(&format!(
@@ -341,11 +343,11 @@ pub mod footer {
     }
 
     impl Footer for WillowFooter {
-        fn j2phtml(&self) -> String {
+        fn make_footer(&self) -> String {
             let mut html = String::new();
             html.push_str(&format!(
                 "<div class=\"footer\">
-                        <div class=\"balance\">{:?}</div>
+                        <div class=\"balance\">{}</div>
                     </div>",
                 self.balance()
             ));
@@ -363,6 +365,7 @@ mod model_test_core {
     #[test]
     fn make_full_html_statement() {
         pretty_env_logger::try_init().ok();
+        std::env::set_var("RUST_LOG", "debug");
 
         let rowcols: Vec<Event> = Event::mock_deps();
         log::info!("mocking events.. {:?}", rowcols);

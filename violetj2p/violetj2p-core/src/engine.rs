@@ -30,34 +30,5 @@ pub fn parse_deps(args: Vec<String>) -> Result<Vec<Event>, anyhow::Error> {
 /// - 2. Header/footer components are then appended to the rowcol components.
 /// - 3. The algorithm returns a fully-formed HTML statement as Ok(String)     
 pub fn make_html(deps: Vec<Event>) -> Result<String, anyhow::Error> {
-    let mut html = String::new();
-    html.push_str("<html><body>");
-    for event in deps.iter() {
-        html.push_str(&format!(
-            "<div class=\"rowcol\">
-                    <div class=\"header\">
-                        <div class=\"owner\">{}</div>
-                        <div class=\"client\">{}</div>
-                        <div class=\"date\">{}</div>
-                        <div class=\"type\">{}</div>
-                    </div>
-                    <div class=\"body\">
-                        <div class=\"duration\">{}</div>
-                        <div class=\"rate\">{}</div>
-                        <div class=\"amount\">{}</div>
-                        <div class=\"new-balance\">{}</div>
-                    </div>
-                </div>",
-            event.owner_id(),
-            event.client_id(),
-            event.date(),
-            event.event_type(),
-            event.duration(),
-            event.rate(),
-            event.amount(),
-            event.new_balance()
-        ));
-    }
-    html.push_str("</body></html>");
-    Ok(html)
+    Ok(String::new())     
 }
