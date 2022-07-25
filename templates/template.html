@@ -15,19 +15,20 @@
   </head>
   <body>
     <main class="container">
+      <!-- header section -->
       <div class="container" id="heading">
         <h1>Account Statment</h1>
-        <p>Date: July 24th, 2022</p>
+        <p id="date-section"><strong>Date: July 24, 2022</strong></p>
         <div class="row justify-content-center provider-info-section">
           <div class="col-3" id="providerNameField">Valerie Frankel</div>
-          <div class="col-1">&bull;</div>
+          <div class="col-1 bullet">&bull;</div>
           <div class="col-3">3215 Trawler Pl</div>
-          <div class="col-1">&bull;</div>
+          <div class="col-1 bullet">&bull;</div>
           <div class="col-3">Davis, CA 95616</div>
         </div>
         <div class="row justify-content-center provider-info-section">
           <div class="col-3">530-220-0242</div>
-          <div class="col-1">&bull;</div>
+          <div class="col-1 bullet">&bull;</div>
           <div class="col-3">MFC 42238</div>
         </div>
         <div class="row" id="info-section">
@@ -44,12 +45,12 @@
             </div>
             <div class="row" id="notes-field">
               <p>
-                <strong>Note: </strong>why tf is thisasdfasdfasdf
-                asdfasdfasdfasdf shit
+                <strong>Note: </strong>Amount due reflects coverage of your
+                negative balance, plus replenishment of the retainer.
               </p>
             </div>
           </div>
-          <div class="col" id="info-spacer"></div>
+          <div class="col-lg-4" id="info-spacer"></div>
           <div class="col client-info-section payment-details-section">
             <div class="row-1">
               <p><strong>Payment Methods</strong></p>
@@ -68,6 +69,80 @@
             </div>
           </div>
         </div>
+      </div>
+      <!-- table section -->
+      <div class="contain" id="table-container">
+        <table class="table table-borderless">
+          <!-- table header -->
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Type</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Rate</th>
+              <th scope="col">Amount</th>
+              <th scope="col" class="text-align-right">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+            <tr>
+              <td>03-11-2022</td>
+              <td>Meeting</td>
+              <td>1.1</td>
+              <td>$250</td>
+              <td>$285</td>
+              <td class="text-align-right">$-650</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </main>
   </body>

@@ -4,8 +4,24 @@
   border: 0;
 }
 
+@media print {
+  body {
+    width: 8.5in;
+    height: 11in;
+  }
+}
+
 main {
   padding: 3rem;
+}
+
+table {
+  margin-top: 3rem;
+}
+
+thead {
+  font-size: 1.25em;
+  border-bottom: 3px solid;
 }
 
 p {
@@ -14,12 +30,20 @@ p {
   overflow-wrap: break-word;
 }
 
+td {
+  font-size: 1.25em;
+}
+
 #heading {
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#date-section {
+  margin-bottom: 2rem;
 }
 
 #notes-field {
@@ -32,9 +56,13 @@ p {
   justify-content: space-between;
 }
 
+#info-spacer {
+  width: 225px;
+}
+
 .provider-info-section,
 .client-info-section {
-  width: 50%;
+  width: 450px;
   text-align: start;
   white-space: nowrap;
 }
@@ -45,8 +73,16 @@ p {
   flex-direction: column;
 }
 
-.payment-details-section {
-  justify-items: flex-end;
+.bullet {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  margin: -8px -18px 0px 2px;
+}
+
+.text-align-right {
+  text-align: right;
 }
 
 .row {
