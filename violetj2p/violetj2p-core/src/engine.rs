@@ -30,5 +30,5 @@ pub fn parse_deps(args: Vec<String>) -> Result<Vec<Event>, anyhow::Error> {
 /// - 2. Header/footer components are then appended to the rowcol components.
 /// - 3. The algorithm returns a fully-formed HTML statement as Ok(String)     
 pub fn make_html(deps: Vec<Event>) -> Result<String, anyhow::Error> {
-    Ok(String::new())     
+    Ok(String::new())
 }

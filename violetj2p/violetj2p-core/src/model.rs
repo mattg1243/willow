@@ -245,14 +245,16 @@ pub mod header {
         provider: String,
         contact: String,
         billing: String,
+        client: String,
     }
 
     impl WillowHeader {
-        pub fn new(provider: String, contact: String, billing: String) -> Self {
+        pub fn new(provider: String, contact: String, billing: String, client: String) -> Self {
             WillowHeader {
                 provider,
                 contact,
                 billing,
+                client,
             }
         }
 
@@ -269,27 +271,12 @@ pub mod header {
             self.billing.clone()
         }
 
+        pub fn client(&self) -> String {
+            self.client.clone()
+        }
+
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
-        }
-    }
-
-    /// Defines how to embed the header component in the HTML repr.
-    impl Header for WillowHeader {
-        fn make_header(&self) -> String {
-            // The HTML schema for a statement Header goes here:
-            let mut html_header = String::new();
-            html_header.push_str(&format!(
-                "<div class=\"header\">
-                        <div class=\"provider\">{:?}</div>
-                        <div class=\"contact\">{:?}</div>
-                        <div class=\"billing\">{:?}</div>
-                    </div>",
-                self.provider(),
-                self.contact(),
-                self.billing()
-            ));
-            html_header
         }
     }
 
@@ -362,24 +349,4 @@ mod model_test_core {
     #[allow(unused_imports)]
     use super::{Footer, Header, RowCol};
 
-    #[test]
-    fn make_full_html_statement() {
-        pretty_env_logger::try_init().ok();
-        std::env::set_var("RUST_LOG", "debug");
-
-        let rowcols: Vec<Event> = Event::mock_deps();
-        log::info!("mocking events.. {:?}", rowcols);
-        let header: WillowHeader = WillowHeader::new(
-            "Willow".to_string(),
-            "Willow".to_string(),
-            "Willow".to_string(),
-        );
-        log::info!("mocking header.. {}", header);
-        let footer = WillowFooter::new(0.0);
-        log::info!("mocking footer.. {:?}", footer);
-
-        let wrapped_html = HtmlStatement::new(header, rowcols, footer);
-        log::info!("building html from statement.. {:?}", wrapped_html);
-        wrapped_html.finalize("make_full_html_test.pdf").unwrap();
-    }
-}
+} 
