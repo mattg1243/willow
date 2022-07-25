@@ -1,0 +1,58 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+main {
+  padding: 3rem;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+#heading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#notes-field {
+  width: 350px;
+  white-space: initial;
+}
+
+#info-section {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.provider-info-section,
+.client-info-section {
+  width: 50%;
+  text-align: start;
+  white-space: nowrap;
+}
+
+.client-info-section {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-details-section {
+  justify-items: flex-end;
+}
+
+.row {
+  margin: 0;
+}
+
+.spacer {
+  width: 50px;
+}
