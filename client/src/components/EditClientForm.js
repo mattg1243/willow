@@ -17,7 +17,7 @@ import {
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginAction } from '../actions';
+import { loginAction, getClients } from '../actions';
 import { runLogoutTimer } from "../utils";
 import BadInputAlert from "./BadInputAlert";
 import axios from 'axios';
@@ -28,7 +28,7 @@ export default function EditClientsDialog(props) {
     const [lname, setLname] = useState(`${props.client.lname}`);
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
-    const [archived, setArchived] = useState(`${props.client.isArchived}`)
+    const [archived, setArchived] = useState(props.client.isArchived)
     const [rate, setRate] = useState(`${props.client.rate ? props.client.rate : 0}`);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [badInput, setBadInput] = useState(false);
@@ -78,7 +78,13 @@ export default function EditClientsDialog(props) {
         }, 
         {
             headers: { 'Authorization': `Bearer ${token}`}
-        }).catch(err => {
+        })
+        .then((response) => {
+            dispatch(getClients(response.data));
+            runLogoutTimer();
+            props.setEditIsShown(false);
+        })
+        .catch(err => {
             if (err.response.status === 422) {
                 setErrMsg(err.response.data);
                 setBadInput(true);
@@ -108,7 +114,7 @@ export default function EditClientsDialog(props) {
             <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
             <FormLabel>Archived</FormLabel>
             {/* need to match the colorScheme for this switch w Willow Green */}
-            <Switch size="lg" />
+            <Switch size="lg" defaultChecked={archived} onChange={() => { setArchived(archived ? false: true); }}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
                 <Button bg={isDark? 'brand.dark.purple': 'brand.green'} style={{ color: 'white'}} onClick={() => { updateClient(); }}>Save</Button>
                 <Button style={{backgroundColor: 'red', color: 'white'}} onClick={() => { setDeleteIsShown(true); }}>Delete</Button>
