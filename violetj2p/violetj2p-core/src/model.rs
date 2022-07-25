@@ -52,22 +52,9 @@ where
             footer,
         }
     }
-
-    /// Generate a finalized statement from a header, vector of events, and a footer
-    pub fn finalize(&self, path: &str) -> Result<(), anyhow::Error> {
-        let mut html = String::new();
-        html.push_str(&self.header.make_header());
-        for row in self.rows.iter() {
-            html.push_str(&row.make_row());
-        }
-        html.push_str(&self.footer.make_footer());
-
-        crate::gen::make_gen(html, path)?;
-        Ok(())
-    }
 }
 
-/// Defines an event
+/// Defines an event schema & its methods
 pub mod event {
     use super::{Deserialize, JsonValue, Serialize};
 
@@ -203,6 +190,7 @@ pub mod event {
 }
 
 #[allow(missing_docs)]
+/// Defines the WillowHeader struct & its methods
 pub mod header {
     use super::{Deserialize, Serialize};
 
@@ -272,6 +260,7 @@ pub mod header {
 }
 
 #[allow(missing_docs)]
+/// Encapsulates the WillowFooter struct & its methods
 pub mod footer {
     use super::{Deserialize, Serialize};
 

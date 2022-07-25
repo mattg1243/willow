@@ -1,4 +1,26 @@
-//! src/lib.rs defines trait implementations for generic Headers, RowCols, and Footers
+//! To construct an HTML statement within violetj2p, three params are required:
+//!
+//! - A `WillowHeader` struct
+//! - A `Vec<Event>`
+//! - A `WillowFooter` struct
+//!
+//! The flow is as follows:
+//! - invoke `full_make_html(h, r, f)` where
+//! `h: WillowHeader`
+//! `r: Vec<Event>`
+//! `f: WillowFooter`
+//!
+//! - `full_make_html(h,r,f)` will return an HTML representation of the three
+//! input params using the templates within the three trait impls (i.e. the traits:
+//! Header, RowCol, and Footer).
+//!
+//! - once the HMTL string is acquired from the `full_make_html(h,r,f)` call,
+//! the string is then passed into `gen::make_gen(html_str, output_path)`. This `make_gen()` 
+//! function returns: `Result<(), std::io::Error>` because the Ok result can be safely discarded
+//! (i.e. we only care about the return value of this function if it has failed).
+//!
+//! Further documentation of each Trait, Struct, and Function can be found by viewing the source
+//! for the library, or by clicking on each module seperately.
 
 #![warn(missing_docs)]
 #![warn(unused_imports)]
@@ -6,14 +28,16 @@
 
 /// Contains functions for building PDFs from HTML.
 pub mod gen;
+pub use self::gen::make_gen;
 
 /// Contains the data model for events.
 pub mod model;
-use model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol};
+pub use self::model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol};
 
 /// Contains lowlevel functions for accepting environement JSON data,
 /// converting it to a model, and embedding it into an HTML rowcol schema.
 pub mod engine;
+pub use self::engine::parse_deps;
 
 /// The closing tags to our HTML statement that will be appended at the end of the 'full_make_html()' function
 static CLOSING_TAGS: &str = "</body>
