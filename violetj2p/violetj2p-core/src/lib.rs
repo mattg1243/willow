@@ -9,12 +9,16 @@ pub mod gen;
 
 /// Contains the data model for events.
 pub mod model;
+use model::{
+    header::WillowHeader,
+    footer::WillowFooter,
+    Header,
+};
 
 /// Contains lowlevel functions for accepting environement JSON data,
 /// converting it to a model, and embedding it into an HTML rowcol schema.
 pub mod engine;
 
-use model::{header::WillowHeader, Header};
 /// Impl Header trait
 impl Header for WillowHeader {
     fn make_header(&self) -> String {
