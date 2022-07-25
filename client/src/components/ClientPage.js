@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { VStack, HStack, Stack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints';
 import { loginAction } from '../actions';
 import { runLogoutTimer } from '../utils';
@@ -70,13 +70,16 @@ function ClientPage(props) {
                             <Button 
                                 variant="outline"
                                 color="white" 
-                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                                style={{margin: '1rem', padding: '20px'}}
+                                isDisabled={client.isArchived}
                                 onClick={() => {setAddIsShown(true)}}
                                 >New Event</Button>
                             <Button 
                                 variant="outline"
-                                color="white" 
-                                style={{backgroundColor: isDark? "#63326E" : '#03b126', margin: '1rem', padding: '20px'}}
+                                color="white"
+                                bg={isDark ? 'brand.dark.purple': 'brand.green'}  
+                                style={{margin: '1rem', padding: '20px'}}
                                 onClick={() => {setStatementDrawerOpen(true)}}
                             >Statement</Button>
                         </VStack>
@@ -117,16 +120,17 @@ function ClientPage(props) {
                                             <IconButton 
                                                 icon={<EditIcon />} 
                                                 size="sm" 
+                                                isDisabled={client.isArchived}
                                                 onClick={() => { setToEdit(event); setEditEventIsShown(true); }}
                                                 style={{margin: '1rem'}}
                                             />
                                             <IconButton 
                                                 icon={<DeleteIcon />} 
-                                                size="sm" 
+                                                size="sm"
+                                                isDisabled={client.isArchived} 
                                                 onClick={() => { setDeleteIsShown(true); setToDelete(event._id) }}
                                             />
                                         </Td>): null}
-                                        
                                     </Tr>
                                 )}
                             )}

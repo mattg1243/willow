@@ -6,6 +6,7 @@ import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
 import Splash from './components/Splash';
 import ProtectedRoute from './components/ProtectedRoute';
+import { theme } from './theme';
 import './style.css';
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -27,7 +28,7 @@ function App() {
 
   return (
     <>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <Router>
@@ -39,6 +40,7 @@ function App() {
                 {/* All routes below are priveleged and need to be wrapped in a PrivateRoutes component */}
                 <Route path='/profile' element={<ProtectedRoute component={Profile} />} />
                 <Route path='/clients' element={<ProtectedRoute component={Dashboard} />} />
+                <Route path='/client-archive' element={<ProtectedRoute archiveMode={true} component={Dashboard} />} />
                 <Route path='/client/:id' element={<ProtectedRoute component={ClientPage} />} />
               </Routes>
             </Router>

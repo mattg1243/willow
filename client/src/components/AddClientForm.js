@@ -72,7 +72,7 @@ export default function AddClientForm(props) {
                 <FormLabel>Billing Rate</FormLabel>
                 <Input onChange={(e) => { setRate(e.target.value) }} />
                 <Divider />
-                <Button style={{backgroundColor: isDark? "#63326E" : '#03b126', color: 'white', marginTop: '1rem'}} onClick={() => { addClient(); }}>Save</Button>
+                <Button bg={isDark? "brand.dark.purple" : 'brand.green'} style={{color: 'white', marginTop: '1rem'}} onClick={() => { addClient(); }}>Save</Button>
             </VStack>
             
         </>
