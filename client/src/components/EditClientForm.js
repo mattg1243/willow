@@ -103,15 +103,15 @@ export default function EditClientsDialog(props) {
                 })
             ) : null}
             <FormLabel>First Name</FormLabel>
-            <Input type="text" onChange={(e) => { setFname(e.target.value); }} value={fname}/>
+            <Input type="text" isDisabled={props.client.isArchived} onChange={(e) => { setFname(e.target.value); }} value={fname}/>
             <FormLabel>Last Name</FormLabel>
-            <Input type="text" onChange={(e) => { setLname(e.target.value); }} value={lname}/>
+            <Input type="text" isDisabled={props.client.isArchived} onChange={(e) => { setLname(e.target.value); }} value={lname}/>
             <FormLabel>Email</FormLabel>
-            <Input type="email" onChange={(e) => { setEmail(e.target.value); }} value={email}/>
+            <Input type="email" isDisabled={props.client.isArchived} onChange={(e) => { setEmail(e.target.value); }} value={email}/>
             <FormLabel>Phone</FormLabel>
-            <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
+            <Input type="tel" isDisabled={props.client.isArchived} onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
             <FormLabel>Billing Rate</FormLabel>
-            <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
+            <Input type="number" isDisabled={props.client.isArchived} onChange={(e) => { setRate(e.target.value); }} value={rate}/>
             <FormLabel>Closed</FormLabel>
             {/* need to match the colorScheme for this switch w Willow Green */}
             <Switch size="lg" defaultChecked={archived} onChange={() => { setArchived(archived ? false: true); }}/>

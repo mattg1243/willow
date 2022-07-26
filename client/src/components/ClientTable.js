@@ -107,8 +107,12 @@ export default function ClientTable(props) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {clients.map(client => { return (
-                        <Tr key={client._id} onClick={() => { navigate(`/client/${client._id}`) }}>
+                    {clients.map(client => { 
+                        // create url endpoint based on archived status
+                        let endpoint = `/client/${client._id}`;
+                        if (client.isArchived) { endpoint += '?closed=true'; }
+                        return (
+                        <Tr key={client._id} onClick={() => { navigate(endpoint) }}>
                             <Td>{client.fname + " " + client.lname}</Td>
                             <Td isNumeric>${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                         </Tr>
