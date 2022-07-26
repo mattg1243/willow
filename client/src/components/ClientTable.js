@@ -85,7 +85,7 @@ export default function ClientTable(props) {
         <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
         {isDesktop ? null : <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>}
             <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>
-                {props.archiveMode ? <>Client Archive</>: <>Clients</>}
+                {props.archiveMode ? <>Closed Cases</>: <>Clients</>}
             </Heading>
                 <VStack style={{flexDirection: isDesktop ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
                 <Button 

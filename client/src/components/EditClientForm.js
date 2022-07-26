@@ -112,7 +112,7 @@ export default function EditClientsDialog(props) {
             <Input type="tel" onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
             <FormLabel>Billing Rate</FormLabel>
             <Input type="number" onChange={(e) => { setRate(e.target.value); }} value={rate}/>
-            <FormLabel>Archived</FormLabel>
+            <FormLabel>Closed</FormLabel>
             {/* need to match the colorScheme for this switch w Willow Green */}
             <Switch size="lg" defaultChecked={archived} onChange={() => { setArchived(archived ? false: true); }}/>
             <HStack style={{paddingTop: '2rem'}} spacing={10}>
