@@ -47,7 +47,7 @@ export default function HamburgerMenu() {
                     Clients
                 </MenuItem>
                 <MenuItem icon={<FaRegFileArchive color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/client-archive') }} >
-                    Client Archive
+                    Closed Cases
                 </MenuItem>
                 <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true); }}>
                     Quick Statement
