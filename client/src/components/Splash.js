@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     VStack,
     HStack,
@@ -7,12 +7,21 @@ import {
 from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints';
-
+import { useSelector } from 'react-redux';
 
 function Splash(props) {
 
+    const [loggedIn, setLoggedIn] = useState(false);
+
     const { breakpoints, currentBreakpoint} = props;
     const navigate = useNavigate();
+    const user = useSelector(state => state.user);
+    
+    // check if user is logged in
+    useEffect(() => {
+        if (user) { setLoggedIn(true); }
+        else { setLoggedIn(false); }
+    })
 
     return (
         <>
@@ -20,8 +29,14 @@ function Splash(props) {
                 <h1 className="willowCursive" style={{fontSize: '6rem'}}>Willow</h1>
                 <h3 style={{maxWidth: breakpoints[currentBreakpoint] < breakpoints.tablet ? '80%' : '50%', fontSize: '1.5rem'}}>A free and easy way for professionals to track their time, manage retainers and invoice clients.</h3>
                 <HStack spacing={10} style={{margin: '2rem'}}>
+                {loggedIn ? (
+                    <Button bg='brand.green' color='white' onClick={() => { navigate('/clients') }}>Clients</Button>
+                   ) : (
+                    <>
                     <Button bg='brand.dark.purple' color='white' onClick={() => { navigate('/register') }}>Register</Button>
                     <Button bg='brand.green' color='white' onClick={() => { navigate('/') }}>Log In</Button>
+                    </>
+                   )}
                 </HStack>
                 <VStack style={{flexDirection: breakpoints[currentBreakpoint] < breakpoints.tablet ? 'column': 'row', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%' : '70%', justifyContent: 'space-between', textAlign: 'center'}} spacing={5}>
                     <VStack width={breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': "33%"} style={{height: '15rem', padding: '2rem', margin: breakpoints[currentBreakpoint] < breakpoints.tablet ? '4rem': '0'}}>
