@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from  "react";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
     Input, 
     Container, 
@@ -76,6 +76,15 @@ export default function Login() {
       }
     };
 
+    // check if user is being redirected here due to expired token
+    useEffect(() => {
+        const search = window.location.search;
+        const params = new URLSearchParams(search);
+        if (params.get("expired")) {
+            setMessage("You have been logged out due to an expired session");
+        }
+    })
+
     return (
         <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <VStack className="loginCont" >
@@ -86,7 +95,7 @@ export default function Login() {
                     <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                         <AlertIcon />
                         <AlertTitle mr={2}>{message}</AlertTitle>
-                        <CloseButton position='absolute' right='8px' top='8px' onClick={() => setMessage("")}/>
+                        <CloseButton position='absolute' right='8px' top='8px' onClick={() => { window.location.search = ''; setMessage(""); }}/>
                     </Alert>
                 </VStack>
                 {loading ? (
