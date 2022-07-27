@@ -52,24 +52,11 @@ where
             footer,
         }
     }
-
-    /// Generate a finalized statement from a header, vector of events, and a footer
-    pub fn finalize(&self, path: &str) -> Result<(), anyhow::Error> {
-        let mut html = String::new();
-        html.push_str(&self.header.make_header());
-        for row in self.rows.iter() {
-            html.push_str(&row.make_row());
-        }
-        html.push_str(&self.footer.make_footer());
-
-        crate::gen::make_gen(html, path)?;
-        Ok(())
-    }
 }
 
-/// Defines an event
+/// Defines an event schema & its methods
 pub mod event {
-    use super::{Deserialize, JsonValue, RowCol, Serialize};
+    use super::{Deserialize, JsonValue, Serialize};
 
     /// The schema for the willow::Event record.
     #[derive(Debug, Deserialize, Serialize)]
@@ -89,43 +76,48 @@ pub mod event {
         new_balance: f64,
     }
 
-    /// This is where we define the HTML schema for the rowcol objects
-    /// i.e. the events
-    impl RowCol for Event {
-        fn make_row(&self) -> String {
-            let mut html = String::new();
-            html.push_str(&format!(
-                "<div class=\"rowcol\">
-                        <div class=\"header\">
-                            <div class=\"owner\">{}</div>
-                            <div class=\"client\">{}</div>
-                            <div class=\"date\">{}</div>
-                            <div class=\"type\">{}</div>
-                        </div>
-                        <div class=\"body\">
-                            <div class=\"duration\">{}</div>
-                            <div class=\"rate\">{}</div>
-                            <div class=\"amount\">{}</div>
-                            <div class=\"new-balance\">{}</div>
-                        </div>
-                    </div>",
-                self.owner_id(),
-                self.client_id(),
-                self.date(),
-                self.event_type(),
-                self.duration(),
-                self.rate(),
-                self.amount(),
-                self.new_balance()
-            ));
-
-            html
-        }
-    }
-
     /// Event Accessors:
     #[allow(missing_docs, dead_code)]
     impl Event {
+        pub fn new(
+            oid: &str,
+            cid: &str,
+            date: &str,
+            etype: &str,
+            duration: u8,
+            rate: u16,
+            amount: JsonValue,
+            new_balance: f64,
+        ) -> Self {
+            Self {
+                owner_id: oid.to_owned(),
+                client_id: cid.to_owned(),
+                date: date.to_owned(),
+                event_type: etype.to_owned(),
+                duration,
+                rate,
+                amount,
+                new_balance
+            }
+        }
+
+        pub fn mock_deps() -> Vec<Self> {
+            let mut mock: Vec<Self> = vec![];
+            for _ in 0..10 {
+                mock.push(Self::new(
+                        "f901309830913",
+                        "4790194704971",
+                        "07/22/2022",
+                        "Meeting",
+                        2,
+                        90,
+                        serde_json::json!("amount: {200}"),
+                        200.50,
+                ))
+            }
+            return mock
+        }
+
         pub fn owner_id(&self) -> &str {
             &self.owner_id
         }
@@ -182,7 +174,7 @@ pub mod event {
         }
 
         /// Returns a mock Vec<Event>.
-        pub fn mock_deps() -> Vec<Event> {
+        pub fn mock_three() -> Vec<Event> {
             vec![Event::mock(), Event::mock(), Event::mock()]
         }
 
@@ -237,22 +229,25 @@ pub mod event {
 }
 
 #[allow(missing_docs)]
+/// Defines the WillowHeader struct & its methods
 pub mod header {
-    use super::{Deserialize, Header, Serialize};
+    use super::{Deserialize, Serialize};
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
         provider: String,
         contact: String,
         billing: String,
+        client: String,
     }
 
     impl WillowHeader {
-        pub fn new(provider: String, contact: String, billing: String) -> Self {
+        pub fn new(provider: String, contact: String, billing: String, client: String) -> Self {
             WillowHeader {
                 provider,
                 contact,
                 billing,
+                client,
             }
         }
 
@@ -269,27 +264,12 @@ pub mod header {
             self.billing.clone()
         }
 
+        pub fn client(&self) -> String {
+            self.client.clone()
+        }
+
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
-        }
-    }
-
-    /// Defines how to embed the header component in the HTML repr.
-    impl Header for WillowHeader {
-        fn make_header(&self) -> String {
-            // The HTML schema for a statement Header goes here:
-            let mut html_header = String::new();
-            html_header.push_str(&format!(
-                "<div class=\"header\">
-                        <div class=\"provider\">{:?}</div>
-                        <div class=\"contact\">{:?}</div>
-                        <div class=\"billing\">{:?}</div>
-                    </div>",
-                self.provider(),
-                self.contact(),
-                self.billing()
-            ));
-            html_header
         }
     }
 
@@ -319,8 +299,9 @@ pub mod header {
 }
 
 #[allow(missing_docs)]
+/// Encapsulates the WillowFooter struct & its methods
 pub mod footer {
-    use super::{Deserialize, Footer, Serialize};
+    use super::{Deserialize, Serialize};
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowFooter {
@@ -340,46 +321,5 @@ pub mod footer {
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
         }
-    }
-
-    impl Footer for WillowFooter {
-        fn make_footer(&self) -> String {
-            let mut html = String::new();
-            html.push_str(&format!(
-                "<div class=\"footer\">
-                        <div class=\"balance\">{}</div>
-                    </div>",
-                self.balance()
-            ));
-            html
-        }
-    }
-}
-
-#[cfg(test)]
-mod model_test_core {
-    use super::{event::Event, footer::WillowFooter, header::WillowHeader, HtmlStatement};
-    #[allow(unused_imports)]
-    use super::{Footer, Header, RowCol};
-
-    #[test]
-    fn make_full_html_statement() {
-        pretty_env_logger::try_init().ok();
-        std::env::set_var("RUST_LOG", "debug");
-
-        let rowcols: Vec<Event> = Event::mock_deps();
-        log::info!("mocking events.. {:?}", rowcols);
-        let header: WillowHeader = WillowHeader::new(
-            "Willow".to_string(),
-            "Willow".to_string(),
-            "Willow".to_string(),
-        );
-        log::info!("mocking header.. {}", header);
-        let footer = WillowFooter::new(0.0);
-        log::info!("mocking footer.. {:?}", footer);
-
-        let wrapped_html = HtmlStatement::new(header, rowcols, footer);
-        log::info!("building html from statement.. {:?}", wrapped_html);
-        wrapped_html.finalize("make_full_html_test.pdf").unwrap();
     }
 }

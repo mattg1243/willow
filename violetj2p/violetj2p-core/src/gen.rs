@@ -21,6 +21,7 @@ pub fn example_html_pdf() {
 }
 
 /// Generates a PDF repr from a String repr HTML
+#[allow(dead_code)]
 pub fn make_gen(html: String, out: &str) -> Result<(), std::io::Error> {
     let pdf_app = PdfApplication::new().expect("failed to create PDF builder");
     let mut pdfout = pdf_app
