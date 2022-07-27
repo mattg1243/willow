@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginAction } from '../actions';
 import { runLogoutTimer } from "../utils";
 import Header from './Header';
+import PaymentInfoInput from "./PaymentInfoInput";
 import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
 
@@ -32,7 +33,10 @@ export default function Profile() {
     const [email, setEmail] = useState(`${user.email}`);
     const [state, setState] = useState(`${user.state}`);
     const [phone, setPhone] = useState(`${user.phone}`);
-    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`);
+    const [checkField, setCheckField] = useState(`${user.paymentInfo.check ? user.paymentInfo.check: "Not yet specified"}`)
+    const [venmoField, setVenmoField] = useState(`${user.paymentInfo.venmo ? user.paymentInfo.venmo: "Not yet specified"}`)
+    const [paypalField, setPaypalField] = useState(`${user.paymentInfo.paypal ? user.paymentInfo.paypal: "Not yet specified"}`)
+    const [zelleField, setZelleField] = useState(`${user.paymentInfo.zelle ? user.paymentInfo.zelle: "Not yet specified"}`)
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState("Please only use alphanumeric characters");
 
@@ -52,7 +56,12 @@ export default function Profile() {
             email: email,
             phone: phone,
             state: state,
-            paymentInfo: paymentInfo,
+            paymentInfo: JSON.stringify({
+                check: checkField,
+                venmo: venmoField,
+                paypal: paypalField,
+                zelle: zelleField
+            }),
         }, 
         {
             headers: { 
@@ -112,14 +121,12 @@ export default function Profile() {
                         >
                     <FormLabel>Payment Info <InfoIcon style={{color: 'grey'}}/></FormLabel>
                 </Tooltip>
-                <InputGroup>
-                    <Input type="text" value={paymentInfo} onChange={(e) => { setPaymentInfo(e.target.value) }} maxLength='80'/>
-                    <InputRightElement width='4.5rem'>
-                        <Button h='1.75rem' size='sm' onClick={() => { setPaymentInfo('');  }}>
-                        Clear
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
+                {/* payment info fields */}
+                <PaymentInfoInput fieldLabel="Check" stateName={checkField} stateSetter={setCheckField} />
+                <PaymentInfoInput fieldLabel="Venmo" stateName={venmoField} stateSetter={setVenmoField} />
+                <PaymentInfoInput fieldLabel="PayPal" stateName={paypalField} stateSetter={setPaypalField} />
+                <PaymentInfoInput fieldLabel="Zelle  " stateName={zelleField} stateSetter={setZelleField} />
+                {/* buttons */}
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '3rem'}} width="100%">
                     <Button bg={isDark? "brand.dark.purple" : 'brand.green'} color='white' onClick={(e) => { updateInfo(e); }}>Save</Button>
                     <Button bg={isDark? "brand.dark.red" : 'brand.grey'} color='white' >Cancel</Button>
