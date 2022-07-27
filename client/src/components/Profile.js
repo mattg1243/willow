@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { 
     Input, 
     InputGroup,
-    InputRightElement,
+    Divider,
     VStack, 
     HStack, 
     Button, 
@@ -17,10 +17,11 @@ import { useNavigate } from 'react-router-dom';
 import { loginAction } from '../actions';
 import { runLogoutTimer } from "../utils";
 import Header from './Header';
+import PaymentInfoInput from "./PaymentInfoInput";
 import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
 
-export default function Profile() {
+export default function Profile(props) {
 
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
@@ -32,12 +33,16 @@ export default function Profile() {
     const [email, setEmail] = useState(`${user.email}`);
     const [state, setState] = useState(`${user.state}`);
     const [phone, setPhone] = useState(`${user.phone}`);
-    const [paymentInfo, setPaymentInfo] = useState(`${user.paymentInfo ? user.paymentInfo: ""}`);
+    const [checkField, setCheckField] = useState(`${user.paymentInfo.check ? user.paymentInfo.check: "Not yet specified"}`)
+    const [venmoField, setVenmoField] = useState(`${user.paymentInfo.venmo ? user.paymentInfo.venmo: "Not yet specified"}`)
+    const [paypalField, setPaypalField] = useState(`${user.paymentInfo.paypal ? user.paymentInfo.paypal: "Not yet specified"}`)
+    const [zelleField, setZelleField] = useState(`${user.paymentInfo.zelle ? user.paymentInfo.zelle: "Not yet specified"}`)
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState("Please only use alphanumeric characters");
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const { breakpoints, currentBreakpoint } = props;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -52,7 +57,12 @@ export default function Profile() {
             email: email,
             phone: phone,
             state: state,
-            paymentInfo: paymentInfo,
+            paymentInfo: JSON.stringify({
+                check: checkField,
+                venmo: venmoField,
+                paypal: paypalField,
+                zelle: zelleField
+            }),
         }, 
         {
             headers: { 
@@ -79,7 +89,7 @@ export default function Profile() {
     return (
         <>
         <Header />
-            <VStack style={{height: '100%', width: '60%'}} spacing={5}>
+            <VStack style={{height: '100%', maxWidth: '650px', padding: '2rem'}} spacing={5}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', paddingBottom: '2rem'}}>Profile</Heading>
                 {badInput ? (
                    errMsg.map(err => (
@@ -87,11 +97,17 @@ export default function Profile() {
                     ))) : (<></>)
                 }
                 <FormLabel>Name for Header</FormLabel>
-                <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
+                </InputGroup>
                 <FormLabel>Street Address</FormLabel>
-                <Input type="text" value={street} onChange={(e) => { setStreet(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={street} onChange={(e) => { setStreet(e.target.value) }}/>
+                </InputGroup> 
                 <FormLabel>City</FormLabel>
-                <Input type="text" value={city} onChange={(e) => { setCity(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={city} onChange={(e) => { setCity(e.target.value) }}/>
+                </InputGroup>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} width="100%">
                     <VStack>
                         <FormLabel>State</FormLabel>
@@ -103,23 +119,26 @@ export default function Profile() {
                     </VStack>
                 </HStack>
                 <FormLabel>Email</FormLabel>
-                <Input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
+                </InputGroup>
                 <FormLabel>Phone Number</FormLabel>
-                <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                </InputGroup>
+                <Divider />
                 <Tooltip 
                     label="This will tell your clients how you'd like to receive payment. 
                         It will show on the bottom of statements, but is not required (limited to 80 characters)."
                         >
                     <FormLabel>Payment Info <InfoIcon style={{color: 'grey'}}/></FormLabel>
                 </Tooltip>
-                <InputGroup>
-                    <Input type="text" value={paymentInfo} onChange={(e) => { setPaymentInfo(e.target.value) }} maxLength='80'/>
-                    <InputRightElement width='4.5rem'>
-                        <Button h='1.75rem' size='sm' onClick={() => { setPaymentInfo('');  }}>
-                        Clear
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
+                {/* payment info fields */}
+                <PaymentInfoInput fieldLabel="Check" stateName={checkField} stateSetter={setCheckField} />
+                <PaymentInfoInput fieldLabel="Venmo" stateName={venmoField} stateSetter={setVenmoField} />
+                <PaymentInfoInput fieldLabel="PayPal" stateName={paypalField} stateSetter={setPaypalField} />
+                <PaymentInfoInput fieldLabel="Zelle  " stateName={zelleField} stateSetter={setZelleField} />
+                {/* buttons */}
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '3rem'}} width="100%">
                     <Button bg={isDark? "brand.dark.purple" : 'brand.green'} color='white' onClick={(e) => { updateInfo(e); }}>Save</Button>
                     <Button bg={isDark? "brand.dark.red" : 'brand.grey'} color='white' >Cancel</Button>

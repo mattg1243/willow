@@ -77,7 +77,7 @@ const getAllData = (req, res) => {
             zip: '',
             state: '',
             city: '',
-            paymentInfo: '',
+            paymentInfo: {},
         },
         clients: [],
         events: [],
