@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { HStack, VStack, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Heading } from '@chakra-ui/react';
 import { withBreakpoints } from 'react-breakpoints';
@@ -10,12 +10,12 @@ function Dashboard(props) {
     
     const [isShown, setIsShown] = useState(false);
     const { breakpoints, currentBreakpoint } = props;
-    
+
     return (
         <>
             <Header />
             <VStack style={{height: '100%', width: breakpoints[currentBreakpoint] < breakpoints.tablet ? '100%': '70%', paddingTop: '1rem'}}>
-                <ClientTable addClientShown={setIsShown} breakpoints={breakpoints} currentBreakpoint={currentBreakpoint}/>
+                <ClientTable addClientShown={setIsShown} archiveMode={props.archiveMode} breakpoints={breakpoints} currentBreakpoint={currentBreakpoint}/>
                 <HStack style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                
                 </HStack>

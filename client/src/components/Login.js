@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from  "react";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
     Input, 
     Container, 
@@ -76,26 +76,35 @@ export default function Login() {
       }
     };
 
+    // check if user is being redirected here due to expired token
+    useEffect(() => {
+        const search = window.location.search;
+        const params = new URLSearchParams(search);
+        if (params.get("expired")) {
+            setMessage("You have been logged out due to an expired session");
+        }
+    })
+
     return (
         <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <VStack className="loginCont" >
                 <h3 className="willowCursive" style={{fontSize: '7rem'}}>Willow</h3>
                 <VStack style={{width: '20rem'}}>
-                    <Input className="textInput" placeholder="Username" autoCapitalize="none" type="text" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value)}}/>
-                    <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value)}} onKeyPress={(e) => handleKeypress(e)}/>
+                    <Input className="textInput" placeholder="Username" autoCapitalize="none" type="text" variant='flushed' focusBorderColor="brand.green" onChange={(e) => {setUsername(e.target.value)}}/>
+                    <Input className="textInput" placeholder="Password" type="password" variant='flushed' focusBorderColor="brand.green" onChange={(e) => {setPassword(e.target.value)}} onKeyPress={(e) => handleKeypress(e)}/>
                     <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                         <AlertIcon />
                         <AlertTitle mr={2}>{message}</AlertTitle>
-                        <CloseButton position='absolute' right='8px' top='8px' onClick={() => setMessage("")}/>
+                        <CloseButton position='absolute' right='8px' top='8px' onClick={() => { window.location.search = ''; setMessage(""); }}/>
                     </Alert>
                 </VStack>
                 {loading ? (
-                    <Spinner style={{margin: '1.9rem', padding: '1rem', color: '#03b126'}}/>
+                    <Spinner color='brand.green' style={{margin: '1.9rem', padding: '1rem'}}/>
                 ) : (
                     <>
                         <HStack style={{paddingTop: '1rem'}}>
-                        <Button background="#03b126" color="#fff" onClick={(e) => { e.preventDefault(); loginUser(); }}>Login</Button>
-                        <Button background="#63326E" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
+                        <Button background="brand.dark.purple" color="#fff" onClick={() => { navigate('/register') }}>Register</Button>
+                        <Button background="brand.green" color="#fff" onClick={(e) => { e.preventDefault(); loginUser(); }}>Login</Button>
                         </HStack>
                         <p onClick={() => {setResetModalShown(true)}} style={{textDecoration: 'underline', cursor: 'pointer', color: '#63326E'}}>Reset Password</p>
                     </>
@@ -110,7 +119,7 @@ export default function Login() {
                         <Input type="email" onChange={(e) => { setEmailReset(e.target.value); }}/>
                     </ModalBody>
                     <ModalFooter>
-                        <Button style={{backgroundColor: "#63326E", color: 'white'}} mr={3} onClick={() => { resetPassword(); }}>
+                        <Button bg='brand.dark.purple' style={{color: 'white'}} mr={3} onClick={() => { resetPassword(); }}>
                         Reset
                         </Button>
                         <Button onClick={() => {setResetModalShown(false)}}>Cancel</Button>

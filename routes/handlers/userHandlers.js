@@ -127,7 +127,7 @@ const updateClientInfo = (req, res) => {
             { 
                 fname: req.body.fname, lname: req.body.lname, 
                 email: req.body.email, phonenumber: req.body.phone,
-                rate: req.body.rate,
+                rate: req.body.rate, isArchived: req.body.isArchived
             }, (err, client) => {
                 if (err) { throw err; }
     

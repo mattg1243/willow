@@ -68,16 +68,16 @@ export default function Register() {
                        <BadInputAlert errMsg={err.msg} />
                    )) : <></>}
                     <InputGroup>
-                        <Input className="textInput" placeholder="First Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setFname(e.target.value);}}/>
-                        <Input className="textInput" placeholder="Last Name" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setLname(e.target.value);}}/>
+                        <Input className="textInput" placeholder="First Name" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setFname(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Last Name" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setLname(e.target.value);}}/>
                     </InputGroup>
                     <InputGroup>
-                        <Input className="textInput" placeholder="Email" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setEmail(e.target.value);}}/>
-                        <Input className="textInput" placeholder="Username" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setUsername(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Email" type="email" size='lg' focusBorderColor="brand.green" onChange={(e) => {setEmail(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Username" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setUsername(e.target.value);}}/>
                     </InputGroup>
                     <InputGroup>
-                        <Input className="textInput" placeholder="Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPassword(e.target.value);}}/>
-                        <Input className="textInput" placeholder="Confirm Password" type="password" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPasswordConfirm(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Password" type="password" size='lg' focusBorderColor="brand.green" onChange={(e) => {setPassword(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Confirm Password" type="password" size='lg' focusBorderColor="brand.green" onChange={(e) => {setPasswordConfirm(e.target.value);}}/>
                     </InputGroup>
                     <Divider orientation="horizontal"/>
                     <HStack style={{justifyContent: 'center'}}>
@@ -90,15 +90,15 @@ export default function Register() {
                     </HStack>
                     <InputGroup>
                     </InputGroup>
-                        <Input className="textInput" placeholder="Name to appear on statements" type="email" size='lg' focusBorderColor="#03b126" onChange={(e) => {setNameForHeader(e.target.value);}}/>
-                        <Input className="textInput" placeholder="Phone Number" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setPhone(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Name to appear on statements" type="email" size='lg' focusBorderColor="brand.green" onChange={(e) => {setNameForHeader(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Phone Number" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setPhone(e.target.value);}}/>
                     <InputGroup>
-                        <Input className="textInput" placeholder="Street" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setStreet(e.target.value);}}/>
-                        <Input className="textInput" placeholder="City" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setCity(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Street" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setStreet(e.target.value);}}/>
+                        <Input className="textInput" placeholder="City" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setCity(e.target.value);}}/>
                     </InputGroup>
                     <InputGroup>
-                        <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="#03b126" onChange={(e) => {setState(e.target.value);}}/>
-                        <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="#03b126" onChange={(e) => {setZip(e.target.value);}}/>
+                        <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setState(e.target.value);}}/>
+                        <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="brand.green" onChange={(e) => {setZip(e.target.value);}}/>
                     </InputGroup>
                     <Button background="#63326E" color="#fff" onClick={() => { registerUser(); }}>Register</Button>
                 </VStack>

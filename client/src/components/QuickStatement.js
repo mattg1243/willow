@@ -181,7 +181,7 @@ export default function QuickStatement(props) {
               {loading ? (
                   <>
                     <VStack width='100%'>
-                      <Spinner style={{margin: '2rem', padding: '2rem', color: isDark? "#63326E" : "#03b126"}}/>
+                      <Spinner color={isDark? "brand.dark.purple" : "brand.green"} style={{margin: '2rem', padding: '2rem'}}/>
                     </VStack>
                   </>
                 ) : (
@@ -191,7 +191,7 @@ export default function QuickStatement(props) {
           </DrawerBody>
 
           <DrawerFooter >
-            <Button style={{backgroundColor: isDark? "#63326E" : "#03b126", color: 'white'}} onClick={() => { makeStatement() }}>Download</Button>
+            <Button bg={isDark? "brand.dark.purple" : "brand.green"} color='white' onClick={() => { makeStatement() }}>Download</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

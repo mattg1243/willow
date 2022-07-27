@@ -187,15 +187,17 @@ export default function AddEventForm(props) {
                 {props.event ? (
                     <Button 
                     variant="outline"
-                    color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginTop: '1rem'}}
+                    color="white"
+                    bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                    style={{marginTop: '1rem'}}
                     onClick={() => { updateEvent(); }}
                     >Update</Button>
                 ):(
                     <Button 
                     variant="outline"
-                    color="white" 
-                    style={{backgroundColor: isDark? "#63326E" : '#03b126', marginTop: '1rem'}}
+                    color="white"
+                    bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                    style={{marginTop: '1rem'}}
                     onClick={() => { saveEvent(); }}
                     >Save</Button>
                 )}
