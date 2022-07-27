@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { 
     Input, 
     InputGroup,
-    InputRightElement,
+    Divider,
     VStack, 
     HStack, 
     Button, 
@@ -21,7 +21,7 @@ import PaymentInfoInput from "./PaymentInfoInput";
 import BadInputAlert from './BadInputAlert';
 import axios from 'axios';
 
-export default function Profile() {
+export default function Profile(props) {
 
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
@@ -42,6 +42,7 @@ export default function Profile() {
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const { breakpoints, currentBreakpoint } = props;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -88,7 +89,7 @@ export default function Profile() {
     return (
         <>
         <Header />
-            <VStack style={{height: '100%', width: '60%'}} spacing={5}>
+            <VStack style={{height: '100%', maxWidth: '650px', padding: '2rem'}} spacing={5}>
                 <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', paddingBottom: '2rem'}}>Profile</Heading>
                 {badInput ? (
                    errMsg.map(err => (
@@ -96,11 +97,17 @@ export default function Profile() {
                     ))) : (<></>)
                 }
                 <FormLabel>Name for Header</FormLabel>
-                <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={name} onChange={(e) => { setName(e.target.value) }}/>
+                </InputGroup>
                 <FormLabel>Street Address</FormLabel>
-                <Input type="text" value={street} onChange={(e) => { setStreet(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={street} onChange={(e) => { setStreet(e.target.value) }}/>
+                </InputGroup> 
                 <FormLabel>City</FormLabel>
-                <Input type="text" value={city} onChange={(e) => { setCity(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={city} onChange={(e) => { setCity(e.target.value) }}/>
+                </InputGroup>
                 <HStack spacing={12} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} width="100%">
                     <VStack>
                         <FormLabel>State</FormLabel>
@@ -112,9 +119,14 @@ export default function Profile() {
                     </VStack>
                 </HStack>
                 <FormLabel>Email</FormLabel>
-                <Input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
+                </InputGroup>
                 <FormLabel>Phone Number</FormLabel>
-                <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                <InputGroup>
+                    <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                </InputGroup>
+                <Divider />
                 <Tooltip 
                     label="This will tell your clients how you'd like to receive payment. 
                         It will show on the bottom of statements, but is not required (limited to 80 characters)."
