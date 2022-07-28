@@ -45,7 +45,7 @@
 //!
 //!     // Here we use the 'mock_env' function to mock the deps that we would (in a real
 //!     // environment) acquire from the above code (i.e. the invocation of 'parse_deps')
-//!     let (header, events, footer) = mock_env(); 
+//!     let (header, events, footer) = mock_env();
 //!     let html_str: String = full_make_html(header, events, footer);
 //!     make_gen(html_str, "example_output.pdf")
 //! }
@@ -56,11 +56,11 @@
 #![forbid(unused_mut)]
 
 /// Re-exports
-pub use self::mock_args as mock_env;
+pub use self::mock_args_deser as mock_env;
 
 /// Contains functions for building PDFs from HTML.
 pub mod gen;
-pub use self::gen::make_gen;
+pub use self::gen::{make_gen, parse_deps};
 
 /// Contains the data model for events.
 pub mod model;
@@ -68,13 +68,29 @@ pub use self::model::{
     event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol,
 };
 
-/// Contains lowlevel functions for accepting environement JSON data,
-/// converting it to a model, and embedding it into an HTML rowcol schema.
-pub mod engine;
-pub use self::engine::parse_deps;
+/// Table columns
+static TABLE_COLUMNS: &str = "<!-- table section -->
+      <div class=\"contain\" id=\"table-container\">
+        <table class=\"table table-borderless\">
+          <!-- table header -->
+          <thead>
+            <tr>
+              <th scope=\"col\">Date</th>
+              <th scope=\"col\">Type</th>
+              <th scope=\"col\">Duration</th>
+              <th scope=\"col\">Rate</th>
+              <th scope=\"col\">Amount</th>
+              <th scope=\"col\" class=\"text-align-right\">Balance</th>
+            </tr>
+          </thead>
+          <tbody>";
+
+/// Table closing tags
+/// These are appended after the Vec<Event> has been traversed
+static CLOSE_TABLE: &str = "</tbody></table></div>";
 
 /// The closing tags to our HTML statement that will be appended at the end of the 'full_make_html()' function
-static CLOSING_TAGS: &str = "</body>
+static CLOSING_TAGS: &str = "</main></body>
   <script
     src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\"
     integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\"
@@ -83,11 +99,6 @@ static CLOSING_TAGS: &str = "</body>
 </html>";
 
 /// This is the core function that accepts all params necessary to generate a full statement
-///
-/// params:
-/// h: WillowHeader
-/// r: Vec<Event>
-/// f: WillowFooter
 ///
 /// The procedure relies on the trait implementations. It first constructs a mutable String:
 /// 'html_str', uses the make_header function on the WillowHeader struct to create and push
@@ -111,6 +122,9 @@ pub fn full_make_html(h: WillowHeader, r: Vec<Event>, f: WillowFooter) -> String
     // Push the HTML header to our string
     html_str.push_str(header.as_str());
 
+    // Push the Table columns before constructing the rows
+    html_str.push_str(TABLE_COLUMNS);
+
     // Iteratively construct our description tables rows using
     // the RowCol impl. This current impl will construct as many rows
     // as there are 'Event' in 'r'. May want to think about this later because
@@ -125,6 +139,8 @@ pub fn full_make_html(h: WillowHeader, r: Vec<Event>, f: WillowFooter) -> String
         log::debug!("{:?}", row);
         html_str.push_str(row.as_str());
     }
+    // Close the table
+    html_str.push_str(CLOSE_TABLE);
 
     // Construct the HTML statement footer
     let footer: String = f.make_footer();
@@ -233,25 +249,46 @@ impl Header for WillowHeader {
 /// Impl RowCol trait (i.e. Description table)
 impl RowCol for Event {
     fn make_row(&self) -> String {
-        String::new()
+        let mut html_table = String::new();
+        // Push table Row
+        html_table.push_str(&format!(
+            "
+            <tr>
+                <td>{date}</td>
+                <td>{event_type}</td>
+                <td>{duration}</td>
+                <td>{rate}</td>
+                <td>{amount}</td>
+                <td class=\"text-align-right\">{balance}</td>
+            </tr>",
+            date = self.date(),
+            event_type = self.event_type(),
+            duration = self.duration(),
+            rate = self.rate(),
+            amount = self.amount(),
+            balance = self.new_balance()
+        ));
+
+        return html_table;
     }
 }
 
 /// Impl Footer trait (i.e. The statement footer)
 impl Footer for WillowFooter {
     fn make_footer(&self) -> String {
-        String::new()
+        let html_footer_str = String::new();
+        return html_footer_str;
     }
 }
 
 /// A util function for mocking environment arguments, handy for testing & benches
-pub fn mock_args() -> (WillowHeader, Vec<Event>, WillowFooter) {
+pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, WillowFooter) {
     (
         WillowHeader::new(
             "Anne Proxy".to_string(),
             "anneproxy@skiff.com".to_string(),
             "venmo: 908278409274".to_string(),
-            "Brandon Belt".to_string()
+            "Brandon Belt".to_string(),
         ),
         Event::mock_deps(),
         WillowFooter::new(200.50),

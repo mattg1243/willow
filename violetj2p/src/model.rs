@@ -54,6 +54,21 @@ where
     }
 }
 
+impl<H, R, F> From<(H, Vec<R>, F)> for HtmlStatement<H, R, F> 
+where
+    H: Header,
+    R: RowCol,
+    F: Footer,
+{
+    fn from(tup: (H, Vec<R>, F)) -> HtmlStatement<H, R, F> {
+        Self {
+            header: tup.0,
+            rows: tup.1,
+            footer: tup.2
+        }
+    }
+}
+
 /// Defines an event schema & its methods
 pub mod event {
     use super::{Deserialize, JsonValue, Serialize};

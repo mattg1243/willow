@@ -4,7 +4,6 @@
 //! 2. Maps a Vec<Event> into a rowcol HTML schema and collect the HTML string,
 //!    which is then returned as Ok(String) on success
 //! 3. wkhtmltopdf HTML -> PDF
-mod engine;
 mod gen;
 mod model;
 
