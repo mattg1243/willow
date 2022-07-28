@@ -33,6 +33,7 @@ export default function Profile(props) {
     const [email, setEmail] = useState(`${user.email}`);
     const [state, setState] = useState(`${user.state}`);
     const [phone, setPhone] = useState(`${user.phone}`);
+    const [license, setLicense] = useState(`${user.license}`);
     const [checkField, setCheckField] = useState(`${user.paymentInfo.check ? user.paymentInfo.check: "Not yet specified"}`)
     const [venmoField, setVenmoField] = useState(`${user.paymentInfo.venmo ? user.paymentInfo.venmo: "Not yet specified"}`)
     const [paypalField, setPaypalField] = useState(`${user.paymentInfo.paypal ? user.paymentInfo.paypal: "Not yet specified"}`)
@@ -63,6 +64,7 @@ export default function Profile(props) {
                 paypal: paypalField,
                 zelle: zelleField
             }),
+            license: license,
         }, 
         {
             headers: { 
@@ -125,6 +127,10 @@ export default function Profile(props) {
                 <FormLabel>Phone Number</FormLabel>
                 <InputGroup>
                     <Input type="text" value={phone} onChange={(e) => { setPhone(e.target.value) }}/>
+                </InputGroup>
+                <FormLabel>License</FormLabel>
+                <InputGroup>
+                    <Input type="text" value={license} onChange={(e) => { setLicense(e.target.value) }}/>
                 </InputGroup>
                 <Divider />
                 <Tooltip 

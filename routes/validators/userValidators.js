@@ -85,9 +85,11 @@ const updateUserInfoValidator = [
   body('phone', 'Check "Phone" for invalid characters').trim().escape().isNumeric().isLength({ min: 1, max: 150})
   .withMessage('Invalid phone number'),
 
-  body('paymentInfo', 'Check "Payment Info" for invalid characters').isJSON()
+  body('paymentInfo', 'Check "Payment Info" for invalid characters').isJSON(),
   // .isLength({ min: 2, max: 300})
   // .withMessage('Payment Info field exceeds 80 charactes'),
+
+  body('license', 'Check "License" for invalid characters').trim().escape()
 
 ]
 
