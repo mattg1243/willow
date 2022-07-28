@@ -44,7 +44,8 @@ const updateUserInfo = (req, res) => {
                 city: req.body.city, 
                 state: req.body.state, 
                 zip: req.body.zip,
-                paymentInfo: JSON.parse(req.body.paymentInfo)
+                paymentInfo: JSON.parse(req.body.paymentInfo),
+                license: req.body.license
             }, { upsert: true }, function(err, info) {
 
             if (err) return console.error(err)

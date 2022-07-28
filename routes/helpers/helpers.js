@@ -78,6 +78,7 @@ const getAllData = (req, res) => {
             state: '',
             city: '',
             paymentInfo: {},
+            license: '',
         },
         clients: [],
         events: [],
@@ -107,6 +108,7 @@ const getAllData = (req, res) => {
         response.user.state = user.state;
         response.user.city = user.city;
         response.user.paymentInfo = user.paymentInfo;
+        response.user.license = user.license;
         // create token from the user ID
         response.token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, { expiresIn: '3600s' })
         // then, populate the client array
