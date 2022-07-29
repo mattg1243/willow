@@ -2,7 +2,7 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
-const { exec } = require('node:child_process');
+const { execFile } = require('child_process');
 const async = require('async');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
@@ -217,7 +217,7 @@ const makeStatement = (req, res) => {
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             
-            exec(`"../moxie/target/release/moxie", ${JSON.stringify(clientInfo)} ${JSON.stringify(eventsList)} ${JSON.stringify(providerInfo)}`,
+            execFile("../moxie/target/release/moxie", [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
@@ -240,27 +240,27 @@ const makeStatement = (req, res) => {
                 
             })
 
-            PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-                if (err) return console.error(err)
+            // PythonShell.run("Python/src/core/main.py", options, (err, result) => {
+            //     if (err) return console.error(err)
     
-                console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-                console.log(result)
-                console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
-                console.timeEnd(genTime);
-                console.log('');
-                try {
-                    res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
+            //     console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
+            //     console.log(result)
+            //     console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
+            //     console.timeEnd(genTime);
+            //     console.log('');
+            //     try {
+            //         res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
             
-                        if (err) return console.error(err);
-                        // delete the pdf from the server after download
-                        fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
-                            if (err) return console.error(err)
+            //             if (err) return console.error(err);
+            //             // delete the pdf from the server after download
+            //             fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
+            //                 if (err) return console.error(err)
                 
-                        });
-                    })
-                } 
-                catch (err) { throw err; }
-            })
+            //             });
+            //         })
+            //     } 
+            //     catch (err) { throw err; }
+            // })
         }
     )
 }
