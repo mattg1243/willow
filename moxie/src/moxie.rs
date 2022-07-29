@@ -29,7 +29,7 @@ fn main() -> Result<(), anyhow::Error> {
     log::debug!("running gen::make_gen()");
 
     // Generate a PDF from out HTML string
-    moxie::gen::make_gen(html, "etc/statement_test.pdf")?;
+    moxie::gen::make_gen(html, "./public/invoices/statement_test.pdf")?;
 
     Ok(())
 }
