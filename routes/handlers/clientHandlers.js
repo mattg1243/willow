@@ -163,31 +163,21 @@ const makeStatement = (req, res) => {
             User.findById(`${userID}`, (err, user) => {
                 if (err) { return console.error(err); }
                 // populate the provider obj
-                providerInfo.name = user.nameForHeader ? user.nameForHeader: user.fname + " " + user.lname
-                providerInfo.address = {
-                    street: user.street, 
-                    cityState: user.city + ", " + user.state + " " + user.zip
-                },
-                providerInfo.phone = user.phone,
-                providerInfo.email = user.email,
-                providerInfo.paymentInfo = user.paymentInfo ? user.paymentInfo: ''
+                providerInfo = user._doc;
                 callback(null);
-            }).clone()
+            }).select(['-_id', '-clients', '-username', '-__v']).clone()
         },
         // populate client object
         (callback) => {
             Client.findById(`${clientID}`, (err, client) => {
                 if (err) { return console.error(err); }
                 // populate the client obj
-                clientInfo.clientname = client.fname + " " + client.lname;
-                clientInfo.phone = client.phonenumber;
-                clientInfo.billingAdd = "",
-                clientInfo.mailingAdd = "" // this isnt handled client side yet 
+                clientInfo.clientname = client._doc;
                 callback(null);
-            }).clone()
+            }).select(['-_id', '-ownerID', '-sessions', '-isArchived', '-__v']).clone()
         },
         // populate the events list
-        (callback) => {   
+        (callback) => { 
             Event.find({ clientID: clientID, date: {
                 $gte: start,
                 $lte: end
@@ -219,6 +209,12 @@ const makeStatement = (req, res) => {
             }
             // run the statement generator script
             console.time(pyTime);
+            // console.log("+++   EXCLUDE TEST +++")
+            // console.dir(providerInfo)
+            // console.log("+++ EXCLUDE TEST CLIENT   +++")
+            // console.dir(clientInfo)
+            // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
+            // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             PythonShell.run("Python/src/core/main.py", options, (err, result) => {
                 if (err) return console.error(err)
     
