@@ -21,7 +21,7 @@ import {
   Text,
   HStack,
   Alert,
-  AlertIcon,
+  InputGroup,
   AlertTitle,
   CloseButton,
   Spinner
@@ -46,6 +46,8 @@ export default function QuickStatement(props) {
   const [startdate, setStartdate] = useState(new Date());
   const [enddate, setEnddate] = useState(new Date());
   const [events, setEvents] = useState([]);
+  const [amount, setAmount] = useState("");
+  const [notes, setNotes] = useState("");
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +57,10 @@ export default function QuickStatement(props) {
   const makeStatement = () => {
     setLoading(true);
     axios.post(`/client/makestatement/${user.id}/${client._id}/${startdate}/${enddate}`,
-      {},
+      {
+        amount: amount,
+        notes: notes,
+      },
       {
         headers: {
         'Authorization': `Bearer ${token}`,
@@ -172,6 +177,17 @@ export default function QuickStatement(props) {
                 <Box>
                     <Text mb="8px">End Date</Text>
                     <Input type="date" isDisabled={autoSelection ? true: false} onChange={(e) => {setEnddate(e.target.value)}}/>
+                </Box>
+                <Divider padding="10px"/>
+                <Box>
+                  <Text mb="8px">Amount</Text>
+                  <InputGroup>
+                      <Input type="text" onChange={(e) => { setAmount(e.target.value) }}/>
+                  </InputGroup>
+                  <Text mb="8px">Notes</Text>
+                  <InputGroup>
+                      <Input type="text" onChange={(e) => { setNotes(e.target.value) }}/>
+                  </InputGroup>
                 </Box>
                 <Alert status='error' style={{display: message ? 'flex': 'none'}}>
                     <AlertTitle mr={2}>{message}</AlertTitle>
