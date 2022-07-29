@@ -29,7 +29,7 @@ export default function EditClientsDialog(props) {
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
     const [archived, setArchived] = useState(props.client.isArchived)
-    const [rate, setRate] = useState(`${props.client.rate ? props.client.rate : 0}`);
+    const [rate, setRate] = useState(props.client.rate ? `${props.client.rate}` : null);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState([]);
@@ -73,7 +73,7 @@ export default function EditClientsDialog(props) {
             lname: lname,
             email: email,
             phone: phone,
-            rate: rate,
+            rate: parseInt(rate),
             isArchived: archived,
         }, 
         {
