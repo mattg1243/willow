@@ -6,11 +6,7 @@
 //! 3. wkhtmltopdf HTML -> PDF
 
 #![warn(clippy::todo, unused_mut)]
-#![forbid(
-    unsafe_code,
-    unused_lifetimes,
-    unused_mut,
-)]
+#![forbid(unsafe_code, unused_lifetimes, unused_mut)]
 
 mod gen;
 mod model;
@@ -24,13 +20,9 @@ fn main() -> Result<(), anyhow::Error> {
 mod payload_test {
     #[test]
     fn deserialize_payload() {
-        use super::model::Client;
         use super::model::event::Event;
-        use std::{
-            fs::File,
-            io::Read,
-            path::Path,
-        };
+        use super::model::Client;
+        use std::{fs::File, io::Read, path::Path};
 
         pretty_env_logger::try_init().ok();
 
@@ -50,7 +42,7 @@ mod payload_test {
             events_dump.read_to_string(&mut data).unwrap();
 
             log::debug!("Deserializing events dump...");
-            let dump:  Vec<Event> = Event::collect(data).unwrap();
+            let dump: Vec<Event> = Event::collect(data).unwrap();
             log::info!("Done. {:?}", dump)
         }
     }

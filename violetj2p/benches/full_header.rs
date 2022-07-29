@@ -1,8 +1,8 @@
 #![allow(soft_unstable)]
 #![feature(test)]
 
-extern crate violetj2p;
 extern crate test;
+extern crate violetj2p;
 
 use std::time::{Duration, Instant};
 use test::Bencher;
@@ -27,5 +27,8 @@ fn bench_full_header(b: &mut Bencher) {
     let runtime = start.elapsed();
 
     println!("\n");
-    log::info!("Time elapsed in both make_header and make_gen functions: {:?}", runtime)
+    log::info!(
+        "Time elapsed in both make_header and make_gen functions: {:?}",
+        runtime
+    )
 }

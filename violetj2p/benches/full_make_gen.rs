@@ -31,7 +31,8 @@ fn bench_full_make_gen(b: &mut Bencher) {
     log::info!("events: {:?}", events);
     log::info!("footer: {:?}", footer);
     let html_str = full_make_html(new_header, events, footer);
-    let try_make_gen: Result<(), std::io::Error> = make_gen(html_str, "etc/bench_full_make_gen.pdf");
+    let try_make_gen: Result<(), std::io::Error> =
+        make_gen(html_str, "etc/bench_full_make_gen.pdf");
 
     let runtime = start.elapsed();
     assert!(try_make_gen.is_ok());
