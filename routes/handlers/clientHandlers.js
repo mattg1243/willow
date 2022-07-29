@@ -129,6 +129,8 @@ const makeStatement = (req, res) => {
     const end = new Date(req.params.end).toISOString();
     const userID = req.params.userid;
     const clientID = req.params.clientid;
+    const amountInput = req.body.amount;
+    const notesInput = req.body.notes;
     let eventsList;
     // timing labels
     const dbTime = "Time in database: ";
