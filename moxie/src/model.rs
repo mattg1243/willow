@@ -7,22 +7,12 @@ use serde_json::Value as JsonValue;
 /// Client payload
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Client {
-    #[serde(rename = "_id")]
-    mongo_id: String, // unread
-    #[serde(rename = "ownerID")]
-    owner_id: String, // unread
     fname: String,
     lname: String,
     phonenumber: String,
-    sessions: Vec<String>, // unread
-    balance: String,
-    #[serde(rename = "__v")]
-    v: usize, // unread
+    balance: JsonValue,
     email: String,
-    rate: String,
-    #[serde(rename = "isArchived")]
-    is_archived: bool, // unread
-    id: String, // unread
+    rate: JsonValue,
 }
 
 impl TryFrom<String> for Client {
@@ -38,18 +28,12 @@ impl Client {
     /// Mock for tests/benches
     pub fn mock() -> Client {
         Client {
-            mongo_id: "741974017049174091441".to_string(),
-            owner_id: "497240972409274097409".to_string(),
             fname: "Winona".to_string(),
             lname: "Ryder".to_string(),
             phonenumber: "925-678-9876".to_string(),
-            sessions: vec!["90284092480924".to_string(), "427984729847".to_string()],
-            balance: "987.24".to_string(),
-            v: 0,
+            balance: JsonValue::String("987.24".to_string()),
             email: "winona@skiff.com".to_string(),
-            rate: "90".to_string(),
-            is_archived: false,
-            id: "904820984029840924".to_string(),
+            rate: JsonValue::String("90".to_string()),
         }
     }
 
@@ -60,13 +44,13 @@ impl Client {
         cat.push_str(self.lname.as_str());
         return cat;
     }
-    pub fn balance(&self) -> String {
+    pub fn balance(&self) -> JsonValue {
         self.balance.clone()
     }
     pub fn email(&self) -> String {
         self.email.clone()
     }
-    pub fn rate(&self) -> String {
+    pub fn rate(&self) -> JsonValue {
         self.rate.clone()
     }
 }
