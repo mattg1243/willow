@@ -1,12 +1,13 @@
-#![feature(test)]
 #![allow(soft_unstable)]
+#![feature(test)]
 
-extern crate violetj2p;
+extern crate moxie;
 extern crate test;
 
-use std::time::{Duration, Instant};
+use moxie::model::{event::Event, header::WillowHeader};
+use moxie::template::*;
+use std::time::Instant;
 use test::Bencher;
-use violetj2p::model::{header::WillowHeader, Header};
 
 #[bench]
 fn bench_full_header(b: &mut Bencher) {
@@ -16,16 +17,19 @@ fn bench_full_header(b: &mut Bencher) {
     let new_header = WillowHeader::new(
         "Anne Proxy".to_string(),
         "925-675-9878".to_string(),
-        "venmo: 9819410398".to_string(),
+        serde_json::json!({"eth": "anneproxy.eth"}),
         "Brandon Belt".to_string(),
     );
     log::debug!("Benching make_header with new_header: {:?}", new_header);
     let html_header = test::black_box(new_header.make_header());
     log::info!("Made html header: {}", html_header);
     log::debug!("Benching make_gen...");
-    test::black_box(violetj2p::gen::make_gen(html_header, "etc/header_bench.pdf").unwrap());
+    test::black_box(moxie::gen::make_gen(html_header, "etc/header_bench.pdf").unwrap());
     let runtime = start.elapsed();
 
     println!("\n");
-    log::info!("Time elapsed in both make_header and make_gen functions: {:?}", runtime)
+    log::info!(
+        "Time elapsed in both make_header and make_gen functions: {:?}",
+        runtime
+    )
 }
