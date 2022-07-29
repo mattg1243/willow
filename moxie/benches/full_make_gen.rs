@@ -1,16 +1,16 @@
 #![feature(test)]
 #![allow(soft_unstable)]
 
+extern crate moxie;
 extern crate test;
-extern crate violetj2p;
 
-use std::time::Instant;
-use test::Bencher;
-use violetj2p::{
+use moxie::{
     full_make_html,
     gen::make_gen,
     model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol},
 };
+use std::time::Instant;
+use test::Bencher;
 
 #[bench]
 fn bench_full_make_gen(b: &mut Bencher) {
@@ -20,7 +20,7 @@ fn bench_full_make_gen(b: &mut Bencher) {
     let new_header = WillowHeader::new(
         "Anne Proxy".to_string(),
         "925-357-6734".to_string(),
-        "venmo: 287429847".to_string(),
+        serde_json::json!({"eth": "anneproxy.eth"}),
         "Brandon Belt".to_string(),
     );
     let events: Vec<Event> = Event::mock_deps();
