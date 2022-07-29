@@ -1,10 +1,3 @@
-//! violetj2p.rs is the main executable that executes the following:
-//!
-//! 1. Deserializes command-line passed JSON structs into Vec<Event>
-//! 2. Maps a Vec<Event> into a rowcol HTML schema and collect the HTML string,
-//!    which is then returned as Ok(String) on success
-//! 3. wkhtmltopdf HTML -> PDF
-
 #![warn(clippy::todo, unused_mut)]
 #![forbid(unsafe_code, unused_lifetimes, unused_mut)]
 extern crate moxie;
@@ -21,18 +14,24 @@ use moxie::{
 /// [] bench
 fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
+
+    // Parse args into (Client, Vec<Event>, User)
     let (header_params, events, user_params) = gen::deserialize_payload()?;
     log::debug!("{:?}", header_params);
     log::debug!("{:?}", user_params);
 
+    // Construct a WillowHeader from (Client, User)
     let header: WillowHeader = WillowHeader::try_from((header_params, user_params))?; 
+    // Fetch the 'new_balance' value at the last Event
     let _running_balance = events.last().unwrap().new_balance();
     log::debug!("{:?}", _running_balance);
 
+    // Construct a statement from a WillowHeader and Vec<Event>
     let html = gen::full_make_html(header, events);
     log::debug!("full_make_html() done: {:?}", html);
     log::debug!("running gen::make_gen()");
 
+    // Generate a PDF from out HTML string
     gen::make_gen(html, "etc/statement_test.pdf")?;
 
     Ok(())
@@ -47,7 +46,7 @@ mod payload_test {
         use std::{fs::File, io::Read, path::Path};
 
         pretty_env_logger::try_init().ok();
-
+        // Parse into: Client
         {
             let mut client_json = File::open(Path::new("etc/client.json")).unwrap();
             let mut data = String::new();
@@ -57,7 +56,7 @@ mod payload_test {
             let c: Client = Client::try_from(data).unwrap();
             log::info!("Deserialized client: {:?} from ./etc/client.json", c);
         }
-
+        // Parse into: Vec<Event>
         {
             let mut events_dump = File::open(Path::new("etc/events.json")).unwrap();
             let mut data = String::new();
@@ -67,6 +66,7 @@ mod payload_test {
             let dump: Vec<Event> = Event::collect(data).unwrap();
             log::info!("Done. {:?}", dump)
         }
+        // Parse into: User
         {
             let mut user_json = File::open(Path::new("etc/user.json")).unwrap();
             let mut data = String::new();

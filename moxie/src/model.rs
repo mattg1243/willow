@@ -76,14 +76,14 @@ impl Client {
 #[allow(missing_docs)]
 pub struct User {
     #[serde(rename = "_id")]
-    id: String,
+    id: String,                         // unread
     username: String,
     pub fname: String,
     pub lname: String,
     pub email: String,
-    clients: Vec<String>,
+    clients: Vec<String>,               // unread
     #[serde(rename = "__v")]
-    v: usize,
+    v: usize,                           // unread
     city: String,
     #[serde(rename = "nameForHeader")]
     pub name_on_header: String,
@@ -164,9 +164,9 @@ pub mod event {
     #[allow(missing_docs)]
     pub struct Event {
         #[serde(rename = "_id")]
-        id: String,
+        id: String,                             // unread
         #[serde(rename = "clientID")]
-        client_id: String,
+        client_id: String,                      // unread
         date: String,
         #[serde(rename = "type")]
         event_type: String,
