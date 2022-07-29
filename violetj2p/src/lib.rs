@@ -31,7 +31,7 @@
 //! use violetj2p::{
 //!     WillowHeader, WillowFooter, Event,
 //!     Header, Footer, RowCol,
-//!     parse_deps, full_make_html, make_gen, mock_env
+//!     full_make_html, make_gen, mock_env
 //! };
 //!
 //! fn main() -> Result<(), std::io::Error> {
@@ -60,7 +60,7 @@ pub use self::mock_args_deser as mock_env;
 
 /// Contains functions for building PDFs from HTML.
 pub mod gen;
-pub use self::gen::{make_gen, parse_deps};
+pub use self::gen::make_gen;
 
 /// Contains the data model for events.
 pub mod model;
@@ -250,6 +250,7 @@ impl Header for WillowHeader {
 impl RowCol for Event {
     fn make_row(&self) -> String {
         let mut html_table = String::new();
+
         // Push table Row
         html_table.push_str(&format!(
             "
@@ -264,7 +265,7 @@ impl RowCol for Event {
             date = self.date(),
             event_type = self.event_type(),
             duration = self.duration(),
-            rate = self.rate(),
+            rate = self.peekrate(),
             amount = self.amount(),
             balance = self.new_balance()
         ));
