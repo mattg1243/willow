@@ -5,9 +5,9 @@ extern crate moxie;
 extern crate test;
 
 use moxie::{
-    full_make_html,
+    gen::full_make_html,
     gen::make_gen,
-    model::{event::Event, footer::WillowFooter, header::WillowHeader, Footer, Header, RowCol},
+    model::{header::WillowHeader, event::Event, footer::WillowFooter},
 };
 use std::time::Instant;
 use test::Bencher;
@@ -30,7 +30,7 @@ fn bench_full_make_gen(b: &mut Bencher) {
     log::info!("header: {:?}", new_header);
     log::info!("events: {:?}", events);
     log::info!("footer: {:?}", footer);
-    let html_str = full_make_html(new_header, events, footer);
+    let html_str = full_make_html(new_header, events);
     let try_make_gen: Result<(), std::io::Error> =
         make_gen(html_str, "etc/bench_full_make_gen.pdf");
 

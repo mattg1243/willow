@@ -8,21 +8,21 @@ use serde_json::Value as JsonValue;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Client {
     #[serde(rename = "_id")]
-    mongo_id: String,
+    mongo_id: String,                   // unread
     #[serde(rename = "ownerID")]
-    owner_id: String,
+    owner_id: String,                   // unread
     fname: String,
     lname: String,
     phonenumber: String,
-    sessions: Vec<String>,
+    sessions: Vec<String>,              // unread
     balance: String,
     #[serde(rename = "__v")]
-    v: usize,
+    v: usize,                           // unread
     email: String,
     rate: String,
     #[serde(rename = "isArchived")]
-    is_archived: bool,
-    id: String,
+    is_archived: bool,                  // unread
+    id: String,                         // unread
 }
 
 impl TryFrom<String> for Client {
@@ -33,6 +33,7 @@ impl TryFrom<String> for Client {
     }
 }
 
+#[allow(missing_docs)]
 impl Client {
     /// Mock for tests/benches
     pub fn mock() -> Client {
@@ -52,45 +53,46 @@ impl Client {
         }
     }
 
-    fn concat_prov(&self) -> String {
+    pub fn concat_prov(&self) -> String {
         let mut cat = String::new();
         cat.push_str(self.fname.as_str());
         cat.push_str(" ");
         cat.push_str(self.lname.as_str());
         return cat;
     }
-    fn balance(&self) -> String {
+    pub fn balance(&self) -> String {
         self.balance.clone()
     }
-    fn email(&self) -> String {
+    pub fn email(&self) -> String {
         self.email.clone()
     }
-    fn rate(&self) -> String {
+    pub fn rate(&self) -> String {
         self.rate.clone()
     }
 }
 
 /// User Payload
 #[derive(Debug, Deserialize, Serialize)]
+#[allow(missing_docs)]
 pub struct User {
     #[serde(rename = "_id")]
     id: String,
     username: String,
-    fname: String,
-    lname: String,
-    email: String,
+    pub fname: String,
+    pub lname: String,
+    pub email: String,
     clients: Vec<String>,
     #[serde(rename = "__v")]
     v: usize,
     city: String,
     #[serde(rename = "nameForHeader")]
-    name_on_header: String,
-    phone: String,
-    state: String,
-    street: String,
-    zip: String,
+    pub name_on_header: String,
+    pub phone: String,
+    pub state: String,
+    pub street: String,
+    pub zip: String,
     #[serde(rename = "paymentInfo")]
-    payments: JsonValue,
+    pub payments: JsonValue,
     license: String,
 }
 
@@ -125,13 +127,13 @@ impl User {
         }
     }
 
-    fn username(&self) -> String {
+    pub fn username(&self) -> String {
         self.username.clone()
     }
-    fn catname(&self) -> String {
+    pub fn catname(&self) -> String {
         format!("{} {}", self.fname.clone(), self.lname.clone())
     }
-    fn billing_addr(&self) -> JsonValue {
+    pub fn billing_addr(&self) -> JsonValue {
         serde_json::json!({
             "street": self.street.clone(),
             "city": self.city.clone(),
@@ -139,82 +141,17 @@ impl User {
             "zip": self.zip.clone(),
         })
     }
-    fn nameoh(&self) -> String {
+    pub fn nameoh(&self) -> String {
         self.name_on_header.clone()
     }
-    fn payments(&self) -> JsonValue {
+    pub fn payments(&self) -> JsonValue {
         self.payments.clone()
     }
-    fn phone(&self) -> String {
+    pub fn phone(&self) -> String {
         self.phone.clone()
     }
-    fn license(&self) -> String {
+    pub fn license(&self) -> String {
         self.license.clone()
-    }
-}
-
-/// A rowcol component must impl this trait
-pub trait RowCol {
-    /// Convert an Event into a statement row
-    fn make_row(&self) -> String;
-}
-
-/// A header component must impl this trait
-pub trait Header {
-    /// Convert client/provider info into a statement header
-    fn make_header(&self) -> String;
-}
-
-/// A footer component must impl this trait
-pub trait Footer {
-    /// Construct a statement footer
-    fn make_footer(&self) -> String;
-}
-
-/// A finalized statement in HTML repr
-#[derive(Debug, Deserialize, Serialize)]
-pub struct HtmlStatement<H, R, F>
-where
-    H: Header,
-    R: RowCol,
-    F: Footer,
-{
-    /// The header component
-    pub header: H,
-    /// The body component
-    pub rows: Vec<R>,
-    /// The footer component
-    pub footer: F,
-}
-
-impl<H, R, F> HtmlStatement<H, R, F>
-where
-    H: Header,
-    R: RowCol,
-    F: Footer,
-{
-    /// Construct a new statement from parts
-    pub fn new(header: H, rows: Vec<R>, footer: F) -> Self {
-        HtmlStatement {
-            header,
-            rows,
-            footer,
-        }
-    }
-}
-
-impl<H, R, F> From<(H, Vec<R>, F)> for HtmlStatement<H, R, F>
-where
-    H: Header,
-    R: RowCol,
-    F: Footer,
-{
-    fn from(tup: (H, Vec<R>, F)) -> HtmlStatement<H, R, F> {
-        Self {
-            header: tup.0,
-            rows: tup.1,
-            footer: tup.2,
-        }
     }
 }
 
@@ -330,10 +267,10 @@ pub mod header {
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
-        provider: String,
-        contact: String,
-        billing: super::JsonValue,
-        client: String,
+        pub provider: String,
+        pub contact: String,
+        pub billing: super::JsonValue,
+        pub client: String,
     }
 
     impl TryFrom<(Client, User)> for WillowHeader {
@@ -348,6 +285,8 @@ pub mod header {
             })
         }
     }
+
+   
 
     impl WillowHeader {
         pub fn new(

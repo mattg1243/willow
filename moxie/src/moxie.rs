@@ -7,11 +7,12 @@
 
 #![warn(clippy::todo, unused_mut)]
 #![forbid(unsafe_code, unused_lifetimes, unused_mut)]
+extern crate moxie;
 
-mod gen;
-mod model;
-
-use model::{event::Event, Client};
+use moxie::{
+    model::header::WillowHeader,
+    gen,
+};
 
 /// TODO:
 ///
@@ -20,8 +21,20 @@ use model::{event::Event, Client};
 /// [] bench
 fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
-    let params: (Client, Vec<Event>) = gen::deserialize_payload()?;
-    log::debug!("{:?}", params);
+    let (header_params, events, user_params) = gen::deserialize_payload()?;
+    log::debug!("{:?}", header_params);
+    log::debug!("{:?}", user_params);
+
+    let header: WillowHeader = WillowHeader::try_from((header_params, user_params))?; 
+    let _running_balance = events.last().unwrap().new_balance();
+    log::debug!("{:?}", _running_balance);
+
+    let html = gen::full_make_html(header, events);
+    log::debug!("full_make_html() done: {:?}", html);
+    log::debug!("running gen::make_gen()");
+
+    gen::make_gen(html, "etc/statement_test.pdf")?;
+
     Ok(())
 }
 
@@ -29,8 +42,8 @@ fn main() -> Result<(), anyhow::Error> {
 mod payload_test {
     #[test]
     fn deserialize_payload() {
-        use super::model::event::Event;
-        use super::model::{Client, User};
+        use moxie::model::event::Event;
+        use moxie::model::{Client, User};
         use std::{fs::File, io::Read, path::Path};
 
         pretty_env_logger::try_init().ok();
