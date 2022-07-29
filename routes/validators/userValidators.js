@@ -103,15 +103,15 @@ const newClientValidator = [
   .withMessage("Invalid characters in the last name field"),
 
   body('email', "Invalid characters in the email field")
-  .optional().trim().escape().isLength({ min: 1, max: 100})
+  .optional({ checkFalsy: true }).trim().escape().isLength({ min: 1, max: 100})
   .isEmail().withMessage('Invalid email'),
   
   body('phonenumber', "Invalid phone number")
-  .optional().isNumeric().withMessage('Phone number must be only numbers')
+  .optional({ checkFalsy: true }).isNumeric().withMessage('Phone number must be only numbers')
   .trim().escape(),
 
   body('rate', "Invalid characters in the billing rate field")
-  .optional().trim().escape().isNumeric()
+  .optional({ checkFalsy: true }).trim().escape().isNumeric()
   .withMessage("Only numbers are valid in the billing rate field"),
 
   body('user', 'It appears you are not logged')
@@ -143,15 +143,15 @@ const udpateClientValidator = [
   .withMessage("Invalid characters in the last name field"),
 
   body('email', "Invalid characters in the email field")
-  .optional().trim().escape().isLength({ min: 1, max: 100})
+  .optional({ checkFalsy: true }).trim().escape().isLength({ min: 1, max: 100})
   .isEmail().withMessage('Invalid email'),
   
   body('phone', "Invalid phone number")
-  .optional().isNumeric().withMessage('Phone number must be only numbers')
+  .optional({ checkFalsy: true }).isNumeric().withMessage('Phone number must be only numbers')
   .trim().escape(),
 
   body('rate', "Invalid characters in the billing rate field")
-  .optional().trim().escape().isNumeric()
+  .optional({ nullable: true }).trim().escape().isNumeric()
   .withMessage("Only numbers are valid in the billing rate field"),
 
   body('user', 'It appears you are not logged')
