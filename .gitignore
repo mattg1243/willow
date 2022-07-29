@@ -6,6 +6,6 @@ Python/src/core/__pycache__
 .deployement
 /.vscode
 /test
-violetj2p/target/
-violetj2p/etc/
+moxie/target/
+moxie/etc/
 mockData.js

@@ -1,14 +1,15 @@
 [package]
-name = "violetj2p-core"
+name = "willow-core-moxie"
 version = "0.1.0"
+authors = ["ethgallucci <staticanne@skiff.com>"]
 edition = "2021"
 
 [[bin]]
-name = "violetj2p"
-path = "src/violetj2p.rs"
+name = "moxie"
+path = "src/moxie.rs"
 
 [lib]
-name = "violetj2p"
+name = "moxie"
 path = "src/lib.rs"
 
 [dependencies]

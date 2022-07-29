@@ -305,7 +305,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "violetj2p-core"
+name = "willow-core-moxie"
 version = "0.1.0"
 dependencies = [
  "anyhow",
