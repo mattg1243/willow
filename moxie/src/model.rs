@@ -34,6 +34,24 @@ impl TryFrom<String> for Client {
 }
 
 impl Client {
+    /// Mock for tests/benches
+    pub fn mock() -> Client {
+        Client {
+            mongo_id: "741974017049174091441".to_string(),
+            owner_id: "497240972409274097409".to_string(),
+            fname: "Winona".to_string(),
+            lname: "Ryder".to_string(),
+            phonenumber: "925-678-9876".to_string(),
+            sessions: vec!["90284092480924".to_string(), "427984729847".to_string()],
+            balance: "987.24".to_string(),
+            v: 0,
+            email: "winona@skiff.com".to_string(),
+            rate: "90".to_string(),
+            is_archived: false,
+            id: "904820984029840924".to_string(),
+        }
+    }
+
     fn concat_prov(&self) -> String {
         let mut cat = String::new();
         cat.push_str(self.fname.as_str());
@@ -49,6 +67,89 @@ impl Client {
     }
     fn rate(&self) -> String {
         self.rate.clone()
+    }
+}
+
+/// User Payload
+#[derive(Debug, Deserialize, Serialize)]
+pub struct User {
+    #[serde(rename = "_id")]
+    id: String,
+    username: String,
+    fname: String,
+    lname: String,
+    email: String,
+    clients: Vec<String>,
+    #[serde(rename = "__v")]
+    v: usize,
+    city: String,
+    #[serde(rename = "nameForHeader")]
+    name_on_header: String,
+    phone: String,
+    state: String,
+    street: String,
+    zip: String,
+    #[serde(rename = "paymentInfo")]
+    payments: JsonValue,
+    license: String,
+}
+
+impl TryFrom<String> for User {
+    type Error = anyhow::Error;
+
+    fn try_from(value: String) -> Result<User, Self::Error> {
+        Ok(serde_json::from_str(value.as_str())?)
+    }
+}
+
+#[allow(missing_docs)]
+impl User {
+    /// Mock for test/benches
+    pub fn mock() -> User {
+        User {
+            id: "2904872409842".to_string(),
+            username: "moxieryder".to_string(),
+            fname: "Moxie".to_string(),
+            lname: "Ryder".to_string(),
+            email: "moxie@skiff.com".to_string(),
+            clients: vec!["Winona Ryder".to_string()],
+            v: 0,
+            city: "Anchorage".to_string(),
+            name_on_header: "Moxie Ryder".to_string(),
+            phone: "899-777-1928".to_string(),
+            state: "Alaska".to_string(),
+            street: "Anchorage dr.".to_string(),
+            zip: "67826".to_string(),
+            payments: serde_json::json!({"eth": "moxieryder.eth"}),
+            license: "GOAT".to_string(),
+        }
+    }
+
+    fn username(&self) -> String {
+        self.username.clone()
+    }
+    fn catname(&self) -> String {
+        format!("{} {}", self.fname.clone(), self.lname.clone())
+    }
+    fn billing_addr(&self) -> JsonValue {
+        serde_json::json!({
+            "street": self.street.clone(),
+            "city": self.city.clone(),
+            "state": self.state.clone(),
+            "zip": self.zip.clone(),
+        })
+    }
+    fn nameoh(&self) -> String {
+        self.name_on_header.clone()
+    }
+    fn payments(&self) -> JsonValue {
+        self.payments.clone()
+    }
+    fn phone(&self) -> String {
+        self.phone.clone()
+    }
+    fn license(&self) -> String {
+        self.license.clone()
     }
 }
 
@@ -225,24 +326,36 @@ pub mod event {
 #[allow(missing_docs)]
 /// Defines the WillowHeader struct & its methods
 pub mod header {
-    use super::{Deserialize, Serialize};
+    use super::{Client, Deserialize, Serialize, User};
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
         provider: String,
         contact: String,
-        billing: String,
+        billing: super::JsonValue,
         client: String,
     }
 
-    impl From<super::Client> for WillowHeader {
-        fn from(c: super::Client) -> WillowHeader {
-            todo!()
+    impl TryFrom<(Client, User)> for WillowHeader {
+        type Error = anyhow::Error;
+
+        fn try_from(value: (Client, User)) -> Result<WillowHeader, Self::Error> {
+            Ok(WillowHeader {
+                provider: value.0.concat_prov(),
+                contact: value.0.email(),
+                billing: value.1.billing_addr(),
+                client: value.1.catname(),
+            })
         }
     }
 
     impl WillowHeader {
-        pub fn new(provider: String, contact: String, billing: String, client: String) -> Self {
+        pub fn new(
+            provider: String,
+            contact: String,
+            billing: super::JsonValue,
+            client: String,
+        ) -> Self {
             WillowHeader {
                 provider,
                 contact,
@@ -260,7 +373,7 @@ pub mod header {
             self.contact.clone()
         }
 
-        pub fn billing(&self) -> String {
+        pub fn billing(&self) -> super::JsonValue {
             self.billing.clone()
         }
 
@@ -297,5 +410,22 @@ pub mod footer {
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
         }
+    }
+}
+
+#[cfg(test)]
+mod impl_tests {
+    use super::*;
+    use header::WillowHeader;
+
+    #[test]
+    fn client_user_to_header() {
+        pretty_env_logger::try_init().ok();
+
+        let c = Client::mock();
+        let u = User::mock();
+        let h: WillowHeader = WillowHeader::try_from((c, u)).unwrap();
+
+        log::info!("Constructed 'WillowHeader' from (Client, User): {:?}", h)
     }
 }

@@ -289,7 +289,7 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, WillowFooter) {
         WillowHeader::new(
             "Anne Proxy".to_string(),
             "anneproxy@skiff.com".to_string(),
-            "venmo: 908278409274".to_string(),
+            serde_json::json!("venmo: {0319301930913}, paypal: {09381093809831}"),
             "Brandon Belt".to_string(),
         ),
         Event::mock_deps(),
@@ -308,7 +308,7 @@ mod tests {
         let new_header = WillowHeader::new(
             "Anne Proxy".to_string(),
             "925-988-1298".to_string(),
-            "venmo: 8988989889".to_string(),
+            serde_json::json!("venmo: {092302930293}, paypal: {0924e98429084}"),
             "Joe Panik".to_string(),
         );
         log::debug!("Trying make_header with new_header: {:?}", new_header);

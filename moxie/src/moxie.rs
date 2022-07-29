@@ -11,8 +11,17 @@
 mod gen;
 mod model;
 
+use model::{event::Event, Client};
+
+/// TODO:
+///
+/// Simulate
+/// [] local tests
+/// [] bench
 fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
+    let params: (Client, Vec<Event>) = gen::deserialize_payload()?;
+    log::debug!("{:?}", params);
     Ok(())
 }
 
@@ -21,7 +30,7 @@ mod payload_test {
     #[test]
     fn deserialize_payload() {
         use super::model::event::Event;
-        use super::model::Client;
+        use super::model::{Client, User};
         use std::{fs::File, io::Read, path::Path};
 
         pretty_env_logger::try_init().ok();
@@ -44,6 +53,15 @@ mod payload_test {
             log::debug!("Deserializing events dump...");
             let dump: Vec<Event> = Event::collect(data).unwrap();
             log::info!("Done. {:?}", dump)
+        }
+        {
+            let mut user_json = File::open(Path::new("etc/user.json")).unwrap();
+            let mut data = String::new();
+            user_json.read_to_string(&mut data).unwrap();
+
+            log::debug!("Deserializing user...");
+            let u: User = User::try_from(data).unwrap();
+            log::info!("Done. {:?}", u)
         }
     }
 }

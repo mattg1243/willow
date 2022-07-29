@@ -1,6 +1,15 @@
+use crate::model::{event::Event, Client};
+use std::env;
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
 
-/// Parses environment arguments into a Tuple(WillowHeader, Vec<Event>, WillowFooter)
+/// Get env params for statement
+pub fn deserialize_payload() -> Result<(Client, Vec<Event>), anyhow::Error> {
+    pretty_env_logger::try_init().ok();
+    let args: Vec<String> = env::args().collect();
+    let c: Client = Client::try_from(args[0].clone())?;
+    let e: Vec<Event> = Event::collect(args[1].clone())?;
+    Ok((c, e))
+}
 
 /// Example HTML -> PDF using wkhtmltopdf.
 #[allow(dead_code)]
