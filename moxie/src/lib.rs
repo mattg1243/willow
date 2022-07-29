@@ -26,12 +26,11 @@
 //!
 //! This test will currently fail, as the `parse_deps` function hasn't been properly impl yet.
 //! ```rust
-//! extern crate violetj2p;
+//! extern crate moxie;
 //!
-//! use violetj2p::{
-//!     WillowHeader, WillowFooter, Event,
-//!     Header, Footer, RowCol,
-//!     full_make_html, make_gen, mock_env
+//! use moxie::{
+//!     model::{header::WillowHeader, event::Event, footer::WillowFooter},
+//!     mock_env, full_make_html, gen::make_gen,
 //! };
 //!
 //! fn main() -> Result<(), std::io::Error> {
