@@ -47,11 +47,13 @@
 //!     // environment) acquire from the above code (i.e. the invocation of 'parse_deps')
 //!     let (header, events, footer) = mock_env();
 //!     let html_str: String = full_make_html(header, events, footer);
-//!     make_gen(html_str, "example_output.pdf")
+//!     make_gen(html_str, "etc/example_output.pdf")
 //! }
 //! ```
 
+// --------- END OUTER DOCS -------------
 #![warn(missing_docs)]
+#![warn(dead_code)]
 #![warn(unused_imports)]
 #![forbid(unused_mut)]
 
@@ -313,6 +315,6 @@ mod tests {
         log::debug!("Trying make_header with new_header: {:?}", new_header);
         let html_header = new_header.make_header();
         log::info!("Made html header: {}", html_header);
-        crate::gen::make_gen(html_header, "header_test.pdf").unwrap()
+        crate::gen::make_gen(html_header, "etc/header_test.pdf").unwrap()
     }
 }

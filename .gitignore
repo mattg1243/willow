@@ -7,4 +7,5 @@ Python/src/core/__pycache__
 /.vscode
 /test
 violetj2p/target/
+violetj2p/etc/
 mockData.js

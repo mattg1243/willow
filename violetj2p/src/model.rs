@@ -139,9 +139,9 @@ pub mod event {
         new_balance: String,
     }
 
-    /// Event Accessors:
     #[allow(missing_docs, dead_code)]
     impl Event {
+        /// Constructor for testing
         pub fn new(
             id: &str,
             client_id: &str,
@@ -164,10 +164,12 @@ pub mod event {
             }
         }
 
+        /// Deserialize a JSON array of Events into a vector
         pub fn collect(json_dump: String) -> Result<Vec<Self>, anyhow::Error> {
-            return Ok(serde_json::from_str(json_dump.as_str())?)
+            return Ok(serde_json::from_str(json_dump.as_str())?);
         }
 
+        /// Mock a vector of Event for testing
         pub fn mock_deps() -> Vec<Self> {
             let mut mock: Vec<Self> = vec![];
             for _ in 0..10 {
@@ -194,13 +196,17 @@ pub mod event {
         pub fn duration(&self) -> f32 {
             self.duration
         }
-        pub fn rate(&self) -> Option<u32> { self.rate }
+        pub fn rate(&self) -> Option<u32> {
+            self.rate
+        }
+        /// If 'rate' is null, returns an empty string.
+        /// If rate is non-null, returns u32
         pub fn peekrate(&self) -> String {
             if let Some(r) = self.rate() {
                 r.to_string()
             } else {
                 String::from("")
-            } 
+            }
         }
         pub fn amount(&self) -> &JsonValue {
             &self.amount
@@ -212,77 +218,6 @@ pub mod event {
         /// Returns the string repr of the object.
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
-        }
-    }
-
-    /// Useful mock funcs for testing purposes.
-    #[allow(dead_code)]
-    impl Event {
-        /// Returns a mock Event object.
-        pub fn mock() -> Event {
-            Event {
-                id: "owner_id".to_string(),
-                client_id: "client_id".to_string(),
-                date: "date".to_string(),
-                event_type: "event_type".to_string(),
-                duration: 0f32,
-                rate: None,
-                amount: JsonValue::Null,
-                new_balance: String::from("100"),
-            }
-        }
-
-        /// Returns a mock Vec<Event>.
-        pub fn mock_three() -> Vec<Event> {
-            vec![Event::mock(), Event::mock(), Event::mock()]
-        }
-
-        /// Returns a mock Vec<String> repr JSON-encoded Event objects
-        /// passed from Node.
-        pub fn mock_args() -> Vec<String> {
-            vec![
-                "{
-                    \"ownerID\": \"owner_id\",
-                    \"clientID\": \"client_id\",
-                    \"date\": \"date\",
-                    \"type\": \"event_type\",
-                    \"duration\": 0,
-                    \"rate\": 0,
-                    \"amount\": null,
-                    \"newBalance\": 0.0
-                }"
-                .to_string(),
-                "{
-                    \"ownerID\": \"owner_id\",
-                    \"clientID\": \"client_id\",
-                    \"date\": \"date\",
-                    \"type\": \"event_type\",
-                    \"duration\": 0,
-                    \"rate\": 0,
-                    \"amount\": null,
-                    \"newBalance\": 0.0
-                }"
-                .to_string(),
-            ]
-        }
-    }
-
-    /// An implementation of the TryFrom<String> trait for Event.
-    impl TryFrom<String> for Event {
-        type Error = anyhow::Error;
-
-        fn try_from(s: String) -> Result<Event, Self::Error> {
-            let event: Event = serde_json::from_str(&s)?;
-            Ok(event)
-        }
-    }
-
-    impl TryInto<String> for Event {
-        type Error = anyhow::Error;
-
-        fn try_into(self) -> Result<String, Self::Error> {
-            let s = serde_json::to_string_pretty(&self)?;
-            Ok(s)
         }
     }
 }
@@ -335,30 +270,6 @@ pub mod header {
 
         pub fn stringify(&self) -> String {
             serde_json::to_string_pretty(self).unwrap()
-        }
-    }
-
-    impl TryFrom<String> for WillowHeader {
-        type Error = anyhow::Error;
-
-        fn try_from(s: String) -> Result<Self, Self::Error> {
-            let header: WillowHeader = serde_json::from_str(&s)?;
-            Ok(header)
-        }
-    }
-
-    impl TryInto<String> for WillowHeader {
-        type Error = anyhow::Error;
-
-        fn try_into(self) -> Result<String, Self::Error> {
-            let header: String = serde_json::to_string_pretty(&self)?;
-            Ok(header)
-        }
-    }
-
-    impl std::fmt::Display for WillowHeader {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "{}", self.stringify())
         }
     }
 }

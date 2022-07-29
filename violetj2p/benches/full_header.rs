@@ -1,5 +1,5 @@
-#![feature(test)]
 #![allow(soft_unstable)]
+#![feature(test)]
 
 extern crate violetj2p;
 extern crate test;

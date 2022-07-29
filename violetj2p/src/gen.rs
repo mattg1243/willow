@@ -1,9 +1,4 @@
-/// src/gen.rs defines primitives for generating statements.
-///
-/// i.e. includes the HTML/CSS schema for embedding client events within HTML
-/// for maximum layout flexibility and quick serialization into PDF files.
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
-use crate::model::{header::WillowHeader, event::Event, footer::WillowFooter};
 
 /// Parses environment arguments into a Tuple(WillowHeader, Vec<Event>, WillowFooter)
 
