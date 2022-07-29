@@ -4,8 +4,8 @@
 extern crate moxie;
 extern crate test;
 
+use moxie::model::{event::Event, header::WillowHeader};
 use moxie::template::*;
-use moxie::model::{header::WillowHeader, event::Event};
 use std::time::Instant;
 use test::Bencher;
 

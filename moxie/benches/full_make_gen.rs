@@ -7,7 +7,7 @@ extern crate test;
 use moxie::{
     gen::full_make_html,
     gen::make_gen,
-    model::{header::WillowHeader, event::Event, footer::WillowFooter},
+    model::{event::Event, footer::WillowFooter, header::WillowHeader},
 };
 use std::time::Instant;
 use test::Bencher;

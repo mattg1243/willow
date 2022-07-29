@@ -1,7 +1,5 @@
-use crate::model::{
-    User, Client,
-};
-use crate::model::{header::WillowHeader, event::Event};
+use crate::model::{event::Event, header::WillowHeader};
+use crate::model::{Client, User};
 use crate::template::{Header, RowCol};
 
 use std::env;
@@ -63,8 +61,6 @@ pub static CLOSING_TAGS: &str = "</main></body>
   ></script>
 </html>";
 
-
-
 /// This is the core function that accepts all params necessary to generate a full statement
 ///
 /// The procedure relies on the trait implementations. It first constructs a mutable String:
@@ -108,7 +104,7 @@ pub fn full_make_html(h: WillowHeader, r: Vec<Event>) -> String {
     }
     // Close the table
     html_str.push_str(CLOSE_TABLE);
-    
+
     // Push the closing body tag and script field. Close the HTML tag to finalize our HTML statement
     html_str.push_str(CLOSING_TAGS);
 

@@ -1,11 +1,7 @@
 #![warn(clippy::todo, unused_mut)]
 #![forbid(unsafe_code, unused_lifetimes, unused_mut)]
 extern crate moxie;
-
-use moxie::{
-    model::header::WillowHeader,
-    gen,
-};
+use moxie::model::header;
 
 /// TODO:
 ///
@@ -16,23 +12,24 @@ fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
 
     // Parse args into (Client, Vec<Event>, User)
-    let (header_params, events, user_params) = gen::deserialize_payload()?;
+    let (header_params, events, user_params) = moxie::gen::deserialize_payload()?;
     log::debug!("{:?}", header_params);
     log::debug!("{:?}", user_params);
 
     // Construct a WillowHeader from (Client, User)
-    let header: WillowHeader = WillowHeader::try_from((header_params, user_params))?; 
+    let header: header::WillowHeader =
+        header::WillowHeader::try_from((header_params, user_params))?;
     // Fetch the 'new_balance' value at the last Event
     let _running_balance = events.last().unwrap().new_balance();
     log::debug!("{:?}", _running_balance);
 
     // Construct a statement from a WillowHeader and Vec<Event>
-    let html = gen::full_make_html(header, events);
+    let html = moxie::gen::full_make_html(header, events);
     log::debug!("full_make_html() done: {:?}", html);
     log::debug!("running gen::make_gen()");
 
     // Generate a PDF from out HTML string
-    gen::make_gen(html, "etc/statement_test.pdf")?;
+    moxie::gen::make_gen(html, "etc/statement_test.pdf")?;
 
     Ok(())
 }

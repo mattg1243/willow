@@ -36,10 +36,6 @@ All structs defined in `moxie::model` are *public*, but their fields remain *pri
 
 # To Do
 
-## Moxie main
-
-The main *moxie* executable still needs to be patched up a bit before it moves on to tests and benches. Then we can implement its interface with the backend and begin to test locally using the front end to call *moxie*. 
-
 ## Bloat
 
 I would like to clean multiple structs in `moxie::model` from bloat. Many of the fields being passed in the JSON are irrelevant to *moxie* and are currently only being defined in order to correctly deserialize them at runtime. For example (fields denoted with *unread* indicates that *moxie* is unconcerned with them & can spawn an engine instance without ever reading them):

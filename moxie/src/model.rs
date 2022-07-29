@@ -8,21 +8,21 @@ use serde_json::Value as JsonValue;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Client {
     #[serde(rename = "_id")]
-    mongo_id: String,                   // unread
+    mongo_id: String, // unread
     #[serde(rename = "ownerID")]
-    owner_id: String,                   // unread
+    owner_id: String, // unread
     fname: String,
     lname: String,
     phonenumber: String,
-    sessions: Vec<String>,              // unread
+    sessions: Vec<String>, // unread
     balance: String,
     #[serde(rename = "__v")]
-    v: usize,                           // unread
+    v: usize, // unread
     email: String,
     rate: String,
     #[serde(rename = "isArchived")]
-    is_archived: bool,                  // unread
-    id: String,                         // unread
+    is_archived: bool, // unread
+    id: String, // unread
 }
 
 impl TryFrom<String> for Client {
@@ -76,14 +76,9 @@ impl Client {
 #[allow(missing_docs)]
 pub struct User {
     #[serde(rename = "_id")]
-    id: String,                         // unread
-    username: String,
     pub fname: String,
     pub lname: String,
     pub email: String,
-    clients: Vec<String>,               // unread
-    #[serde(rename = "__v")]
-    v: usize,                           // unread
     city: String,
     #[serde(rename = "nameForHeader")]
     pub name_on_header: String,
@@ -109,13 +104,9 @@ impl User {
     /// Mock for test/benches
     pub fn mock() -> User {
         User {
-            id: "2904872409842".to_string(),
-            username: "moxieryder".to_string(),
             fname: "Moxie".to_string(),
             lname: "Ryder".to_string(),
             email: "moxie@skiff.com".to_string(),
-            clients: vec!["Winona Ryder".to_string()],
-            v: 0,
             city: "Anchorage".to_string(),
             name_on_header: "Moxie Ryder".to_string(),
             phone: "899-777-1928".to_string(),
@@ -127,9 +118,6 @@ impl User {
         }
     }
 
-    pub fn username(&self) -> String {
-        self.username.clone()
-    }
     pub fn catname(&self) -> String {
         format!("{} {}", self.fname.clone(), self.lname.clone())
     }
@@ -164,9 +152,9 @@ pub mod event {
     #[allow(missing_docs)]
     pub struct Event {
         #[serde(rename = "_id")]
-        id: String,                             // unread
+        id: String, // unread
         #[serde(rename = "clientID")]
-        client_id: String,                      // unread
+        client_id: String, // unread
         date: String,
         #[serde(rename = "type")]
         event_type: String,
@@ -285,8 +273,6 @@ pub mod header {
             })
         }
     }
-
-   
 
     impl WillowHeader {
         pub fn new(

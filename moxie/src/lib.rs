@@ -30,7 +30,7 @@
 //!
 //! use moxie::{
 //!     model::{header::WillowHeader, event::Event, footer::WillowFooter},
-//!     mock_env, gen::{make_gen, full_make_html}, 
+//!     mock_env, gen::{make_gen, full_make_html},
 //! };
 //!
 //! fn main() -> Result<(), std::io::Error> {
@@ -70,7 +70,7 @@ pub use model::{event::*, header::*};
 /// Auto-imports
 pub mod prelude {
     pub use super::model::{Client, User};
-    pub use super::template::{Header, RowCol, Footer};
+    pub use super::template::{Footer, Header, RowCol};
 }
 pub(crate) use self::prelude::*;
 
