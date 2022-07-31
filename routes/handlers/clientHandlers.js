@@ -217,7 +217,7 @@ const makeStatement = (req, res) => {
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             
-            execFile("../moxie/target/release/moxie", [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
+            execFile("../../moxie/target/release/moxie", [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
