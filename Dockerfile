@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 node:14-slim
 
 WORKDIR /app
 
-COPY package*.json /app
+COPY package*.json /app/
 RUN npm ci --production
 # install python3.9.7
 RUN apt update
