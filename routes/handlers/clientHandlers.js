@@ -218,7 +218,7 @@ const makeStatement = (req, res) => {
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             const dir = __dirname;
             console.log("DIR = "+dir)
-            execFile(`${dir}/moxie`,  [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
+            execFile(`./moxie`,  [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)], {shell: true},
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
