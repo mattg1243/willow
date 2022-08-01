@@ -7,9 +7,8 @@ use std::env;
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
 
 /// Get env params for statement
-pub fn deserialize_payload() -> Result<(Client, Vec<Event>, User), MoxieOutput> {
+pub fn deserialize_payload(args: Vec<String>) -> Result<(Client, Vec<Event>, User), MoxieOutput> {
     pretty_env_logger::try_init().ok();
-    let args: Vec<String> = env::args().collect();
     // let c: Client = Client::try_from(args[0].clone())?;
     match Client::try_from(args[0].clone()) {
         Ok(c) => match Event::collect(args[1].clone()) {

@@ -56,6 +56,7 @@
 #![warn(unused_imports)]
 #![forbid(unused_mut)]
 
+pub use self::ff::moxie_make;
 /// Re-exports
 pub use self::mock_args_deser as mock_env;
 
@@ -89,6 +90,75 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFoot
         Event::mock_deps(),
         model::footer::WillowFooter::new(200.50),
     )
+}
+
+/// Foreign Function Interfaces to moxie
+pub mod ff {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Debug, Deserialize, Serialize)]
+    #[allow(missing_docs)]
+    #[repr(C)]
+    pub enum FfErr {
+        DeserializePayload {
+            ctx: String,
+        },
+        GenHeader {
+            ctx: String,
+        },
+        GenHtml {
+            ctx: String,
+            template_step: Option<usize>,
+        },
+        GenFinal {
+            ctx: String,
+        },
+    }
+
+    impl std::fmt::Display for FfErr {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "{:?}", self)
+        }
+    }
+
+    impl std::error::Error for FfErr {}
+
+    #[no_mangle]
+    #[allow(missing_docs)]
+    pub unsafe extern "C" fn moxie_make(
+        client: String,
+        events: String,
+        user: String,
+        output_path: String,
+    ) -> () {
+        std::env::set_var("RUST_BACKTRACE", "1");
+        std::env::set_var("RUST_LOG", "debug");
+        pretty_env_logger::try_init().ok();
+
+        let params = vec![client, events, user];
+        match super::gen::deserialize_payload(params) {
+            Ok((c, e, u)) => match super::WillowHeader::try_from((c, u)) {
+                Ok(header) => {
+                    let html = super::gen::full_make_html(header, e);
+                    match super::gen::make_gen(html, output_path.as_str()) {
+                        Ok(()) => return (),
+                        Err(e) => {
+                            let ctx = format!("final statement gen failed: {:?}", e);
+                            panic!("{}", ctx)
+                        }
+                    }
+                }
+                Err(e) => {
+                    let ctx = format!("make_header failed: {:?}", e);
+                    panic!("{}", ctx)
+                }
+            },
+            Err(e) => {
+                let ctx = format!("deserialize_payload failed: {:?}", e);
+                panic!("{}", ctx)
+            }
+        }
+    }
 }
 
 /// Contains Moxie Errors

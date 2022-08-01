@@ -6,6 +6,7 @@ const { exec } = require('child_process');
 const async = require('async');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
+const ffi = require('ffi');
 
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
@@ -217,26 +218,32 @@ const makeStatement = (req, res) => {
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             
-            exec(`./routes/handlers/moxie "${JSON.stringify(clientInfo)}" "${JSON.stringify(eventsList)}" "${JSON.stringify(providerInfo)}"`, 
-            (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`exec error: ${error}`);
-                    return;
-                }
-                if (stdout) {console.log(`stdout: ${stdout}`);}
-                if(stderr) {console.error(`stderr: ${stderr}`);}
-                try {
-                    res.status(200).download(`public/invoices/statementtest.pdf`, `${clientInfo.fname + "-" + clientInfo.lname}.pdf`, function (err) {
+            // FFI
+            var lib = ffi.Library(path.join('./moxie', 'target/release/libmoxie_core'), {
+              moxie_make: ['null', ['String', 'String', 'String', 'String']]
+            });
+            var result = moxie_make(JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo), "public/invoices/statement_test.pdf");
             
-                        if (err) return console.error(err);
-                        // delete the pdf from the server after download
-                        fs.unlink(`public/invoices/statementtest.pdf.pdf`, function (err) {
-                            if (err) return console.error(err)
-                
-                        });
-                    })
-                } 
-                catch (err) { throw err; }
+            // exec(`./routes/handlers/moxie "${JSON.stringify(clientInfo)}" "${JSON.stringify(eventsList)}" "${JSON.stringify(providerInfo)}"`, 
+            // (error, stdout, stderr) => {
+            //    if (error) {
+            //        console.error(`exec error: ${error}`);
+            //        return;
+            //    }
+            //    if (stdout) {console.log(`stdout: ${stdout}`);}
+            //    if(stderr) {console.error(`stderr: ${stderr}`);}
+            //    try {
+            //        res.status(200).download(`public/invoices/statementtest.pdf`, `${clientInfo.fname + "-" + clientInfo.lname}.pdf`, function (err) {
+            //  
+            //            if (err) return console.error(err);
+            //            // delete the pdf from the server after download
+            //            fs.unlink(`public/invoices/statementtest.pdf.pdf`, function (err) {
+            //                if (err) return console.error(err)
+            //    
+            //            });
+            //        })
+            //    } 
+            //    catch (err) { throw err; }
                 
             })
 
@@ -261,8 +268,6 @@ const makeStatement = (req, res) => {
             //     } 
             //     catch (err) { throw err; }
             // })
-        }
-    )
 }
 
 const downloadStatement = async (req, res) => {

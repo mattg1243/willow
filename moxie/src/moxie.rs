@@ -1,8 +1,9 @@
 #![warn(clippy::todo, unused_mut)]
 #![forbid(unsafe_code, unused_lifetimes, unused_mut)]
-extern crate moxie;
+extern crate moxie_core;
 use moxie::eh::{MoxieOutput, OutLevel};
 use moxie::model::header;
+use moxie_core as moxie;
 
 /// TODO:
 ///
@@ -13,9 +14,10 @@ fn main() -> Result<(), MoxieOutput> {
     pretty_env_logger::try_init().ok();
     std::env::set_var("RUST_LOG", "debug");
     std::env::set_var("RUST_BACKTRACE", "1");
+    let args: Vec<String> = std::env::args().collect();
 
     // Parse args into (Client, Vec<Event>, User)
-    match moxie::gen::deserialize_payload() {
+    match moxie::gen::deserialize_payload(args) {
         // Deserialized
         Ok((header_params, events, user_params)) => {
             log::debug!("{:?}", header_params);

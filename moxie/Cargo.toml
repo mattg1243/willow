@@ -9,8 +9,9 @@ name = "moxie"
 path = "src/moxie.rs"
 
 [lib]
-name = "moxie"
+name = "moxie_core"
 path = "src/lib.rs"
+crate-type = ["dylib", "rlib"]
 
 [dependencies]
 anyhow = "1.0.58"
@@ -24,7 +25,6 @@ wkhtmltopdf = "0.4.0"
 [profile.dev]
 opt-level = 0
 lto = false
-panic = "unwind"
 incremental = true
 debug = true
 overflow-checks = true
@@ -33,5 +33,4 @@ overflow-checks = true
 opt-level = 3
 strip = "debuginfo"
 lto = "fat"
-panic = "abort"
 incremental = false
