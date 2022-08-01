@@ -2,7 +2,7 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
-const { execFile } = require('child_process');
+const { execFile, exec } = require('child_process');
 const async = require('async');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
@@ -216,8 +216,9 @@ const makeStatement = (req, res) => {
             // console.dir(clientInfo)
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
-            
-            execFile("../../moxie/target/release/moxie", [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
+            const dir = __dirname;
+            console.log("DIR = "+dir)
+            execFile(`${dir}/moxie`,  [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);

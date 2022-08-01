@@ -35,5 +35,5 @@ RUN echo y | apt install ssh
 
 COPY . .
 
-EXPOSE 8080 2222
+EXPOSE 8080 2222 3001
 CMD ["npm", "start"]
