@@ -91,6 +91,49 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFoot
     )
 }
 
+/// Contains Moxie Errors
+pub mod eh {
+    use serde::{Deserialize, Serialize};
+
+    /// Moxie EH (error handling) Custom Result type
+    pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
+    #[allow(missing_docs)]
+    #[derive(Debug, Deserialize, Serialize)]
+    pub enum OutLevel {
+        INFO,
+        DEBUG,
+        WARN,
+        CRITICAL,
+    }
+
+    #[allow(missing_docs)]
+    #[derive(Debug, Deserialize, Serialize)]
+    pub struct MoxieOutput {
+        level: OutLevel,
+        ctx: String,
+    }
+
+    impl MoxieOutput {
+        #[inline]
+        #[allow(missing_docs)]
+        pub fn new(level: OutLevel, ctx: &str) -> Self {
+            Self {
+                level,
+                ctx: ctx.to_string(),
+            }
+        }
+    }
+
+    impl std::fmt::Display for MoxieOutput {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Moxie throw err: {}", self.ctx)
+        }
+    }
+
+    impl std::error::Error for MoxieOutput {}
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
