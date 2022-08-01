@@ -16,10 +16,11 @@ pub struct Client {
 }
 
 impl TryFrom<String> for Client {
-    type Error = anyhow::Error;
+    type Error = Box<dyn std::error::Error>;
 
     fn try_from(value: String) -> Result<Client, Self::Error> {
-        Ok(serde_json::from_str(value.as_str())?)
+        let c: Client = serde_json::from_str(value.as_str())?;
+        Ok(c)
     }
 }
 
@@ -142,6 +143,8 @@ pub mod event {
         amount: JsonValue,
         #[serde(rename = "newBalance")]
         new_balance: String,
+        #[serde(rename = "__v")]
+        v: usize,
         detail: String,
     }
 
@@ -155,6 +158,7 @@ pub mod event {
             rate: Option<u32>,
             amount: JsonValue,
             new_balance: &str,
+            v: usize,
             detail: &str,
         ) -> Self {
             Self {
@@ -164,6 +168,7 @@ pub mod event {
                 rate,
                 amount,
                 new_balance: new_balance.to_owned(),
+                v,
                 detail: detail.to_owned(),
             }
         }
@@ -184,6 +189,7 @@ pub mod event {
                     Some(90u32),
                     serde_json::json!("amount: {200}"),
                     "200.50",
+                    0,
                     "undefined",
                 ))
             }

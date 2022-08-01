@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 node:14-slim
 
 WORKDIR /app
 
-COPY package*.json /app
+COPY package*.json /app/
 RUN npm ci --production
 # install python3.9.7
 RUN apt update
@@ -24,6 +24,8 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # WORKDIR "/app/moxie/"
 # RUN echo y | cargo build --release
 
+ENV DB_URL="mongodb+srv://mattg1243:chewyvuitton@main-cluster.5pmmm.mongodb.net/maindb?writeConcern=majority"
+ENV JWT_SECRET="8e50e7a5e789c946ceab5e2b994234f24933e8209764037225a87b91f8a59b1ca5ab1138b9d70e50127a494c2fe94ab064ffcfe03ddabb7e414005b4ec85ccf0"
 
 
 RUN apt update && echo y | apt upgrade
@@ -35,5 +37,5 @@ RUN echo y | apt install ssh
 
 COPY . .
 
-EXPOSE 8080 2222
+EXPOSE 8080 2222 3001
 CMD ["npm", "start"]
