@@ -1,3 +1,4 @@
+use super::eh::{MoxieOutput, OutLevel};
 use crate::model::{event::Event, header::WillowHeader};
 use crate::model::{Client, User};
 use crate::template::{Header, RowCol};
@@ -6,13 +7,29 @@ use std::env;
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
 
 /// Get env params for statement
-pub fn deserialize_payload() -> Result<(Client, Vec<Event>, User), anyhow::Error> {
+pub fn deserialize_payload() -> Result<(Client, Vec<Event>, User), MoxieOutput> {
     pretty_env_logger::try_init().ok();
     let args: Vec<String> = env::args().collect();
-    let c: Client = Client::try_from(args[0].clone())?;
-    let e: Vec<Event> = Event::collect(args[1].clone())?;
-    let u: User = User::try_from(args[2].clone())?;
-    Ok((c, e, u))
+    // let c: Client = Client::try_from(args[0].clone())?;
+    match Client::try_from(args[0].clone()) {
+        Ok(c) => match Event::collect(args[1].clone()) {
+            Ok(events) => match User::try_from(args[2].clone()) {
+                Ok(u) => return Ok((c, events, u)),
+                Err(e) => {
+                    let ctx = format!("failed at deser user: {:?}", e);
+                    return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+                }
+            },
+            Err(e) => {
+                let ctx = format!("failed at collect events: {:?}", e);
+                return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+            }
+        },
+        Err(e) => {
+            let ctx = format!("failed at deser client: {:?}", e);
+            return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+        }
+    }
 }
 
 /// Example HTML -> PDF using wkhtmltopdf.

@@ -16,10 +16,11 @@ pub struct Client {
 }
 
 impl TryFrom<String> for Client {
-    type Error = anyhow::Error;
+    type Error = Box<dyn std::error::Error>;
 
     fn try_from(value: String) -> Result<Client, Self::Error> {
-        Ok(serde_json::from_str(value.as_str())?)
+        let c: Client = serde_json::from_str(value.as_str())?;
+        Ok(c)
     }
 }
 
@@ -59,7 +60,6 @@ impl Client {
 #[derive(Debug, Deserialize, Serialize)]
 #[allow(missing_docs)]
 pub struct User {
-    #[serde(rename = "_id")]
     pub fname: String,
     pub lname: String,
     pub email: String,
@@ -135,10 +135,6 @@ pub mod event {
     #[derive(Debug, Deserialize, Serialize)]
     #[allow(missing_docs)]
     pub struct Event {
-        #[serde(rename = "_id")]
-        id: String, // unread
-        #[serde(rename = "clientID")]
-        client_id: String, // unread
         date: String,
         #[serde(rename = "type")]
         event_type: String,
@@ -147,30 +143,33 @@ pub mod event {
         amount: JsonValue,
         #[serde(rename = "newBalance")]
         new_balance: String,
+        #[serde(rename = "__v")]
+        v: usize,
+        detail: String,
     }
 
     #[allow(missing_docs, dead_code)]
     impl Event {
         /// Constructor for testing
         pub fn new(
-            id: &str,
-            client_id: &str,
             date: &str,
             etype: &str,
             duration: f32,
             rate: Option<u32>,
             amount: JsonValue,
             new_balance: &str,
+            v: usize,
+            detail: &str,
         ) -> Self {
             Self {
-                id: id.to_owned(),
-                client_id: client_id.to_owned(),
                 date: date.to_owned(),
                 event_type: etype.to_owned(),
                 duration,
                 rate,
                 amount,
                 new_balance: new_balance.to_owned(),
+                v,
+                detail: detail.to_owned(),
             }
         }
 
@@ -184,14 +183,14 @@ pub mod event {
             let mut mock: Vec<Self> = vec![];
             for _ in 0..10 {
                 mock.push(Self::new(
-                    "f901309830913",
-                    "4790194704971",
                     "07/22/2022",
                     "Meeting",
                     2f32,
                     Some(90u32),
                     serde_json::json!("amount: {200}"),
                     "200.50",
+                    0,
+                    "undefined",
                 ))
             }
             return mock;

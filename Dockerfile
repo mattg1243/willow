@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 node:14-slim
 
 WORKDIR /app
 
-COPY package*.json /app
+COPY package*.json /app/
 RUN npm ci --production
 # install python3.9.7
 RUN apt update
@@ -23,8 +23,6 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # # RUN echo y | pwd
 # WORKDIR "/app/moxie/"
 # RUN echo y | cargo build --release
-
-
 
 RUN apt update && echo y | apt upgrade
 RUN echo y | apt install ssh

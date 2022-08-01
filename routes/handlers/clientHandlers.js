@@ -2,7 +2,7 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
-const { execFile, exec } = require('child_process');
+const { exec } = require('child_process');
 const async = require('async');
 const fs = require('fs');
 const helpers = require('../helpers/helpers');
@@ -173,7 +173,7 @@ const makeStatement = (req, res) => {
             Client.findById(`${clientID}`, (err, client) => {
                 if (err) { return console.error(err); }
                 // populate the client obj
-                clientInfo.clientname = client._doc;
+                clientInfo = client._doc;
                 callback(null);
             }).select(['-_id', '-ownerID', '-sessions', '-isArchived', '-__v']).clone()
         },
@@ -181,9 +181,9 @@ const makeStatement = (req, res) => {
         (callback) => { 
             Event.find({ clientID: clientID, date: {
                 $gte: start,
-                $lte: end
+                $lte: end,
             }
-            } , (err, events) => {
+            }, {clientID: 0, _id: 0}, (err, events) => {
                 if (err) { return console.error(err); }
                 console.log(events.length + " events read from database");
                 eventsList = events;
@@ -216,9 +216,8 @@ const makeStatement = (req, res) => {
             // console.dir(clientInfo)
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
-            const dir = __dirname;
-            console.log("DIR = "+dir)
-            execFile(`./moxie`,  [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)], {shell: true},
+            
+            exec(`./routes/handlers/moxie "${JSON.stringify(clientInfo)}" "${JSON.stringify(eventsList)}" "${JSON.stringify(providerInfo)}"`, 
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
