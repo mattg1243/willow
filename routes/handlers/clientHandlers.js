@@ -173,7 +173,7 @@ const makeStatement = (req, res) => {
             Client.findById(`${clientID}`, (err, client) => {
                 if (err) { return console.error(err); }
                 // populate the client obj
-                clientInfo.clientname = client._doc;
+                clientInfo = client._doc;
                 callback(null);
             }).select(['-_id', '-ownerID', '-sessions', '-isArchived', '-__v']).clone()
         },
@@ -197,7 +197,7 @@ const makeStatement = (req, res) => {
                     eventsList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
                 }
                 callback(null);
-            }).clone()
+            }).select(['-_id', '-clientID']).clone()
         }
     ], (err, result) => {
         console.timeEnd(dbTime);
@@ -217,7 +217,7 @@ const makeStatement = (req, res) => {
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
             
-            execFile("../moxie/target/release/moxie", [JSON.stringify(clientInfo), JSON.stringify(eventsList), JSON.stringify(providerInfo)],
+            execFile("./moxie", [`${JSON.stringify(clientInfo)}`, `${JSON.stringify(eventsList)}`, `${JSON.stringify(providerInfo)}`], {shell: true},
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`);
@@ -230,7 +230,7 @@ const makeStatement = (req, res) => {
             
                         if (err) return console.error(err);
                         // delete the pdf from the server after download
-                        fs.unlink(`public/invoices/statementtest.pdf.pdf`, function (err) {
+                        fs.unlink(`public/invoices/statementtest.pdf`, function (err) {
                             if (err) return console.error(err)
                 
                         });
