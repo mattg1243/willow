@@ -19,7 +19,7 @@ fn main() -> Result<(), anyhow::Error> {
             log::debug!("{:?}", user_params);
             match header::WillowHeader::try_from((header_params, user_params)) {
                 Ok(header) => {
-                   if let Some(rb) = events.last() {
+                    if let Some(rb) = events.last() {
                         log::debug!("running_balance: {:?}", rb);
 
                         let html = moxie::gen::full_make_html(header, events);
@@ -29,25 +29,32 @@ fn main() -> Result<(), anyhow::Error> {
                         match moxie::gen::make_gen(html, "./public/invoices/statement_test.pdf") {
                             Ok(()) => {
                                 log::info!("made statement_test.pdf");
-                                return Ok(())
-                            },
+                                return Ok(());
+                            }
                             Err(a) => {
                                 let ctx = format!("statement_gen failed: {:?}", a);
                                 log::error!("{}", ctx);
-                                return Err(anyhow::Error::msg(ctx))
-                            },
+                                return Err(anyhow::Error::msg(ctx));
+                            }
                         }
-                   } else { return Err(anyhow::Error::msg("Events could not be read, it may be an empty object.")) } 
-                },
+                    } else {
+                        return Err(anyhow::Error::msg(
+                            "Events could not be read, it may be an empty object.",
+                        ));
+                    }
+                }
                 Err(e) => {
                     log::error!("failed to gen header: {:?}", e);
-                    return Err(e)
+                    return Err(e);
                 }
             }
-        },
+        }
         Err(e) => {
-            let ctx = format!("moxie throw err at: moxie::gen::deserialize_payload() [{:?}]", e);
-            return Err(anyhow::Error::msg(ctx))
+            let ctx = format!(
+                "moxie throw err at: moxie::gen::deserialize_payload() [{:?}]",
+                e
+            );
+            return Err(anyhow::Error::msg(ctx));
         }
     }
 }
