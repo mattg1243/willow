@@ -10,6 +10,8 @@ use moxie::model::header;
 /// [] bench
 fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
+    std::env::set_var("RUST_LOG", "debug");
+    std::env::set_var("RUST_BACKTRACE", "1");
 
     // Parse args into (Client, Vec<Event>, User)
     // let (header_params, events, user_params) = moxie::gen::deserialize_payload().unwrap_or_;
