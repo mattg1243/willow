@@ -12,26 +12,44 @@ fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
 
     // Parse args into (Client, Vec<Event>, User)
-    let (header_params, events, user_params) = moxie::gen::deserialize_payload()?;
-    log::debug!("{:?}", header_params);
-    log::debug!("{:?}", user_params);
+    // let (header_params, events, user_params) = moxie::gen::deserialize_payload().unwrap_or_;
+    match moxie::gen::deserialize_payload() {
+        Ok((header_params, events, user_params)) => {
+            log::debug!("{:?}", header_params);
+            log::debug!("{:?}", user_params);
+            match header::WillowHeader::try_from((header_params, user_params)) {
+                Ok(header) => {
+                   if let Some(rb) = events.last() {
+                        log::debug!("running_balance: {:?}", rb);
 
-    // Construct a WillowHeader from (Client, User)
-    let header: header::WillowHeader =
-        header::WillowHeader::try_from((header_params, user_params))?;
-    // Fetch the 'new_balance' value at the last Event
-    let _running_balance = events.last().unwrap().new_balance();
-    log::debug!("{:?}", _running_balance);
+                        let html = moxie::gen::full_make_html(header, events);
+                        log::debug!("full_make_html() done: {:?}", html);
+                        log::debug!("running moxie::gen::make_gen()");
 
-    // Construct a statement from a WillowHeader and Vec<Event>
-    let html = moxie::gen::full_make_html(header, events);
-    log::debug!("full_make_html() done: {:?}", html);
-    log::debug!("running gen::make_gen()");
-
-    // Generate a PDF from out HTML string
-    moxie::gen::make_gen(html, "./public/invoices/statement_test.pdf")?;
-
-    Ok(())
+                        match moxie::gen::make_gen(html, "./public/invoices/statement_test.pdf") {
+                            Ok(()) => {
+                                log::info!("made statement_test.pdf");
+                                return Ok(())
+                            },
+                            Err(a) => {
+                                let ctx = format!("statement_gen failed: {:?}", a);
+                                log::error!("{}", ctx);
+                                return Err(anyhow::Error::msg(ctx))
+                            },
+                        }
+                   } else { return Err(anyhow::Error::msg("Events could not be read, it may be an empty object.")) } 
+                },
+                Err(e) => {
+                    log::error!("failed to gen header: {:?}", e);
+                    return Err(e)
+                }
+            }
+        },
+        Err(e) => {
+            let ctx = format!("moxie throw err at: moxie::gen::deserialize_payload() [{:?}]", e);
+            return Err(anyhow::Error::msg(ctx))
+        }
+    }
 }
 
 #[cfg(test)]
