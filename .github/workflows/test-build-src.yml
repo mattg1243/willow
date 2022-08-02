@@ -27,7 +27,10 @@ jobs:
         run: npm install
       - name: Test
         run: npm test
-      - run: cd client && npm run build
+      - name: Install React deps
+        run: cd client && npm install
+      - name: Build React App
+        run: npm run build
 
   docker-build-deploy:
     runs-on: ubuntu-latest
