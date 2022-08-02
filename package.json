@@ -9,7 +9,7 @@
     "start": "node app.js",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=exp-billing:* npm run devstart",
-    "test": "mocha --require mocha-suppress-logs -exit test",
+    "test": "mocha --require mocha-suppress-logs --exit test",
     "buildpush": "cd client && npm run build && cd .. && git add . && git commit -m 'new react build' && git push origin react && git push heroku react:main"
   },
   "dependencies": {
