@@ -29,12 +29,6 @@ jobs:
         run: cd client && npm install
       - name: Build React App
         run: cd client && npm run build
-        # Share artifact inside workflow
-      - name: Share artifact inside workflow
-        uses: actions/upload-artifact@v1
-        with:
-          name: react-github-actions-build
-          path: build
 
   docker-build-deploy:
     runs-on: ubuntu-latest
