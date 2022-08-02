@@ -26,7 +26,6 @@ describe("User Routes", () => {
   });
 
   it("updates user info", (done) => {
-    this.timeout(5000);
     request(app)
       .post("/user/updateinfo")
       .set("Authorization", "Bearer " + token)
