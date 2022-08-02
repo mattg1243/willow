@@ -127,7 +127,7 @@ const getAllData = (req, res) => {
                 
                 response.events = events;
                 // send the data!
-                return res.json(response);
+                return res.status(200).json(response);
             })
         })
     }).clone();
@@ -137,7 +137,7 @@ const getClients = (req, res) => {
     Client.find({ ownerID: req.body.user }, (err, clients) => {
         if (err) return console.error(err);
 
-        res.json(clients);
+        res.status(200).json(clients);
     }).clone();
 }
 
@@ -145,7 +145,7 @@ const getEvents = (req, res) => {
     Event.find({ clientID: req.body.clientID }, (err, events) => {
         if (err) return console.error(err);
 
-        res.json(events);
+        res.status(200).json(events);
     }).clone();
 }
 
