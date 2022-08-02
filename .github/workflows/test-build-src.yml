@@ -9,26 +9,26 @@ on:
 jobs:
   test-build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+    env:
+        DB_URL: ${{ secrets.DB_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
       - uses: actions/checkout@v3
       - name: Run Tests and Build if succesful
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
       - name: Install dependencies
         run: npm install
       - name: Test
         run: npm test
         env:
-          DB_URL: ${{ secrets.DB_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      - run: npm test
-      - run: cd client && npm run build
+          CI: false
+      - name: Install React deps
+        run: cd client && npm install
+      - name: Build React App
+        run: cd client && npm run build
 
   docker-build-deploy:
     runs-on: ubuntu-latest
