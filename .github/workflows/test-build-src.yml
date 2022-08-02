@@ -16,10 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Run Tests
+      - name: Run Tests and Build if succesful
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm test
-      - name: Build if pass
       - run: cd client && npm run build
