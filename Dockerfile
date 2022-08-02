@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY package*.json /app/
 RUN npm ci --production
+WORKDIR /client
+RUN npm build
 # install python3.9.7
 RUN apt update
 RUN apt upgrade
@@ -34,7 +36,6 @@ RUN echo y | apt install ssh
 # RUN pip3 install -r ./requirements.txt
 
 COPY . .
-RUN npm run build
 
 EXPOSE 8080 2222
 CMD ["npm", "start"]

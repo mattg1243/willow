@@ -10,8 +10,8 @@ jobs:
   test-build:
     runs-on: ubuntu-latest
     env:
-        DB_URL: ${{ secrets.DB_URL }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DB_URL: ${{ secrets.DB_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
       - uses: actions/checkout@v3
@@ -23,12 +23,6 @@ jobs:
         run: npm install
       - name: Test
         run: npm test
-        env:
-          CI: false
-      - name: Install React deps
-        run: cd client && npm install
-      - name: Build React App
-        run: cd client && npm run build
 
   docker-build-deploy:
     runs-on: ubuntu-latest
