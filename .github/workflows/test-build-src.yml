@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: npm test
         env:
-          CI: true
+          CI: false
       - name: Install React deps
         run: cd client && npm install
       - name: Build React App
