@@ -24,6 +24,9 @@ jobs:
         run: npm install
       - name: Test
         run: npm test
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
       - run: npm test
       - run: cd client && npm run build
 
