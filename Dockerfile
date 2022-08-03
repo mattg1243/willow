@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package*.json /app/
 RUN npm ci --production
 WORKDIR /client
+RUN npm ci --production
 RUN npm build
 # install python3.9.7
 RUN apt update
