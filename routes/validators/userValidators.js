@@ -147,7 +147,7 @@ const udpateClientValidator = [
   .isEmail().withMessage('Invalid email'),
   
   body('phone', "Invalid phone number")
-  .optional({ checkFalsy: true }).isNumeric().withMessage('Phone number must be only numbers')
+  .optional({ checkFalsy: true }).isLength({ min: 5, max: 13 })
   .trim().escape(),
 
   body('rate', "Invalid characters in the billing rate field")
