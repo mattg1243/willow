@@ -1,12 +1,19 @@
 FROM --platform=linux/amd64 node:14-slim 
 
 WORKDIR /app
-
+# install server deps
 COPY package*.json /app/
 RUN npm ci --production
-WORKDIR /client
+# install client deps
+COPY client/packge*.json /app/client
+WORKDIR /app/client
 RUN npm ci --production
+# build the frontend
+COPY client/src /app/client/src
+COPY client/public /app/client/public
 RUN npm build
+WORKDIR /app
+
 # install python3.9.7
 RUN apt update
 RUN apt upgrade
