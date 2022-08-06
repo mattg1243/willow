@@ -16,7 +16,7 @@ pub struct Client {
 }
 
 impl TryFrom<String> for Client {
-    type Error = Box<dyn std::error::Error>;
+    type Error = anyhow::Error;
 
     fn try_from(value: String) -> Result<Client, Self::Error> {
         let c: Client = serde_json::from_str(value.as_str())?;
@@ -325,6 +325,14 @@ pub mod footer {
 mod impl_tests {
     use super::*;
     use header::WillowHeader;
+
+    #[test]
+    fn deser_client() {
+        pretty_env_logger::try_init().ok();
+
+        let raw_c: &str = "{\"fname\":\"Brandon\",\"lname\":\"Belt\",\"phonenumber\":\"5554441212\",\"balance\":{\"$numberDecimal\":\"832.5\"},\"email\":\"bbelt@gmail.com\",\"rate\":{\"$numberDecimal\":\"250.00\"}}";
+        let c: Client = Client::try_from(raw_c.to_string()).unwrap();
+    }
 
     #[test]
     fn client_user_to_header() {

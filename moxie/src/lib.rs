@@ -26,8 +26,9 @@
 //!
 //! This test will currently fail, as the `parse_deps` function hasn't been properly impl yet.
 //! ```rust
-//! extern crate moxie;
+//! extern crate moxie_core;
 //!
+//! use moxie_core as moxie;
 //! use moxie::{
 //!     model::{header::WillowHeader, event::Event, footer::WillowFooter},
 //!     mock_env, gen::{make_gen, full_make_html},
@@ -56,7 +57,6 @@
 #![warn(unused_imports)]
 #![forbid(unused_mut)]
 
-pub use self::ff::moxie_make;
 /// Re-exports
 pub use self::mock_args_deser as mock_env;
 
@@ -78,6 +78,28 @@ pub(crate) use self::prelude::*;
 /// Contains template trait impls
 pub mod template;
 
+#[allow(missing_docs)]
+pub fn make_shell_args() -> Result<(), std::io::Error> {
+    use std::fs::File;
+    use std::io::{Read, Write};
+    use std::path::Path;
+
+    let mut params = String::new();
+    let mut client_json_file = File::open(Path::new("etc/client.json")).unwrap();
+    client_json_file.read_to_string(&mut params).unwrap();
+    params.push_str(" ");
+    let mut events_json_file = File::open(Path::new("etc/events.json")).unwrap();
+    events_json_file.read_to_string(&mut params).unwrap();
+    params.push_str(" ");
+    let mut user_json_file = File::open(Path::new("etc/user.json")).unwrap();
+    user_json_file.read_to_string(&mut params).unwrap();
+
+    let mut params_file = File::create("etc/shell_json.txt").unwrap();
+    params_file.write(params.as_bytes()).unwrap();
+    log::debug!("wrote params");
+    Ok(())
+}
+
 /// A util function for mocking environment arguments, handy for testing & benches
 pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFooter) {
     (
@@ -95,6 +117,8 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFoot
 /// Foreign Function Interfaces to moxie
 pub mod ff {
     use serde::{Deserialize, Serialize};
+    use wasm_bindgen::prelude::*;
+    use web_sys::console;
 
     #[derive(Debug, Deserialize, Serialize)]
     #[allow(missing_docs)]
@@ -124,13 +148,9 @@ pub mod ff {
     impl std::error::Error for FfErr {}
 
     #[no_mangle]
+    #[wasm_bindgen]
     #[allow(missing_docs)]
-    pub unsafe extern "C" fn moxie_make(
-        client: String,
-        events: String,
-        user: String,
-        output_path: String,
-    ) -> () {
+    pub fn moxie_make(client: String, events: String, user: String, output_path: String) -> () {
         std::env::set_var("RUST_BACKTRACE", "1");
         std::env::set_var("RUST_LOG", "debug");
         pretty_env_logger::try_init().ok();
@@ -202,6 +222,16 @@ pub mod eh {
     }
 
     impl std::error::Error for MoxieOutput {}
+}
+
+#[cfg(test)]
+mod make {
+    use super::make_shell_args;
+
+    #[test]
+    fn run_make_shell_args() {
+        make_shell_args().unwrap()
+    }
 }
 
 #[cfg(test)]
