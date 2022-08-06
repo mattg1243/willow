@@ -32,6 +32,8 @@ RUN echo y | apt install ssh
 # RUN pip3 install -r ./requirements.txt
 
 COPY . .
+WORKDIR /app/moxie
+RUN cargo build --release
 
 EXPOSE 8080 2222 3001
 CMD ["npm", "start"]
