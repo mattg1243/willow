@@ -16,7 +16,7 @@ pub struct Client {
 }
 
 impl TryFrom<String> for Client {
-    type Error = Box<dyn std::error::Error>;
+    type Error = anyhow::Error;
 
     fn try_from(value: String) -> Result<Client, Self::Error> {
         let c: Client = serde_json::from_str(value.as_str())?;

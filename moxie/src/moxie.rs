@@ -5,6 +5,7 @@ use moxie::eh::{MoxieOutput, OutLevel};
 use moxie::model::header;
 use moxie_core as moxie;
 
+#[cfg(test)]
 fn client() -> Result<(), anyhow::Error> {
     use std::io::Write;
 
@@ -24,7 +25,7 @@ fn client() -> Result<(), anyhow::Error> {
         .unwrap()
         .write(c_raw.as_bytes())
         .unwrap();
-    let c: moxie::model::Client = serde_json::from_str(c_raw).unwrap();
+    let _c: moxie::model::Client = serde_json::from_str(c_raw).unwrap();
     Ok(())
 }
 
@@ -32,7 +33,11 @@ fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
     std::env::set_var("RUST_BACKTRACE", "1");
     let args: Vec<String> = std::env::args().collect();
-    let (header_params, events, user_params) = moxie::gen::deserialize_payload(args)?;
+    let (header_params, events, user_params) = (
+        moxie::model::Client::try_from(args[1].clone())?,
+        moxie::model::event::Event::collect(args[2].clone())?,
+        moxie::model::User::try_from(args[2].clone())?,
+    );
     let header: moxie::WillowHeader =
         moxie::WillowHeader::try_from((header_params, user_params)).unwrap();
     let html: String = moxie::gen::full_make_html(header, events);
