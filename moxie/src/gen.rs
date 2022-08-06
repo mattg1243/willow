@@ -9,10 +9,11 @@ use wkhtmltopdf::{Orientation, PdfApplication, Size};
 /// Get env params for statement
 pub fn deserialize_payload(args: Vec<String>) -> Result<(Client, Vec<Event>, User), MoxieOutput> {
     pretty_env_logger::try_init().ok();
+    log::debug!("{:?}", args);
     // let c: Client = Client::try_from(args[0].clone())?;
-    match Client::try_from(args[0].clone()) {
-        Ok(c) => match Event::collect(args[1].clone()) {
-            Ok(events) => match User::try_from(args[2].clone()) {
+    match Client::try_from(args[1].clone()) {
+        Ok(c) => match Event::collect(args[2].clone()) {
+            Ok(events) => match User::try_from(args[3].clone()) {
                 Ok(u) => return Ok((c, events, u)),
                 Err(e) => {
                     let ctx = format!("failed at deser user: {:?}", e);

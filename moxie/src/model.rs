@@ -327,6 +327,14 @@ mod impl_tests {
     use header::WillowHeader;
 
     #[test]
+    fn deser_client() {
+        pretty_env_logger::try_init().ok();
+
+        let raw_c: &str = "{\"fname\":\"Brandon\",\"lname\":\"Belt\",\"phonenumber\":\"5554441212\",\"balance\":{\"$numberDecimal\":\"832.5\"},\"email\":\"bbelt@gmail.com\",\"rate\":{\"$numberDecimal\":\"250.00\"}}";
+        let c: Client = Client::try_from(raw_c.to_string()).unwrap();
+    }
+
+    #[test]
     fn client_user_to_header() {
         pretty_env_logger::try_init().ok();
 
