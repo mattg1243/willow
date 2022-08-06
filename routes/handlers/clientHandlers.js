@@ -218,20 +218,21 @@ const makeStatement = (req, res) => {
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
         
             
-            exec(`bash -xec "./routes/handlers/moxie" '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(providerInfo)}'`, { shell: true },
+            console.log(`${JSON.stringify(clientInfo, null, 2)}`)
+            exec(`zsh moxie ${JSON.stringify(clientInfo)} ${JSON.stringify(eventsList)} ${JSON.stringify(providerInfo)}`, { shell: true },
             (error, stdout, stderr) => {
                if (error) {
                    console.error(`exec error: ${error}`);
                    return;
                }
                if (stdout) {console.log(`stdout: ${stdout}`);}
-               if(stderr) {console.error(`stderr: ${stderr}`);}
+               if (stderr) {console.error(`stderr: ${stderr}`);}
                try {
                    res.status(200).download(`public/invoices/statementtest.pdf`, `${clientInfo.fname + "-" + clientInfo.lname}.pdf`, function (err) {
              
                        if (err) return console.error(err);
                        // delete the pdf from the server after download
-                       fs.unlink(`public/invoices/statementtest.pdf.pdf`, function (err) {
+                       fs.unlink(`public/invoices/statementtest.pdf`, function (err) {
                            if (err) return console.error(err)
                
                        });
