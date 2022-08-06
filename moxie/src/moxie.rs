@@ -33,6 +33,7 @@ fn main() -> Result<(), anyhow::Error> {
     pretty_env_logger::try_init().ok();
     std::env::set_var("RUST_BACKTRACE", "1");
     let args: Vec<String> = std::env::args().collect();
+
     let (header_params, events, user_params) = (
         moxie::model::Client::try_from(args[1].clone())?,
         moxie::model::event::Event::collect(args[2].clone())?,
@@ -128,6 +129,103 @@ mod payload_test {
     #[test]
     fn run_client() {
         super::client().unwrap();
+    }
+
+    #[test]
+    fn deserialize_raw_strings() {
+        let c_raw = r#"{
+            "fname": "Brandon",
+            "lname": "Belt",
+            "phonenumber": "9256756743",
+            "balance": {
+                "$numberDecimal": "250.00"
+            },
+            "email": "bbelt@gmail.com",
+            "rate": {
+                "$numberDecimal": "250.00"
+            }
+        }"#;
+        let c: moxie::model::Client = moxie::model::Client::try_from(c_raw.to_string()).unwrap();
+        let events_raw = r#"[
+            { 
+                "date": "2021-10-01T00:00:00.000Z", 
+                "type": "Meeting",
+                "duration": 1.5,
+                "rate": 200,
+                "amount": "-300.00",
+                "newBalance": "-300.00",
+                "__v": 0,
+                "detail": "undefined" 
+            },
+            { 
+                "date": "2021-10-06T00:00:00.000Z",
+                "type": "4 Way Meeting",
+                "duration": 1,
+                "rate": 200,
+                "amount": "-200.00",
+                "newBalance": "-500.00",
+                "__v": 0,
+                "detail": "1:1" 
+            },
+            {
+                "date": "2022-01-08T00:00:00.000Z",
+                "type": "Meeting",
+                "duration": 1,
+                "rate": 200,
+                "amount": "-200.00",
+                "newBalance": "-4552.50",
+                "__v": 0,
+                "detail": "1:1" 
+            }
+        ]
+        "#;
+        let user_raw = r#"
+            {
+                "fname": "David",
+                "lname": "Gallucci",
+                "email": "scott.gallucci@gmail.com",
+                "city": "Davis",
+                "nameForHeader": "Scott Gallucci",
+                "phone": "9253662139",
+                "state": "CA",
+                "street": "3215 Trawler Place",
+                "zip": "95616",
+                "paymentInfo": {
+                    "check": "Please mail check to the above address",
+                    "venmo": "scottg123",
+                    "paypal": "Not yet specified",
+                    "zelle": "Not yet specified"
+                },
+                "license": "MFC 42238"
+            }
+        "#;
+        let (header_params, try_events, try_user_params) = (
+            c,
+            moxie::model::event::Event::collect(events_raw.to_string()),
+            moxie::model::User::try_from(user_raw.to_string()),
+        );
+
+        match try_events {
+            Ok(events) => {
+                log::debug!("successfully deserialized events: {:?}", events);
+            }
+            Err(e) => {
+                log::error!("panic at: failed to deserialize events: {:?}", e);
+                panic!()
+            }
+        }
+
+        match try_user_params {
+            Ok(user) => {
+                log::debug!("successfully deserialized user from raw_str: {:?}", user);
+            }
+            Err(e) => {
+                log::error!("panic at: failed to deserialize user: {:?}", e);
+                panic!()
+            }
+        }
+
+        return;
     }
 
     #[test]
