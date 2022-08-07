@@ -130,6 +130,7 @@ impl User {
 /// Defines an event schema & its methods
 pub mod event {
     use super::{Deserialize, JsonValue, Serialize};
+    use std::collections::HashMap;
 
     /// The schema for the willow::Event record.
     #[derive(Debug, Deserialize, Serialize)]
@@ -147,6 +148,8 @@ pub mod event {
         v: usize,
         detail: String,
     }
+
+    pub type Collection = HashMap<String, Vec<Event>>;
 
     #[allow(missing_docs, dead_code)]
     impl Event {
@@ -175,7 +178,15 @@ pub mod event {
 
         /// Deserialize a JSON array of Events into a vector
         pub fn collect(json_dump: String) -> Result<Vec<Self>, anyhow::Error> {
-            return Ok(serde_json::from_str(json_dump.as_str())?);
+            let new_events: Result<Vec<Self>, serde_json::Error> =
+                serde_json::from_str(json_dump.as_str());
+            match new_events {
+                Ok(events) => return Ok(events),
+                Err(e) => {
+                    log::error!("panic at: {:?}", e);
+                    return Err(anyhow::Error::msg("cannot collect events"));
+                }
+            }
         }
 
         /// Mock a vector of Event for testing

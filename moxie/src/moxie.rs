@@ -34,92 +34,22 @@ fn main() -> Result<(), anyhow::Error> {
     std::env::set_var("RUST_BACKTRACE", "1");
     let args: Vec<String> = std::env::args().collect();
 
-    let (header_params, events, user_params) = (
+    let (header_params, user_params, events): (
+        moxie::model::Client,
+        moxie::model::User,
+        Vec<moxie::model::event::Event>,
+    ) = (
         moxie::model::Client::try_from(args[1].clone())?,
-        moxie::model::event::Event::collect(args[2].clone())?,
-        moxie::model::User::try_from(args[2].clone())?,
+        serde_json::from_str(args[3].clone().as_str())?,
+        serde_json::from_value(serde_json::Value::try_from(args[2].clone())?["events"].clone())?,
     );
+    // let events_json = serde_json::Value::try_from(args[2].clone())?;
+    // let events: Vec<moxie::model::event::Event> = serde_json::from_value(events_json["events"].clone())?;
     let header: moxie::WillowHeader =
         moxie::WillowHeader::try_from((header_params, user_params)).unwrap();
     let html: String = moxie::gen::full_make_html(header, events);
     moxie::gen::make_gen(html, "etc/test_main_statement.pdf")?;
     Ok(())
-}
-
-/// TODO:
-///
-/// Simulate
-/// [] local tests
-/// [] bench
-#[allow(dead_code)]
-fn bad_main() -> Result<(), MoxieOutput> {
-    pretty_env_logger::try_init().ok();
-    std::env::set_var("RUST_LOG", "debug");
-    std::env::set_var("RUST_BACKTRACE", "1");
-    let args: Vec<String> = std::env::args().collect();
-
-    // Parse args into (Client, Vec<Event>, User)
-    match moxie::gen::deserialize_payload(args) {
-        // Deserialized
-        Ok((header_params, events, user_params)) => {
-            log::debug!("{:?}", header_params);
-            log::debug!("{:?}", user_params);
-            // Construct a Header
-            match header::WillowHeader::try_from((header_params, user_params)) {
-                // Constructed Header
-                Ok(header) => {
-                    if let Some(rb) = events.last() {
-                        log::debug!("running_balance: {:?}", rb);
-
-                        // Embed HTML
-                        let html = moxie::gen::full_make_html(header, events);
-                        log::debug!("full_make_html() done: {:?}", html);
-                        log::debug!("running moxie::gen::make_gen()");
-
-                        // Export PDF
-                        match moxie::gen::make_gen(html, "./public/invoices/statement_test.pdf") {
-                            // Export Good
-                            Ok(()) => {
-                                log::info!("made statement_test.pdf");
-                                return Ok(());
-                            }
-                            // Throw:
-                            //
-                            // Export Bad
-                            Err(a) => {
-                                let ctx = format!("statement_gen failed: {:?}", a);
-                                log::error!("{}", ctx);
-                                return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
-                            }
-                        }
-                    } else {
-                        let ctx = format!("fetching running_balance failed");
-                        log::error!("{}", ctx);
-                        return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
-                    }
-                }
-                // Throw:
-                //
-                // Failed constructing Header
-                Err(e) => {
-                    let ctx = format!("failed to gen header: {:?}", e);
-                    log::error!("failed to gen header {:?}", ctx);
-                    return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
-                }
-            }
-        }
-        // Throw:
-        //
-        // Deserializing failed
-        Err(e) => {
-            let ctx = format!(
-                "moxie throw err at: moxie::gen::deserialize_payload() [{:?}]",
-                e
-            );
-            log::error!("{}", ctx);
-            return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
-        }
-    }
 }
 
 #[cfg(test)]

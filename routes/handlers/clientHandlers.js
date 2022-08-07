@@ -219,7 +219,7 @@ const makeStatement = (req, res) => {
         
             
             console.log(`${JSON.stringify(clientInfo, null, 2)}`)
-            exec(`zsh moxie ${JSON.stringify(clientInfo)} ${JSON.stringify(eventsList)} ${JSON.stringify(providerInfo)}`, { shell: true },
+            exec(`./moxie '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(providerInfo)}'`, { shell: true },
             (error, stdout, stderr) => {
                if (error) {
                    console.error(`exec error: ${error}`);
