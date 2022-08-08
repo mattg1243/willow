@@ -29,27 +29,26 @@ fn client() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-fn main() -> Result<(), anyhow::Error> {
-    pretty_env_logger::try_init().ok();
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::env::set_var("RUST_BACKTRACE", "1");
+    pretty_env_logger::try_init().ok();
     let args: Vec<String> = std::env::args().collect();
 
-    let (header_params, user_params, events): (
-        moxie::model::Client,
-        moxie::model::User,
-        Vec<moxie::model::event::Event>,
-    ) = (
-        moxie::model::Client::try_from(args[1].clone())?,
-        serde_json::from_str(args[3].clone().as_str())?,
-        serde_json::from_value(serde_json::Value::try_from(args[2].clone())?["events"].clone())?,
-    );
-    // let events_json = serde_json::Value::try_from(args[2].clone())?;
-    // let events: Vec<moxie::model::event::Event> = serde_json::from_value(events_json["events"].clone())?;
+    // Deserialize the Client params
+    let header_params: moxie::model::Client = serde_json::from_str(&args[1].clone())?;
+    // Deserialize the events dump
+    let events: Vec<moxie::model::event::Event> = serde_json::from_str(&args[2].clone())?;
+    log::debug!("{:?}", events);
+    // Deserialize the User params
+    let user_params: moxie::model::User = serde_json::from_str(&args[3].clone())?;
+
+    // Construct the header
     let header: moxie::WillowHeader =
         moxie::WillowHeader::try_from((header_params, user_params)).unwrap();
+    // Construct the statement
     let html: String = moxie::gen::full_make_html(header, events);
     moxie::gen::make_gen(html, "etc/test_main_statement.pdf")?;
-    Ok(())
+    return Ok(());
 }
 
 #[cfg(test)]

@@ -56,27 +56,37 @@ impl Client {
     }
 }
 
+/// PaymentInfo
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[allow(missing_docs)]
+pub struct PaymentInfo {
+    pub check: String,
+    pub venmo: String,
+    pub paypal: String,
+    pub zelle: String,
+}
+
 /// User Payload
 #[derive(Debug, Deserialize, Serialize)]
 #[allow(missing_docs)]
 pub struct User {
-    pub fname: String,
-    pub lname: String,
-    pub email: String,
+    fname: String,
+    lname: String,
+    email: String,
     city: String,
     #[serde(rename = "nameForHeader")]
-    pub name_on_header: String,
-    pub phone: String,
-    pub state: String,
-    pub street: String,
-    pub zip: String,
+    name_on_header: String,
+    phone: String,
+    state: String,
+    street: String,
+    zip: String,
     #[serde(rename = "paymentInfo")]
-    pub payments: JsonValue,
+    payments: PaymentInfo,
     license: String,
 }
 
 impl TryFrom<String> for User {
-    type Error = anyhow::Error;
+    type Error = serde_json::Error;
 
     fn try_from(value: String) -> Result<User, Self::Error> {
         Ok(serde_json::from_str(value.as_str())?)
@@ -97,7 +107,12 @@ impl User {
             state: "Alaska".to_string(),
             street: "Anchorage dr.".to_string(),
             zip: "67826".to_string(),
-            payments: serde_json::json!({"eth": "moxieryder.eth"}),
+            payments: PaymentInfo {
+                check: String::from("Mail check here: "),
+                venmo: String::from("mattg1243"),
+                paypal: String::from(""),
+                zelle: String::from(""),
+            },
             license: "GOAT".to_string(),
         }
     }
@@ -116,7 +131,7 @@ impl User {
     pub fn nameoh(&self) -> String {
         self.name_on_header.clone()
     }
-    pub fn payments(&self) -> JsonValue {
+    pub fn payments(&self) -> PaymentInfo {
         self.payments.clone()
     }
     pub fn phone(&self) -> String {
@@ -249,10 +264,10 @@ pub mod header {
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
-        pub provider: String,
-        pub contact: String,
-        pub billing: super::JsonValue,
-        pub client: String,
+        provider: String,
+        contact: String,
+        billing: super::JsonValue,
+        client: String,
     }
 
     impl TryFrom<(Client, User)> for WillowHeader {

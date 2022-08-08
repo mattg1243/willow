@@ -118,7 +118,6 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFoot
 pub mod ff {
     use serde::{Deserialize, Serialize};
     use wasm_bindgen::prelude::*;
-    use web_sys::console;
 
     #[derive(Debug, Deserialize, Serialize)]
     #[allow(missing_docs)]
