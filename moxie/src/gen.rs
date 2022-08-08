@@ -3,7 +3,7 @@ use crate::model::{event::Event, header::WillowHeader};
 use crate::model::{Client, User};
 use crate::template::{Header, RowCol};
 
-use std::env;
+use std::path::Path;
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
 
 /// Get env params for statement
@@ -134,7 +134,7 @@ pub fn full_make_html(h: WillowHeader, r: Vec<Event>) -> String {
 
 /// Generates a PDF repr from a String repr HTML
 #[allow(dead_code)]
-pub fn make_gen(html: String, out: &str) -> Result<(), std::io::Error> {
+pub fn make_gen(html: String, out: &Path) -> Result<(), std::io::Error> {
     let pdf_app = PdfApplication::new().expect("failed to create PDF builder");
     let mut pdfout = pdf_app
         .builder()
@@ -144,7 +144,7 @@ pub fn make_gen(html: String, out: &str) -> Result<(), std::io::Error> {
         .build_from_html(html.as_str())
         .expect("failed to build pdf");
 
-    let fail_msg = format!("failed to save {}", out.clone());
+    let fail_msg = format!("failed to save {:?}", out.clone());
     pdfout.save(out).expect(fail_msg.as_str());
     Ok(())
 }

@@ -28,6 +28,7 @@
 //! ```rust
 //! extern crate moxie_core;
 //!
+//! use std::path::Path;
 //! use moxie_core as moxie;
 //! use moxie::{
 //!     model::{header::WillowHeader, event::Event, footer::WillowFooter},
@@ -47,7 +48,8 @@
 //!     // environment) acquire from the above code (i.e. the invocation of 'parse_deps')
 //!     let (header, events, _footer) = mock_env();
 //!     let html_str: String = full_make_html(header, events);
-//!     make_gen(html_str, "etc/example_output.pdf")
+//!     let output_path = Path::new("etc/example_output.pdf");
+//!     make_gen(html_str, output_path)
 //! }
 //! ```
 
@@ -73,13 +75,12 @@ pub mod prelude {
     pub use super::model::{Client, User};
     pub use super::template::{Footer, Header, RowCol};
 }
-pub(crate) use self::prelude::*;
 
 /// Contains template trait impls
 pub mod template;
 
 #[allow(missing_docs)]
-pub fn make_shell_args() -> Result<(), std::io::Error> {
+fn make_shell_args() -> Result<(), std::io::Error> {
     use std::fs::File;
     use std::io::{Read, Write};
     use std::path::Path;
@@ -112,72 +113,6 @@ pub fn mock_args_deser() -> (WillowHeader, Vec<Event>, model::footer::WillowFoot
         Event::mock_deps(),
         model::footer::WillowFooter::new(200.50),
     )
-}
-
-/// Foreign Function Interfaces to moxie
-pub mod ff {
-    use serde::{Deserialize, Serialize};
-    use wasm_bindgen::prelude::*;
-
-    #[derive(Debug, Deserialize, Serialize)]
-    #[allow(missing_docs)]
-    #[repr(C)]
-    pub enum FfErr {
-        DeserializePayload {
-            ctx: String,
-        },
-        GenHeader {
-            ctx: String,
-        },
-        GenHtml {
-            ctx: String,
-            template_step: Option<usize>,
-        },
-        GenFinal {
-            ctx: String,
-        },
-    }
-
-    impl std::fmt::Display for FfErr {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "{:?}", self)
-        }
-    }
-
-    impl std::error::Error for FfErr {}
-
-    #[no_mangle]
-    #[wasm_bindgen]
-    #[allow(missing_docs)]
-    pub fn moxie_make(client: String, events: String, user: String, output_path: String) -> () {
-        std::env::set_var("RUST_BACKTRACE", "1");
-        std::env::set_var("RUST_LOG", "debug");
-        pretty_env_logger::try_init().ok();
-
-        let params = vec![client, events, user];
-        match super::gen::deserialize_payload(params) {
-            Ok((c, e, u)) => match super::WillowHeader::try_from((c, u)) {
-                Ok(header) => {
-                    let html = super::gen::full_make_html(header, e);
-                    match super::gen::make_gen(html, output_path.as_str()) {
-                        Ok(()) => return (),
-                        Err(e) => {
-                            let ctx = format!("final statement gen failed: {:?}", e);
-                            panic!("{}", ctx)
-                        }
-                    }
-                }
-                Err(e) => {
-                    let ctx = format!("make_header failed: {:?}", e);
-                    panic!("{}", ctx)
-                }
-            },
-            Err(e) => {
-                let ctx = format!("deserialize_payload failed: {:?}", e);
-                panic!("{}", ctx)
-            }
-        }
-    }
 }
 
 /// Contains Moxie Errors
@@ -224,20 +159,13 @@ pub mod eh {
 }
 
 #[cfg(test)]
-mod make {
-    use super::make_shell_args;
-
-    #[test]
-    fn run_make_shell_args() {
-        make_shell_args().unwrap()
-    }
-}
-
-#[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     #[test]
     fn make_header_test() {
-        use super::{Header, WillowHeader};
+        use super::WillowHeader;
+        use crate::prelude::Header;
 
         pretty_env_logger::try_init().ok();
 
@@ -250,6 +178,6 @@ mod tests {
         log::debug!("Trying make_header with new_header: {:?}", new_header);
         let html_header = new_header.make_header();
         log::info!("Made html header: {}", html_header);
-        crate::gen::make_gen(html_header, "etc/header_test.pdf").unwrap()
+        crate::gen::make_gen(html_header, Path::new("etc/header_test.pdf")).unwrap()
     }
 }

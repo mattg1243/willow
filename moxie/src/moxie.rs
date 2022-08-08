@@ -1,63 +1,105 @@
 #![warn(clippy::todo, unused_mut)]
 #![forbid(unsafe_code, unused_lifetimes, unused_mut)]
 extern crate moxie_core;
-use moxie::eh::{MoxieOutput, OutLevel};
-use moxie::model::header;
 use moxie_core as moxie;
 
-#[cfg(test)]
-fn client() -> Result<(), anyhow::Error> {
-    use std::io::Write;
+use std::path::Path;
 
-    let c_raw = r#"{
-        "fname": "Brandon",
-        "lname": "Belt",
-        "phonenumber": "9256756743",
-        "balance": {
-            "$numberDecimal": "250.00"
-        },
-        "email": "bbelt@gmail.com",
-        "rate": {
-            "$numberDecimal": "250.00"
+#[allow(non_camel_case_types)]
+type void = ();
+
+type Dump = (
+    moxie::model::Client,
+    Vec<moxie::model::event::Event>,
+    moxie::model::User,
+);
+
+// @dev Setup environment
+fn setup_env() -> void {
+    std::env::set_var("RUST_BACKTRACE", "1");
+    pretty_env_logger::try_init().ok();
+    return ();
+}
+
+// @dev Handle args
+fn handler(args: Vec<String>) -> Result<Dump, serde_json::Error> {
+    let try_get_header_params: Result<moxie::model::Client, serde_json::Error> =
+        serde_json::from_str(&args[1].clone());
+    match try_get_header_params {
+        Ok(client) => {
+            let try_get_events: Result<Vec<moxie::model::event::Event>, serde_json::Error> =
+                serde_json::from_str(&args[2].clone());
+            match try_get_events {
+                Ok(events) => {
+                    let try_get_user_params: Result<moxie::model::User, serde_json::Error> =
+                        serde_json::from_str(&args[3].clone());
+                    match try_get_user_params {
+                        Ok(user) => return Ok((client, events, user)),
+                        Err(e) => return Err(e),
+                    }
+                }
+                Err(e) => return Err(e),
+            }
         }
-}"#;
-    std::fs::File::create(std::path::Path::new("etc/client.txt"))
-        .unwrap()
-        .write(c_raw.as_bytes())
-        .unwrap();
-    let _c: moxie::model::Client = serde_json::from_str(c_raw).unwrap();
-    Ok(())
+        Err(e) => return Err(e),
+    }
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    std::env::set_var("RUST_BACKTRACE", "1");
-    pretty_env_logger::try_init().ok();
-    let args: Vec<String> = std::env::args().collect();
+    let _: void = setup_env();
+    let try_get_params: Result<Dump, serde_json::Error> = handler(std::env::args().collect());
 
-    // Deserialize the Client params
-    let header_params: moxie::model::Client = serde_json::from_str(&args[1].clone())?;
-    // Deserialize the events dump
-    let events: Vec<moxie::model::event::Event> = serde_json::from_str(&args[2].clone())?;
-    log::debug!("{:?}", events);
-    // Deserialize the User params
-    let user_params: moxie::model::User = serde_json::from_str(&args[3].clone())?;
+    match try_get_params {
+        Ok(dump) => {
+            let (client, events, user) = (dump.0, dump.1, dump.2);
+            let header: moxie::WillowHeader = moxie::WillowHeader::try_from((client, user))?;
+            let html: String = moxie::gen::full_make_html(header, events);
+            // Local Path:
+            // let output_path = Path::new("etc/statementtest.pdf");
 
-    // Construct the header
-    let header: moxie::WillowHeader =
-        moxie::WillowHeader::try_from((header_params, user_params)).unwrap();
-    // Construct the statement
-    let html: String = moxie::gen::full_make_html(header, events);
-    moxie::gen::make_gen(html, "etc/test_main_statement.pdf")?;
-    return Ok(());
+            // Path for docker deployments:
+            let output_path = Path::new("public/invoices/statementtest.pdf");
+            let gen_result = moxie::gen::make_gen(html, output_path);
+            match gen_result {
+                Ok(()) => return Ok(()),
+                Err(e) => return Err(Box::new(e)),
+            }
+        }
+        Err(e) => return Err(Box::new(e)),
+    }
 }
 
 #[cfg(test)]
 mod payload_test {
-    use super::moxie;
+    use super::{moxie, Path};
+
+    #[cfg(test)]
+    fn client() -> Result<(), anyhow::Error> {
+        use std::io::Write;
+
+        let c_raw = r#"{
+            "fname": "Brandon",
+            "lname": "Belt",
+            "phonenumber": "9256756743",
+            "balance": {
+                "$numberDecimal": "250.00"
+            },
+            "email": "bbelt@gmail.com",
+            "rate": {
+                "$numberDecimal": "250.00"
+            }
+        }"#;
+        std::fs::File::create(Path::new("etc/client.txt"))
+            .unwrap()
+            .write(c_raw.as_bytes())
+            .unwrap();
+        let _c: moxie::model::Client = serde_json::from_str(c_raw).unwrap();
+        Ok(())
+    }
 
     #[test]
     fn run_client() {
-        super::client().unwrap();
+        client().unwrap();
     }
 
     #[test]
@@ -157,7 +199,8 @@ mod payload_test {
         return;
     }
 
-    #[test]
+    // #[test]
+    #[allow(dead_code)]
     fn deserialize_payload() {
         use moxie::model::event::Event;
         use moxie::model::{Client, User};

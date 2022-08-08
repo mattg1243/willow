@@ -1,6 +1,6 @@
 [package]
 name = "willow-core-moxie"
-version = "0.1.0"
+version = "0.1.5"
 authors = ["ethgallucci <staticanne@skiff.com>"]
 edition = "2021"
 

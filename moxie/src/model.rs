@@ -145,7 +145,6 @@ impl User {
 /// Defines an event schema & its methods
 pub mod event {
     use super::{Deserialize, JsonValue, Serialize};
-    use std::collections::HashMap;
 
     /// The schema for the willow::Event record.
     #[derive(Debug, Deserialize, Serialize)]
@@ -163,8 +162,6 @@ pub mod event {
         v: usize,
         detail: String,
     }
-
-    pub type Collection = HashMap<String, Vec<Event>>;
 
     #[allow(missing_docs, dead_code)]
     impl Event {
