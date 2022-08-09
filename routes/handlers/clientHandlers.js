@@ -5,7 +5,8 @@ const { PythonShell } = require('python-shell');
 const { exec } = require('child_process');
 const async = require('async');
 const fs = require('fs');
-const helpers = require('../helpers/helpers');
+const helpers = require('../../utils/helpers');
+const UserHelpers = require('../../utils/userHelpers');
 
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
@@ -44,25 +45,24 @@ const addEvent = async (req, res) => {
             amount: amount, 
             newBalance: 0 
         });
-        // saving event to db
-        event.save((err, event) => {
-        if (err) {
-            console.error(err)
-            return res.status(503).end("There was a problem saving your event, please try again");
+        
+        
+        try {
+            // saving event to db
+            await event.save();
+            await Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }})
+            // get events to recalculate the running balances for each event
+            await UserHelpers.recalcBalance(req.body.clientID);
+            const response = await UserHelpers.getAllData({ _id: req.body.user });
+            return res.status(200).json(response);
+        } catch (err) {
+            console.error(err);
+            return res.status(503).json({ error: err});
         }
-        console.log(event);
-       
-        Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
-            if (err) return console.error(err);
-
-            console.log(result);
-            console.log('Event added')
-            helpers.recalcBalance(req.body.clientID, req, res);
-        })
-    });
+        
 }
 
-const updateEvent = (req, res) => {
+const updateEvent = async (req, res) => {
     let hrs, mins, duration, rate, amount, detail; 
     // DEBUG LOGS
     /*
@@ -88,40 +88,33 @@ const updateEvent = (req, res) => {
     }
     
     detail = req.body.detail
-    let clientID = ''
 
     try {
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
-
-            if (err) {
-                console.error(err);
-                return res.status(503).end("There was a problem updating the event, please try again")
-            }
-
-            clientID = docs.clientID
-            //find all events that belong to this client so the new balance can be calculated
-            helpers.recalcBalance(clientID, req, res);
-        })
-    } catch (err) { throw err ; }
+        await Event.findOneAndUpdate(
+            { _id: req.params.eventid }, 
+            { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }
+        );
+        await UserHelpers.recalcBalance(req.body.clientID);
+        const response = await UserHelpers.getAllData({ _id: req.body.user });
+        return res.status(200).json(response);
+    } catch (err) { return res.status(503).json(err); }
 }
 
 const deleteEvent = (req, res) => {
     console.log(req.body);
     try {
-        Event.findByIdAndDelete(req.body.eventID, (err, event) => {
+        // only using a callback here in order to access the deleted events amount
+        Event.findByIdAndDelete(req.body.eventID, async (err, event) => {
+            if (err) throw err;
 
-            if (err) return console.error(err);
-            console.log("Event:\n");
-            console.dir(event);
-            console.log('\nThe events amount with index:\n' + event.amount);
-            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount }}, function(err, result) {
-                    
-                if (err) console.error(err);
-    
-                else {console.log(result); helpers.recalcBalance(req.body.clientID, req, res); }
-            })
+            await Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount }});
+            await UserHelpers.recalcBalance(req.body.clientID);
+            const response = await UserHelpers.getAllData({ _id: req.body.user });
+            return res.status(200).json(response);
         })
-    } catch (err) { throw err ; }
+    } catch (err) { 
+        return res.status(503).json({ error: err })    
+    }
 }
 
 const makeStatement = (req, res) => {

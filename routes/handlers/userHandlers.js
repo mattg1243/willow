@@ -1,41 +1,42 @@
 const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
-const helpers = require('../helpers/helpers')
+const helpers = require('../../utils/helpers');
+const UserHelpers = require('../../utils/userHelpers');
 const crypto = require('crypto');
 const transporter = require('./mailerConfig');
 
-const registerUser = (req, res) => {
+const registerUser = async (req, res) => {
          
     try {
-        User.register(new User({
-            username: req.body.username, 
-            fname: req.body.fname, 
-            lname: req.body.lname, 
-            email: req.body.email, 
-            nameForHeader: req.body.nameForHeader, 
-            phone: req.body.phone, 
-            street: req.body.street, 
-            city: req.body.city, 
-            state: req.body.state, 
-            zip: req.body.zip}),
-            req.body.password, function(err) {
+        await User.register(new User({
+                username: req.body.username, 
+                fname: req.body.fname, 
+                lname: req.body.lname, 
+                email: req.body.email, 
+                nameForHeader: req.body.nameForHeader, 
+                phone: req.body.phone, 
+                street: req.body.street, 
+                city: req.body.city, 
+                state: req.body.state, 
+                zip: req.body.zip, 
+                paymentInfo: {
+                    check: "",
+                    venmo: "",
+                    paypal: "",
+                    zelle: ""
+                }}),
+            req.body.password)
             
-                if (err) {
-                console.log('Error while registering user : ', err);
-                return res.status(500).send(err.message);
-            } else {
-                console.log('User registered');
-                helpers.getAllData(req, res);
-            }
-        })
+            const response = await UserHelpers.getAllData({ username: req.body.username });
+            return res.status(200).json(response);
     } 
-    catch(err) { throw new Error(err.message); } 
+    catch(err) { return res.status(500).send(err.message); } 
 }
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = async (req, res) => {
     try {
-        User.findOneAndUpdate({ _id: req.body.user }, 
+        await User.findOneAndUpdate({ _id: req.body.user }, 
             { 
                 nameForHeader: req.body.nameForHeader, 
                 phone: req.body.phone,
@@ -46,15 +47,12 @@ const updateUserInfo = (req, res) => {
                 zip: req.body.zip,
                 paymentInfo: JSON.parse(req.body.paymentInfo),
                 license: req.body.license
-            }, { upsert: true }, function(err, info) {
-
-            if (err) return console.error(err)
-    
-            console.log("Info updated : \n" + info)
-            helpers.getAllData(req, res);
-    
-        })
-    } catch (err) { throw err ;}
+            }, { upsert: true })
+            const response = await UserHelpers.getAllData({ _id: req.body.user });
+            return res.status(200).json(response);
+    } catch (err) {
+        return res.status(503).json({ error: err });
+    }
 }
 
 const deleteUser = (req, res) => {
@@ -74,10 +72,7 @@ const deleteUser = (req, res) => {
 }
 
 const addNewClient = async (req, res) => {
-    console.log("Headers: " + req.headers)
-    console.log("Data: " + req.body)
-    try {
-        const newClient = new Client(
+    const newClient = await new Client(
             {
                 ownerID: req.body.user, 
                 fname: req.body.fname, 
@@ -88,22 +83,16 @@ const addNewClient = async (req, res) => {
                 rate: req.body.rate,
             }
         ); 
-        newClient.save(function(err, client) {
-       
-        if (err) return console.error(err);
-        
-        User.findOneAndUpdate({ _id: req.body.user }, { $push: { clients: client['_id'] } })
-        .populate('clients').exec(function(err, clients) {
-            
-            if(err) return console.error(err);
-            
-            console.log("Clients added : " + clients)
-        })
-        
-        helpers.getClients(req, res);
+        try {
+            const savedClient = await newClient.save();
+            await User.findOneAndUpdate({ _id: req.body.user }, { $push: { clients: savedClient['_id'] } })
+            .populate('clients').exec()
 
-    })
-    } catch (err) { throw err ;}
+        } catch (err) {
+            return res.status(503).json({ error: err });
+        }
+        // TODO: add this to the UserHelpers class and uncouple it from http req/res
+        helpers.getClients(req, res);
     
 }
 
