@@ -103,6 +103,7 @@ export default function AddEventForm(props) {
         
         try {
             const response = await axios.post(`/client/event/${eventID}`, {
+                clientID: props.id,
                 date: date,
                 type: type,
                 detail: details,

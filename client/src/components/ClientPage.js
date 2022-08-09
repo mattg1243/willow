@@ -178,7 +178,7 @@ function ClientPage(props) {
                             <ModalHeader>Edit Event</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                    <AddEventForm event={toEdit} rate={client.rate ? client.rate: "Not specified"} edit={true} setIsShown={setEditEventIsShown} />
+                                    <AddEventForm id={ id } event={toEdit} rate={client.rate ? client.rate: "Not specified"} edit={true} setIsShown={setEditEventIsShown} />
                             </ModalBody>
                         </ModalContent>
                     </Modal>
