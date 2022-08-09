@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const handlers = require('./handlers/clientHandlers');
-const helpers = require('./helpers/helpers');
+const helpers = require('../utils/helpers');
 const validators = require('./validators/clientValidators');
 
 // add new event to clients record
