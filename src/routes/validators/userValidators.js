@@ -116,8 +116,6 @@ const newClientValidator = [
 
   body('user', 'It appears you are not logged')
   .trim().escape(),
-  
-  body('token', 'It appears you are not logged').trim().escape(),
 
 ]
 
@@ -125,8 +123,6 @@ const deleteClientValidator = [
   
   body('user', 'It appears you are not logged')
   .trim().escape(),
-  
-  body('token', 'It appears you are not logged').trim().escape(),
 
   body('clientID', 'Invalid client ID provided to the server').trim().escape(),
 
@@ -147,7 +143,7 @@ const udpateClientValidator = [
   .isEmail().withMessage('Invalid email'),
   
   body('phone', "Invalid phone number")
-  .optional({ checkFalsy: true }).isNumeric().withMessage('Phone number must be only numbers')
+  .optional({ checkFalsy: true })
   .trim().escape(),
 
   body('rate', "Invalid characters in the billing rate field")
@@ -156,8 +152,6 @@ const udpateClientValidator = [
 
   body('user', 'It appears you are not logged')
   .trim().escape(),
-  
-  body('token', 'It appears you are not logged').trim().escape(),
 
   body('clientID', 'Invalid client ID provided to the server').trim().escape(),
 
@@ -173,8 +167,6 @@ const changePasswordValidator = [
   body('username').trim().escape().isLength({ min: 7, max: 30 }),
 
   body('password').trim().escape().isLength({ min: 7, max: 30 }),
-
-  body('token').trim().escape(),
 ]
 
 module.exports = {

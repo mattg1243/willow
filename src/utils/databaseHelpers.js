@@ -2,6 +2,9 @@ const User = require("../models/user-model");
 const Client = require("../models/client-schema");
 const Event = require("../models/event-schema");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({path: path.join(__dirname, "../../.env")});
 
 class DatabaseHelpers {
   // returns the clients total balance and an updated

@@ -6,12 +6,13 @@
 */
 
 const request = require("supertest");
-const app = require("../app");
+const app = require("../app.ts");
 const { testUser, testClient, testEvent } = require("./testData");
 const { before } = require("mocha");
 const jwt = require("jsonwebtoken");
+const path = require("path");
 
-require("dotenv").config();
+require("dotenv").config({path: path.resolve(__dirname, '../../.env')});
 
 // auth params
 let token, client_id, event_id;

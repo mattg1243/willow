@@ -7,13 +7,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const mongoStore = require('connect-mongo');
-const passport = require('passport/lib')
+const passport = require('../node_modules/passport')
 const helmet = require('helmet');
 const User = require('./models/user-model')
 const helpers = require('./utils/helpers');
 const cors = require('cors');
 
-require('dotenv').config();
+require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
 // check for production or dev env
 
 const loginRouter = require('./routes/login');
@@ -32,7 +32,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
 // render from React build
-app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 // set view engine to satisify error codes
 app.set('view engine', 'jade');
@@ -60,10 +60,10 @@ app.use(helmet.contentSecurityPolicy({
     ]
   }
 }))
-app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use('/scripts', express.static(path.join(__dirname, 'public/javascripts')))
-app.use('/images', express.static(path.join(__dirname, 'public/images')))
-app.use('/invoices', express.static(path.join(__dirname, 'public/invoices')))
+app.use('/public', express.static(path.join(__dirname, '../public')));
+app.use('/scripts', express.static(path.join(__dirname, '../public/javascripts')))
+app.use('/images', express.static(path.join(__dirname, '../public/images')))
+app.use('/invoices', express.static(path.join(__dirname, '../public/invoices')))
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
@@ -105,7 +105,7 @@ app.use('/api', helpers.verifyJWT, apiRouter);
 app.use('/client', helpers.verifyJWT, clientRouter);
 // rendering from react build
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 })
 
 // catch 404 and forward to error handler
