@@ -1,4 +1,6 @@
 /node_modules
+dist/
+client/build/
 .env
 *.DS_Store
 Python/src/core/__pycache__
