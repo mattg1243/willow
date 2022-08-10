@@ -2,7 +2,7 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const helpers = require('../../utils/helpers');
-const UserHelpers = require('../../utils/userHelpers');
+const DatabaseHelpers = require('../../utils/databaseHelpers');
 const crypto = require('crypto');
 const transporter = require('./mailerConfig');
 
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
                 }}),
             req.body.password)
             
-            const response = await UserHelpers.getAllData({ username: req.body.username });
+            const response = await DatabaseHelpers.getAllData({ username: req.body.username });
             return res.status(200).json(response);
     } 
     catch(err) { return res.status(500).send(err.message); } 
@@ -48,7 +48,7 @@ const updateUserInfo = async (req, res) => {
                 paymentInfo: JSON.parse(req.body.paymentInfo),
                 license: req.body.license
             }, { upsert: true })
-            const response = await UserHelpers.getAllData({ _id: req.body.user });
+            const response = await DatabaseHelpers.getAllData({ _id: req.body.user });
             return res.status(200).json(response);
     } catch (err) {
         return res.status(503).json({ error: err });
