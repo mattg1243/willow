@@ -3,7 +3,7 @@ const Client = require("../models/client-schema");
 const Event = require("../models/event-schema");
 const jwt = require("jsonwebtoken");
 
-class UserHelpers {
+class DatabaseHelpers {
   // returns the clients total balance and an updated
   // list of events in the form of a Mongoose BulkWrite object
   static recalcBalance = async (clientID) => {
@@ -106,6 +106,16 @@ class UserHelpers {
     });
     return Promise.resolve(response);
   };
+
+  static deleteOldEvents = async (clientID) => {
+    try {
+      const events = await Event.find({ clientID: clientID });
+      await Client.findOneAndUpdate({ _id: clientID }, { sessions: events });
+      return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
 }
 
 const eventsTestArray = [
@@ -175,4 +185,4 @@ const eventsTestArray = [
   },
 ];
 
-module.exports = UserHelpers;
+module.exports = DatabaseHelpers;
