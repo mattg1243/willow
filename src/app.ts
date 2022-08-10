@@ -1,25 +1,28 @@
-const createError = require('http-errors');
-const express = require('express');
-const session = require('express-session');
-const path = require('path');
-const flash = require('connect-flash');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const mongoose = require('mongoose');
-const mongoStore = require('connect-mongo');
-const passport = require('../node_modules/passport')
-const helmet = require('helmet');
-const User = require('./models/user-model')
-const helpers = require('./utils/helpers');
-const cors = require('cors');
+import createError from 'http-errors';
+import express from 'express';
+import session from 'express-session';
+import path from 'path';
+import flash from 'connect-flash';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import mongoose from 'mongoose';
+import mongoStore from 'connect-mongo';
+import passport from '../node_modules/passport';
+import helmet from 'helmet';
+// const User = require('./models/user-model')
+import { verifyJWT } from './utils/helpers';
+import cors from 'cors';
+import User from './models/user-model';
+// import User from './models/user-model';
 
-require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
+
+require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 // check for production or dev env
 
-const loginRouter = require('./routes/login');
-const userRouter = require('./routes/user');
-const clientRouter = require('./routes/client');
-const apiRouter = require('./routes/api');
+import loginRouter from './routes/login';
+import userRouter from './routes/user';
+import clientRouter from './routes/client';
+import apiRouter from './routes/api';
 const port = process.env.PORT || 3001;
 
 var app = express();
@@ -27,7 +30,7 @@ app.locals.moment = require('moment');
 app.locals.passport = require('passport');
 
 // connect to MongoDB
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useMongoClient: true, tls: true });
+mongoose.connect(process.env.DB_URL);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
@@ -67,14 +70,13 @@ app.use('/invoices', express.static(path.join(__dirname, '../public/invoices')))
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
-app.use(session({
-  secret: '123456',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
-  store: mongoStore.create({ mongoUrl: process.env.DB_URL }),
-  secure: true
-}));
+// app.use(session({
+//   secret: '123456',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {maxAge: 60 * 60 * 1000}, // 1 hour
+//   secure: true
+// }));
 app.use(flash());
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
@@ -101,8 +103,8 @@ app.use(function(req, res, next) {
 // app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
-app.use('/api', helpers.verifyJWT, apiRouter);
-app.use('/client', helpers.verifyJWT, clientRouter);
+app.use('/api', verifyJWT, apiRouter);
+app.use('/client', verifyJWT, clientRouter);
 // rendering from react build
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
@@ -125,4 +127,4 @@ app.use(function(err, req, res, next) {
 
 app.listen(port);
 
-module.exports = app;
+export default app;

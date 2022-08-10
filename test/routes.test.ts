@@ -5,12 +5,12 @@
   GitHub actions as part of the CI/CD pipeline
 */
 
-const request = require("supertest");
-const app = require("../src/app.ts");
-const { testUser, testClient, testEvent } = require("./testData.js");
-const { before } = require("mocha");
-const jwt = require("jsonwebtoken");
-const path = require("path");
+import request from "supertest";
+import app from "../src/app";
+import { testUser, testClient, testEvent } from "./testData";
+import { before } from "mocha";
+import jwt from "jsonwebtoken";
+import path from "path";
 
 require("dotenv").config({path: path.resolve(__dirname, '../../.env')});
 

@@ -1,10 +1,13 @@
-const User = require('../../models/user-model');
-const Client = require('../../models/client-schema');
+// const User = require('../../models/user-model');
+// const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const helpers = require('../../utils/helpers');
-const DatabaseHelpers = require('../../utils/databaseHelpers');
 const crypto = require('crypto');
 const transporter = require('./mailerConfig');
+
+import User from '../../models/user-model';
+import Client from '../../models/client-schema';
+import DatabaseHelpers from '../../utils/databaseHelpers';
 
 const registerUser = async (req, res) => {
          
@@ -72,60 +75,54 @@ const deleteUser = (req, res) => {
 }
 
 const addNewClient = async (req, res) => {
-    const newClient = await new Client(
-            {
-                ownerID: req.body.user, 
-                fname: req.body.fname, 
-                lname: req.body.lname, 
-                phonenumber: req.body.phonenumber, 
-                email: req.body.email, 
-                balance: 0,
-                rate: req.body.rate,
-            }
-        ); 
-        try {
-            const savedClient = await newClient.save();
-            await User.findOneAndUpdate({ _id: req.body.user }, { $push: { clients: savedClient['_id'] } })
-            .populate('clients').exec()
-
-        } catch (err) {
-            return res.status(503).json({ error: err });
-        }
-        // TODO: add this to the UserHelpers class and uncouple it from http req/res
-        helpers.getClients(req, res);
-    
-}
-
-const deleteClient = (req, res) => {
-
-    Client.findOneAndDelete({ _id: req.body.clientID }, (err, client) => {
-        if (err) { throw err; }
-
-        console.log('Deleted client: ' + client);
-        Event.deleteMany({ clientID: req.body.clientID }, (err, events) => {
-            console.log('Removed events: ' + events);
-            helpers.getAllData(req, res);
-        })
-    })
-
-}
-
-const updateClientInfo = (req, res) => {
+    const newClient = new Client({
+        ownerID: req.body.user, 
+        fname: req.body.fname, 
+        lname: req.body.lname, 
+        phonenumber: req.body.phonenumber, 
+        email: req.body.email, 
+        balance: 0,
+        rate: req.body.rate,
+    }); 
 
     try {
-        Client.findOneAndUpdate({ _id: req.body.clientID }, 
+        // save the new client to the database
+        const savedClient = await newClient.save();
+        await User.findOneAndUpdate({ _id: req.body.user }, { $push: { clients: savedClient['_id'] } })
+        .populate('clients').exec()
+        // return the updated clients list to the user
+        const clients = await DatabaseHelpers.getClients(req.body.user);
+        res.status(200).json(clients);
+    } catch (err) {
+        return res.status(503).json({ error: err });
+    }  
+}
+
+const deleteClient = async (req, res) => {
+    try {
+        await Client.findOneAndDelete({ _id: req.body.clientID });
+        const response = await DatabaseHelpers.getAllData({ _id: req.body.user })
+        return res.status(200).json(response);
+    } catch (err) {
+        return res.status(503).json({ error: err });
+    }
+}
+
+const updateClientInfo = async (req, res) => {
+
+    try {
+        await Client.findOneAndUpdate({ _id: req.body.clientID }, 
             { 
                 fname: req.body.fname, lname: req.body.lname, 
                 email: req.body.email, phonenumber: req.body.phone,
                 rate: req.body.rate, isArchived: req.body.isArchived
-            }, (err, client) => {
-                if (err) { throw err; }
-    
-                console.log("Client updated : \n" + client);
-                helpers.getClients(req, res);
-            }
-        )
-    } catch (err) { throw err; }
+        });
+        const respsonse = await DatabaseHelpers.getClients(req.body.user);
+        res.status(200).json(respsonse);
+
+    } catch (err) {
+        return res.status(503).json({ error: err});
+    }
 }
 
 const resetPassword = (req, res) => {

@@ -1,4 +1,4 @@
-const testUser = {
+export const testUser = {
   _id: "62e96de85ea97c5b5f31584c",
   fname: "tester",
   lname: "mctesterson",
@@ -14,7 +14,7 @@ const testUser = {
   zip: 94553,
 };
 
-const testEvent = {
+export const testEvent = {
   _id: "62e981edb2891af83b748dc0",
   clientID: "62e97b0c37496a5a14c545fa",
   date: "2022-08-02",
@@ -27,7 +27,7 @@ const testEvent = {
   newBalance: 0,
 };
 
-const testClient = {
+export const testClient = {
   _id: "62e97b0c37496a5a14c545fa",
   fname: "client",
   lname: "klein",
@@ -35,10 +35,4 @@ const testClient = {
   phonenumber: 5555555555,
   rate: 200,
   // needs userID and token fields
-};
-
-module.exports = {
-  testUser,
-  testEvent,
-  testClient,
 };

@@ -1,12 +1,10 @@
-const User = require('../../models/user-model');
-const Client = require('../../models/client-schema');
-const Event = require('../../models/event-schema');
-const { PythonShell } = require('python-shell');
-const { exec } = require('child_process');
-const async = require('async');
-const fs = require('fs');
-const helpers = require('../../utils/helpers');
-const DatabaseHelpers = require('../../utils/databaseHelpers');
+import User from '../../models/user-model';
+import Client from '../../models/client-schema';
+import Event from '../../models/event-schema';
+import { exec } from 'child_process';
+import async from 'async';
+import fs from 'fs';
+import DatabaseHelpers from '../../utils/databaseHelpers';
 
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
@@ -30,7 +28,7 @@ const addEvent = async (req, res) => {
         amount = -(time * rate);
     }
     // create the new Event
-    const event = await new Event({ 
+    const event = new Event({ 
         clientID: req.body.clientID, 
         date: req.body.date, 
         type: req.body.type, 
@@ -73,7 +71,7 @@ const updateEvent = async (req, res) => {
         amount = -(duration * rate);
     } 
     else {
-        hrs, mins, duration, rate = 0;
+        rate = 0;
         if (req.body.type == 'Refund') {
             // ensure amount is always negative if event is a refund
             amount =  - (Math.abs(req.body.amount));
@@ -119,6 +117,29 @@ const deleteEvent = (req, res) => {
 }
 
 const makeStatement = (req, res) => {
+    // interfaces
+    interface base {
+        fname: string;
+        lname: string;
+        phonenumber: string;
+        email: string,
+    }
+    
+    interface IClientInfo extends base {
+        balance: any,
+        rate: any
+    }
+
+    interface IProviderInfo extends base {
+        nameForHeader: string,
+        street: string,
+        city: string,
+        state: string,
+        zip: string
+        paymentInfo: any,
+        license: string
+    }
+   
     // parse the request
     const start = new Date(req.params.start).toISOString();
     const end = new Date(req.params.end).toISOString();
@@ -132,24 +153,9 @@ const makeStatement = (req, res) => {
     const genTime = "Time in generator script: ";
     
     // outline argument objects
-     let clientInfo = {  
+    let clientInfo: IClientInfo;
+    let providerInfo: IProviderInfo;
 
-    //     clientname,
-    //     billingAdd,
-    //     mailingAdd: "",  this isnt handled client side yet 
-    //     phone
-     };
-
-     let providerInfo = {
-
-    //     name,
-    //     address: {
-    //         street,
-    //         cityState,
-    //     phone,
-    //     email,
-    //     paymentInfo
-    }
     // read from the database
     console.time(dbTime);
     async.parallel([
@@ -213,7 +219,7 @@ const makeStatement = (req, res) => {
         
             
             console.log(`${JSON.stringify(clientInfo, null, 2)}`)
-            exec(`moxie/target/release/moxie '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(providerInfo)}'`, { shell: true },
+            exec(`moxie/target/release/moxie '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(providerInfo)}'`, { shell: 'true' },
             (error, stdout, stderr) => {
                if (error) {
                    console.error(`exec error: ${error}`);

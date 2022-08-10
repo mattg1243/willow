@@ -1,16 +1,41 @@
-const User = require("../models/user-model");
-const Client = require("../models/client-schema");
-const Event = require("../models/event-schema");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const path = require("path");
+import User, {IPaymentInfo} from "../models/user-model";
+import Client from "../models/client-schema";
+import Event from "../models/event-schema";
+import * as jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { Query, Schema } from "mongoose";
 dotenv.config({path: path.join(__dirname, "../../.env")});
 
-class DatabaseHelpers {
+// interfaces and types
+interface IUserReturnVal {
+  id: string,
+  fname: string,
+  lname: string,
+  email: string,
+  nameForHeader: string,
+  phone: string,
+  street: string,
+  zip: string,
+  state: string,
+  city: string,
+  paymentInfo: IPaymentInfo | any,
+  license: string,
+}
+
+type GetAllDataArg = { _id: string } | { username: string };
+type GetAllDataReturn = {
+  token: string,
+  user: IUserReturnVal,
+  clients: Array<typeof Client>,
+  events: any[],
+}
+// main module class
+export default class DatabaseHelpers {
   // returns the clients total balance and an updated
   // list of events in the form of a Mongoose BulkWrite object
-  static recalcBalance = async (clientID) => {
-    let events;
+  static recalcBalance = async (clientID: Schema.Types.ObjectId) => {
+    let events: any[];
     try {
       events = await Event.find({ clientID: clientID });
     } catch (err) {
@@ -51,10 +76,11 @@ class DatabaseHelpers {
   };
 
   // get all the users data on login
-  static getAllData = async (query) => {
+  static getAllData = async (query: GetAllDataArg): Promise<GetAllDataReturn> => {
+    console.log("query: ", query);
     // create blank response object to fill with data to send to client
     let user, clients, events;
-    let response = {
+    let response: GetAllDataReturn = {
       token: "",
       user: {
         id: "",
@@ -109,6 +135,15 @@ class DatabaseHelpers {
     });
     return Promise.resolve(response);
   };
+
+  static getClients = async (userID: string): Promise<Array<typeof Client>> => {
+    try {
+      const clients: Array<typeof Client> = await Client.find({ ownerID: userID });
+      return Promise.resolve(clients);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
 
   static deleteOldEvents = async (clientID) => {
     try {
@@ -187,5 +222,3 @@ const eventsTestArray = [
     id: "61d9de3e6b4e7b0aa2a539b4",
   },
 ];
-
-module.exports = DatabaseHelpers;
