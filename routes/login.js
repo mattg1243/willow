@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const helpers = require('./helpers/helpers');
+const helpers = require('../utils/helpers');
 const { validate, loginUserValidator } = require('./validators/userValidators');
 require('dotenv').config();
 

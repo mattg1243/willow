@@ -1,8 +1,8 @@
 FROM --platform=linux/amd64 node:14-slim 
 
 WORKDIR /app
-# install server deps
-COPY package*.json /app/
+
+COPY package*.json /app
 RUN npm ci --production
 # install client deps
 COPY client/packge*.json /app/client
@@ -34,8 +34,6 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # WORKDIR "/app/moxie/"
 # RUN echo y | cargo build --release
 
-
-
 RUN apt update && echo y | apt upgrade
 RUN echo y | apt install ssh
 # install python dependencies
@@ -44,6 +42,8 @@ RUN echo y | apt install ssh
 # RUN pip3 install -r ./requirements.txt
 
 COPY . .
+WORKDIR /app/moxie
+RUN cargo build --release
 
 EXPOSE 8080 2222 3001
 CMD ["npm", "start"]

@@ -2,10 +2,11 @@ const User = require('../../models/user-model');
 const Client = require('../../models/client-schema');
 const Event = require('../../models/event-schema');
 const { PythonShell } = require('python-shell');
-const { execFile } = require('child_process');
+const { exec } = require('child_process');
 const async = require('async');
 const fs = require('fs');
-const helpers = require('../helpers/helpers');
+const helpers = require('../../utils/helpers');
+const DatabaseHelpers = require('../../utils/databaseHelpers');
 
 const addEvent = async (req, res) => {
     /* DEBUG LOGS
@@ -13,56 +14,50 @@ const addEvent = async (req, res) => {
     console.dir(req.body);
     console.log("----------------------------------------------------------------")
     */
-    
     let amount = 0;
     let time = 0;
     let rate = 0;
-    
+    // determine the effect of the event on clients balance
     if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
-
         amount = parseFloat(req.body.amount);
-
-        } else if(req.body.type == 'Refund') {
-
-            amount = -(req.body.amount);
-
-        } else {
-
-            time = parseFloat(req.body.hours) + parseFloat(req.body.minutes);    
-            amount = -(time * parseFloat(req.body.rate));
-            rate = parseFloat(req.body.rate);
-     }
-     console.log("amount:\n", amount)
-
-        const event = await new Event({ 
-            clientID: req.body.clientID, 
-            date: req.body.date, 
-            type: req.body.type, 
-            detail: req.body.detail, 
-            duration: time, 
-            rate: rate, 
-            amount: amount, 
-            newBalance: 0 
-        });
-        // saving event to db
-        event.save((err, event) => {
-        if (err) {
-            console.error(err)
-            return res.status(503).end("There was a problem saving your event, please try again");
-        }
-        console.log(event);
-       
-        Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }}, (err, result) => {
-            if (err) return console.error(err);
-
-            console.log(result);
-            console.log('Event added')
-            helpers.recalcBalance(req.body.clientID, req, res);
-        })
+    } 
+    else if(req.body.type == 'Refund') {
+        amount = -(req.body.amount);
+    } 
+    else {
+        time = parseFloat(req.body.hours) + parseFloat(req.body.minutes);    
+        rate = parseFloat(req.body.rate);
+        amount = -(time * rate);
+    }
+    // create the new Event
+    const event = await new Event({ 
+        clientID: req.body.clientID, 
+        date: req.body.date, 
+        type: req.body.type, 
+        detail: req.body.detail, 
+        duration: time, 
+        rate: rate, 
+        amount: amount, 
+        newBalance: 0 
     });
+    // saving event to db
+    try {
+        await event.save();
+        // add the new event to the client documents list of events
+        await Client.findOneAndUpdate({ _id: req.body.clientID }, { $push: { sessions: event }});
+        // get events to recalculate the running balances for each event
+        await DatabaseHelpers.recalcBalance(req.body.clientID);
+        // generate a response for the client and send it
+        const response = await DatabaseHelpers.getAllData({ _id: req.body.user });
+        return res.status(200).json(response);
+    } catch (err) {
+        console.error(err);
+        return res.status(503).json({ error: err});
+    }
+        
 }
 
-const updateEvent = (req, res) => {
+const updateEvent = async (req, res) => {
     let hrs, mins, duration, rate, amount, detail; 
     // DEBUG LOGS
     /*
@@ -76,52 +71,51 @@ const updateEvent = (req, res) => {
         duration = hrs + mins;
         rate = parseFloat(req.body.rate);
         amount = -(duration * rate);
-    } else {
+    } 
+    else {
         hrs, mins, duration, rate = 0;
         if (req.body.type == 'Refund') {
             // ensure amount is always negative if event is a refund
             amount =  - (Math.abs(req.body.amount));
-        } else if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
+        } 
+        else if (req.body.type == 'Retainer' || req.body.type == 'Payment') {
             // ensure the opposite for a retainer / payment
             amount = Math.abs(parseFloat(req.body.amount));
         }
     }
     
     detail = req.body.detail
-    let clientID = ''
 
     try {
-        Event.findOneAndUpdate({ _id: req.params.eventid }, { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }, function (err, docs) {
-
-            if (err) {
-                console.error(err);
-                return res.status(503).end("There was a problem updating the event, please try again")
-            }
-
-            clientID = docs.clientID
-            //find all events that belong to this client so the new balance can be calculated
-            helpers.recalcBalance(clientID, req, res);
-        })
-    } catch (err) { throw err ; }
+        await Event.findOneAndUpdate(
+            { _id: req.params.eventid }, 
+            { type: req.body.type, duration: duration, rate: rate, amount: amount, detail: detail }
+        );
+        await DatabaseHelpers.recalcBalance(req.body.clientID);
+        const response = await DatabaseHelpers.getAllData({ _id: req.body.user });
+        return res.status(200).json(response);
+    } catch (err) { return res.status(503).json({ error: err }); }
 }
 
 const deleteEvent = (req, res) => {
     console.log(req.body);
     try {
-        Event.findByIdAndDelete(req.body.eventID, (err, event) => {
-
-            if (err) return console.error(err);
-            console.log("Event:\n");
-            console.dir(event);
-            console.log('\nThe events amount with index:\n' + event.amount);
-            Client.findOneAndUpdate({ _id: req.body.clientID }, { $inc: { balance: - event.amount }}, function(err, result) {
-                    
-                if (err) console.error(err);
-    
-                else {console.log(result); helpers.recalcBalance(req.body.clientID, req, res); }
-            })
+        // only using a callback here in order to access the deleted events amount
+        Event.findByIdAndDelete(req.body.eventID, async (err, event) => {
+            if (err) throw err;
+            // update clients balance and remove event from client document
+            await Client.findOneAndUpdate(
+                { _id: req.body.clientID },  
+                { $pull: { sessions: { _id: event._id } }}
+            );
+            await DatabaseHelpers.recalcBalance(req.body.clientID);
+            await DatabaseHelpers.deleteOldEvents(req.body.clientID);
+            const response = await DatabaseHelpers.getAllData({ _id: req.body.user });
+            return res.status(200).json(response);
         })
-    } catch (err) { throw err ; }
+    } catch (err) { 
+        return res.status(503).json({ error: err })    
+    }
 }
 
 const makeStatement = (req, res) => {
@@ -181,9 +175,9 @@ const makeStatement = (req, res) => {
         (callback) => { 
             Event.find({ clientID: clientID, date: {
                 $gte: start,
-                $lte: end
+                $lte: end,
             }
-            } , (err, events) => {
+            }, {clientID: 0, _id: 0}, (err, events) => {
                 if (err) { return console.error(err); }
                 console.log(events.length + " events read from database");
                 eventsList = events;
@@ -216,29 +210,31 @@ const makeStatement = (req, res) => {
             // console.dir(clientInfo)
             // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
             // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
+        
             
-            execFile("./moxie", [`${JSON.stringify(clientInfo)}`, `${JSON.stringify(eventsList)}`, `${JSON.stringify(providerInfo)}`], {shell: true},
+            console.log(`${JSON.stringify(clientInfo, null, 2)}`)
+            exec(`moxie/target/release/moxie '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(providerInfo)}'`, { shell: true },
             (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`exec error: ${error}`);
-                    return;
-                }
-                if (stdout) {console.log(`stdout: ${stdout}`);}
-                if(stderr) {console.error(`stderr: ${stderr}`);}
-                try {
-                    res.status(200).download(`public/invoices/statementtest.pdf`, `${clientInfo.fname + "-" + clientInfo.lname}.pdf`, function (err) {
-            
-                        if (err) return console.error(err);
-                        // delete the pdf from the server after download
-                        fs.unlink(`public/invoices/statementtest.pdf`, function (err) {
-                            if (err) return console.error(err)
-                
-                        });
-                    })
-                } 
-                catch (err) { throw err; }
-                
+               if (error) {
+                   console.error(`exec error: ${error}`);
+                   return;
+               }
+               if (stdout) {console.log(`stdout: ${stdout}`);}
+               if (stderr) {console.error(`stderr: ${stderr}`);}
+               try {
+                   res.status(200).download(`public/invoices/statementtest.pdf`, `${clientInfo.fname + "-" + clientInfo.lname}.pdf`, function (err) {
+             
+                       if (err) return console.error(err);
+                       // delete the pdf from the server after download
+                       fs.unlink(`public/invoices/statementtest.pdf`, function (err) {
+                           if (err) return console.error(err)
+               
+                       });
+                   })
+               } 
+               catch (err) { throw err; }
             })
+        })
 
             // PythonShell.run("Python/src/core/main.py", options, (err, result) => {
             //     if (err) return console.error(err)
@@ -261,8 +257,6 @@ const makeStatement = (req, res) => {
             //     } 
             //     catch (err) { throw err; }
             // })
-        }
-    )
 }
 
 const downloadStatement = async (req, res) => {

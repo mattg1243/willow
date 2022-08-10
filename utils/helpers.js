@@ -1,12 +1,10 @@
-const User = require("../../models/user-model");
-const Client = require("../../models/client-schema");
-const Event = require("../../models/event-schema");
+const User = require("../models/user-model");
+const Client = require("../models/client-schema");
+const Event = require("../models/event-schema");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-require('../../models/event-schema');
 
 function recalcBalance(clientID, req, res) {
-    
     let balance = 0;
     
     Event.find({ clientID: clientID }, function (err, events) {
@@ -37,7 +35,7 @@ function recalcBalance(clientID, req, res) {
         })
 })}
 
-const verifyJWT = async (req, res, next) => {
+const verifyJWT = async (req, res, next) => {                               // this needs to moved to middleware
     // extract token from the req header
     console.log("Token:\n" + req.header('Authorization'));
     const token = req.header('Authorization').split(' ')[1];

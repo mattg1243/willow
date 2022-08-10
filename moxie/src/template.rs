@@ -1,4 +1,4 @@
-use crate::model::{event::Event, footer::WillowFooter, header::WillowHeader};
+use crate::model::{event::Event, header::WillowHeader};
 
 /// A rowcol component must impl this trait
 pub trait RowCol {

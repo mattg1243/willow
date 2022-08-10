@@ -19,7 +19,8 @@ impl TryFrom<String> for Client {
     type Error = anyhow::Error;
 
     fn try_from(value: String) -> Result<Client, Self::Error> {
-        Ok(serde_json::from_str(value.as_str())?)
+        let c: Client = serde_json::from_str(value.as_str())?;
+        Ok(c)
     }
 }
 
@@ -55,28 +56,37 @@ impl Client {
     }
 }
 
+/// PaymentInfo
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[allow(missing_docs)]
+pub struct PaymentInfo {
+    pub check: String,
+    pub venmo: String,
+    pub paypal: String,
+    pub zelle: String,
+}
+
 /// User Payload
 #[derive(Debug, Deserialize, Serialize)]
 #[allow(missing_docs)]
 pub struct User {
-    #[serde(rename = "_id")]
-    pub fname: String,
-    pub lname: String,
-    pub email: String,
+    fname: String,
+    lname: String,
+    email: String,
     city: String,
     #[serde(rename = "nameForHeader")]
-    pub name_on_header: String,
-    pub phone: String,
-    pub state: String,
-    pub street: String,
-    pub zip: String,
+    name_on_header: String,
+    phone: String,
+    state: String,
+    street: String,
+    zip: String,
     #[serde(rename = "paymentInfo")]
-    pub payments: JsonValue,
+    payments: PaymentInfo,
     license: String,
 }
 
 impl TryFrom<String> for User {
-    type Error = anyhow::Error;
+    type Error = serde_json::Error;
 
     fn try_from(value: String) -> Result<User, Self::Error> {
         Ok(serde_json::from_str(value.as_str())?)
@@ -97,7 +107,12 @@ impl User {
             state: "Alaska".to_string(),
             street: "Anchorage dr.".to_string(),
             zip: "67826".to_string(),
-            payments: serde_json::json!({"eth": "moxieryder.eth"}),
+            payments: PaymentInfo {
+                check: String::from("Mail check here: "),
+                venmo: String::from("mattg1243"),
+                paypal: String::from(""),
+                zelle: String::from(""),
+            },
             license: "GOAT".to_string(),
         }
     }
@@ -116,7 +131,7 @@ impl User {
     pub fn nameoh(&self) -> String {
         self.name_on_header.clone()
     }
-    pub fn payments(&self) -> JsonValue {
+    pub fn payments(&self) -> PaymentInfo {
         self.payments.clone()
     }
     pub fn phone(&self) -> String {
@@ -135,10 +150,6 @@ pub mod event {
     #[derive(Debug, Deserialize, Serialize)]
     #[allow(missing_docs)]
     pub struct Event {
-        #[serde(rename = "_id")]
-        id: String, // unread
-        #[serde(rename = "clientID")]
-        client_id: String, // unread
         date: String,
         #[serde(rename = "type")]
         event_type: String,
@@ -147,36 +158,47 @@ pub mod event {
         amount: JsonValue,
         #[serde(rename = "newBalance")]
         new_balance: String,
+        #[serde(rename = "__v")]
+        v: usize,
+        detail: String,
     }
 
     #[allow(missing_docs, dead_code)]
     impl Event {
         /// Constructor for testing
         pub fn new(
-            id: &str,
-            client_id: &str,
             date: &str,
             etype: &str,
             duration: f32,
             rate: Option<u32>,
             amount: JsonValue,
             new_balance: &str,
+            v: usize,
+            detail: &str,
         ) -> Self {
             Self {
-                id: id.to_owned(),
-                client_id: client_id.to_owned(),
                 date: date.to_owned(),
                 event_type: etype.to_owned(),
                 duration,
                 rate,
                 amount,
                 new_balance: new_balance.to_owned(),
+                v,
+                detail: detail.to_owned(),
             }
         }
 
         /// Deserialize a JSON array of Events into a vector
         pub fn collect(json_dump: String) -> Result<Vec<Self>, anyhow::Error> {
-            return Ok(serde_json::from_str(json_dump.as_str())?);
+            let new_events: Result<Vec<Self>, serde_json::Error> =
+                serde_json::from_str(json_dump.as_str());
+            match new_events {
+                Ok(events) => return Ok(events),
+                Err(e) => {
+                    log::error!("panic at: {:?}", e);
+                    return Err(anyhow::Error::msg("cannot collect events"));
+                }
+            }
         }
 
         /// Mock a vector of Event for testing
@@ -184,14 +206,14 @@ pub mod event {
             let mut mock: Vec<Self> = vec![];
             for _ in 0..10 {
                 mock.push(Self::new(
-                    "f901309830913",
-                    "4790194704971",
                     "07/22/2022",
                     "Meeting",
                     2f32,
                     Some(90u32),
                     serde_json::json!("amount: {200}"),
                     "200.50",
+                    0,
+                    "undefined",
                 ))
             }
             return mock;
@@ -239,10 +261,10 @@ pub mod header {
 
     #[derive(Debug, Deserialize, Serialize)]
     pub struct WillowHeader {
-        pub provider: String,
-        pub contact: String,
-        pub billing: super::JsonValue,
-        pub client: String,
+        provider: String,
+        contact: String,
+        billing: super::JsonValue,
+        client: String,
     }
 
     impl TryFrom<(Client, User)> for WillowHeader {
@@ -326,6 +348,14 @@ pub mod footer {
 mod impl_tests {
     use super::*;
     use header::WillowHeader;
+
+    #[test]
+    fn deser_client() {
+        pretty_env_logger::try_init().ok();
+
+        let raw_c: &str = "{\"fname\":\"Brandon\",\"lname\":\"Belt\",\"phonenumber\":\"5554441212\",\"balance\":{\"$numberDecimal\":\"832.5\"},\"email\":\"bbelt@gmail.com\",\"rate\":{\"$numberDecimal\":\"250.00\"}}";
+        let c: Client = Client::try_from(raw_c.to_string()).unwrap();
+    }
 
     #[test]
     fn client_user_to_header() {

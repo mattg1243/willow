@@ -1,18 +1,35 @@
+use super::eh::{MoxieOutput, OutLevel};
 use crate::model::{event::Event, header::WillowHeader};
 use crate::model::{Client, User};
 use crate::template::{Header, RowCol};
 
-use std::env;
+use std::path::Path;
 use wkhtmltopdf::{Orientation, PdfApplication, Size};
 
 /// Get env params for statement
-pub fn deserialize_payload() -> Result<(Client, Vec<Event>, User), anyhow::Error> {
+pub fn deserialize_payload(args: Vec<String>) -> Result<(Client, Vec<Event>, User), MoxieOutput> {
     pretty_env_logger::try_init().ok();
-    let args: Vec<String> = env::args().collect();
-    let c: Client = Client::try_from(args[0].clone())?;
-    let e: Vec<Event> = Event::collect(args[1].clone())?;
-    let u: User = User::try_from(args[2].clone())?;
-    Ok((c, e, u))
+    log::debug!("{:?}", args);
+    // let c: Client = Client::try_from(args[0].clone())?;
+    match Client::try_from(args[1].clone()) {
+        Ok(c) => match Event::collect(args[2].clone()) {
+            Ok(events) => match User::try_from(args[3].clone()) {
+                Ok(u) => return Ok((c, events, u)),
+                Err(e) => {
+                    let ctx = format!("failed at deser user: {:?}", e);
+                    return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+                }
+            },
+            Err(e) => {
+                let ctx = format!("failed at collect events: {:?}", e);
+                return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+            }
+        },
+        Err(e) => {
+            let ctx = format!("failed at deser client: {:?}", e);
+            return Err(MoxieOutput::new(OutLevel::CRITICAL, ctx.as_str()));
+        }
+    }
 }
 
 /// Example HTML -> PDF using wkhtmltopdf.
@@ -117,7 +134,7 @@ pub fn full_make_html(h: WillowHeader, r: Vec<Event>) -> String {
 
 /// Generates a PDF repr from a String repr HTML
 #[allow(dead_code)]
-pub fn make_gen(html: String, out: &str) -> Result<(), std::io::Error> {
+pub fn make_gen(html: String, out: &Path) -> Result<(), std::io::Error> {
     let pdf_app = PdfApplication::new().expect("failed to create PDF builder");
     let mut pdfout = pdf_app
         .builder()
@@ -127,7 +144,7 @@ pub fn make_gen(html: String, out: &str) -> Result<(), std::io::Error> {
         .build_from_html(html.as_str())
         .expect("failed to build pdf");
 
-    let fail_msg = format!("failed to save {}", out.clone());
+    let fail_msg = format!("failed to save {:?}", out.clone());
     pdfout.save(out).expect(fail_msg.as_str());
     Ok(())
 }

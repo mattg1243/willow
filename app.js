@@ -10,7 +10,7 @@ const mongoStore = require('connect-mongo');
 const passport = require('./node_modules/passport')
 const helmet = require('helmet');
 const User = require('./models/user-model')
-const helpers = require('./routes/helpers/helpers');
+const helpers = require('./utils/helpers');
 const cors = require('cors');
 
 require('dotenv').config();

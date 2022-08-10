@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const handlers = require('./handlers/userHandlers');
-const helpers = require('./helpers/helpers');
+const helpers = require('../utils/helpers');
 const validators = require('./validators/userValidators');
 
 // register new user to DB
