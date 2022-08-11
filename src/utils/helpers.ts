@@ -17,7 +17,7 @@ function recalcBalance(clientID, req, res) {
             if (isNaN(events[i].amount)) {
                 throw new Error("NaN amount found in event" + i);
             };
-            balance += parseFloat(events[i].amount)
+            balance += events[i].amount
             
             Event.findOneAndUpdate({ _id: events[i]._id }, { newBalance: balance }, (err) => {
                 if (err) console.error(err)

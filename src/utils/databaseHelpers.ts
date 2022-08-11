@@ -34,7 +34,7 @@ type GetAllDataReturn = {
 export default class DatabaseHelpers {
   // returns the clients total balance and an updated
   // list of events in the form of a Mongoose BulkWrite object
-  static recalcBalance = async (clientID: Schema.Types.ObjectId) => {
+  static recalcBalance = async (clientID: string) => {
     let events: any[];
     try {
       events = await Event.find({ clientID: clientID });
