@@ -1,13 +1,11 @@
 import createError from 'http-errors';
 import express from 'express';
-import session from 'express-session';
 import path from 'path';
 import flash from 'connect-flash';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
-import mongoStore from 'connect-mongo';
-import passport from '../node_modules/passport';
+import passport from 'passport';
 import helmet from 'helmet';
 // const User = require('./models/user-model')
 import { verifyJWT } from './utils/helpers';
