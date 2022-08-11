@@ -12,7 +12,7 @@
     "devstart": "nodemon ./src/app.ts",
     "build": "cd client && npm run build",
     "serverstart": "DEBUG=exp-billing:* npm run devstart",
-    "test": "mocha --require mocha-suppress-logs --exit -t 5000 test",
+    "test": "mocha --require mocha-suppress-logs -r ts-node/register --exit -t 5000 'test/routes.test.ts'",
     "buildpush": "cd client && npm run build && cd .. && git add . && git commit -m 'new react build' && git push origin react && git push heroku react:main"
   },
   "dependencies": {
