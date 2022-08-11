@@ -1,7 +1,7 @@
 import { Schema, model, Model, Document } from 'mongoose';
 import { Getters } from './getset';
 
-interface IEvent extends Document {
+export interface IEvent extends Document {
     ownerID: string,
     clientID: string,
     date: Date,

@@ -1,5 +1,6 @@
 import { Schema, model, Model, Document } from 'mongoose';
 import { Getters } from './getset';
+import { IEvent } from './event-schema';
 
 interface IClient extends Document {
     ownerID: string,
@@ -7,7 +8,7 @@ interface IClient extends Document {
     lname: string,
     phonenumber?: string,
     email?: string,
-    sessions?: Array<Object>,
+    sessions?: Array<IEvent>,
     balance: number,
     rate?: number,
     isArchived: boolean
