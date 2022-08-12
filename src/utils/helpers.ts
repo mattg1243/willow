@@ -4,7 +4,7 @@ import Event from "../models/event-schema";
 import jwt from 'jsonwebtoken';
 import path from 'path';
 
-function recalcBalance(clientID, req, res) {
+export function recalcBalance(clientID, req, res) {
     let balance = 0;
     
     Event.find({ clientID: clientID }, function (err, events) {
@@ -59,7 +59,7 @@ export const verifyJWT = async (req, res, next) => {                            
     }
 }
 
-const getAllData = (req, res) => {
+export const getAllData = (req, res) => {
     // create blank response object to fill with data to send to client
     console.log("user:\n", req.body.user)
     let response = {
@@ -131,7 +131,7 @@ const getAllData = (req, res) => {
     }).clone();
 }
 
-const getClients = (req, res) => {
+export const getClients = (req, res) => {
     Client.find({ ownerID: req.body.user }, (err, clients) => {
         if (err) return console.error(err);
 
@@ -139,16 +139,10 @@ const getClients = (req, res) => {
     }).clone();
 }
 
-const getEvents = (req, res) => {
+export const getEvents = (req, res) => {
     Event.find({ clientID: req.body.clientID }, (err, events) => {
         if (err) return console.error(err);
 
         res.status(200).json(events);
     }).clone();
 }
-
-module.exports.recalcBalance = recalcBalance;
-module.exports.verifyJWT = verifyJWT;
-module.exports.getAllData = getAllData;
-module.exports.getClients = getClients;
-module.exports.getEvents = getEvents;

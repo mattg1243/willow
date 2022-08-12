@@ -1,16 +1,13 @@
-const router = require('express').Router();
-const passport = require('passport');
-const helpers = require('../utils/helpers');
-const { validate, loginUserValidator } = require('./validators/userValidators');
-const path = require('path');
-require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
-
+import * as express from 'express';
+import * as passport from 'passport';
+import UserValidators from './validators/userValidators';
 import DatabaseHelpers from '../utils/databaseHelpers';
-import User from '../models/user-model';
+
+const router = express.Router();
 
 router.post('/', 
-    loginUserValidator,
-    validate,
+    UserValidators.loginUserValidator,
+    UserValidators.validate,
     passport.authenticate('local'),
     async (req: any, res: any) => {
         try {
