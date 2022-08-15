@@ -42,7 +42,11 @@ RUN echo y | apt install ssh
 # RUN pip3 install -r ./requirements.txt
 
 COPY . .
+# compile TypeScript
+RUN npm install -g typescript ts-node
+RUN tsc
 WORKDIR /app/moxie
+# compile Rust
 RUN cargo build --release
 
 EXPOSE 8080 2222 3001
