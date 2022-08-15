@@ -1,11 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export const verifyJWT = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const verifyJWT = async (req: Request, res: Response, next: NextFunction) => {
   // this needs to moved to middleware
   // extract token from the req header
   console.log("Token:\n" + req.header("Authorization"));

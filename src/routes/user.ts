@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import UserHandlers from "../handlers/userHandlers";
 import UserValidators from "../middleware/validators/userValidators";
-import { verifyJWT } from "../utils/helpers";
+import { verifyJWT } from "../middleware/auth";
 
 const router = Router();
 

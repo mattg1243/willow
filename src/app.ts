@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import helmet from 'helmet';
 // const User = require('./models/user-model')
-import { verifyJWT } from './utils/helpers';
+import { verifyJWT } from './middleware/auth';
 import cors from 'cors';
 import User from './models/user-model';
 // import User from './models/user-model';
