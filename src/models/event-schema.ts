@@ -9,7 +9,7 @@ export interface IEvent extends Document {
     detail?: string,
     duration?: number,
     rate?: number,
-    amount: number,
+    amount: number | string,
     newBalance: number,
 }
 
