@@ -58,7 +58,7 @@ export default function QuickStatement(props) {
     setLoading(true);
     axios.post(`/client/makestatement/${user.id}/${client._id}/${startdate}/${enddate}`,
       {
-        amount: amount,
+        amount: parseFloat(amount),
         notes: notes,
       },
       {

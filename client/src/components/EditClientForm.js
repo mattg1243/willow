@@ -72,7 +72,7 @@ export default function EditClientsDialog(props) {
             fname: fname,
             lname: lname,
             email: email,
-            phone: phone,
+            phonenumber: phone,
             rate: parseInt(rate),
             isArchived: archived,
         }, 
