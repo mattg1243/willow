@@ -1,19 +1,14 @@
-import * as express from 'express';
-import 'passport'
+import { Router, Response, Request } from "express";
+import "passport";
 
-const router = express.Router();
+const router = Router();
 
-router.get('/', function(req, res) {
-
+router.get("/", (req: Request, res: Response) => {
   if (req.isAuthenticated) {
-    res.redirect('/user/dashboard')
-  }
-  
-  else if (!req.isAuthenticated) {
-    res.redirect('/login');
+    res.redirect("/user/dashboard");
+  } else if (!req.isAuthenticated) {
+    res.redirect("/login");
   }
 });
-
-
 
 export default router;
