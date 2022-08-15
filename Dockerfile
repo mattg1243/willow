@@ -15,8 +15,8 @@ RUN npm run build
 WORKDIR /app/
 
 # install python3.9.7
-RUN apt update
-RUN apt upgrade
+RUN echo y | apt update
+RUN echo y | apt upgrade
 RUN echo y | apt install wget curl
 # RUN echo y | apt install software-properties-common
 RUN echo y | apt install -y build-essential

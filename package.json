@@ -8,7 +8,6 @@
   "scripts": {
     "start": "node ./dist/app.js",
     "tsc": "tsc",
-    "postinstall": "npm run tsc",
     "devstart": "nodemon ./src/app.ts",
     "build": "cd client && npm run build",
     "serverstart": "DEBUG=exp-billing:* npm run devstart",
