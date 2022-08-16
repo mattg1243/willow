@@ -1,4 +1,5 @@
 import { Schema, model, PassportLocalDocument, PassportLocalModel, PassportLocalSchema, Document } from 'mongoose';
+import { Getters } from './getset';
 // not sure how to import this package properly without require...
 const passportLocalMongoose = require('passport-local-mongoose')
 const mongoose = require('mongoose');
@@ -31,6 +32,7 @@ interface IUser extends PassportLocalDocument {
     state?: string,
     zip?: string,
     clients: Array<Object>,        // not sure if this correct
+    defaultBalanceNotifyThreshold?: number,
     paymentInfo?: IPaymentInfo,
     license? : string
 }
@@ -50,6 +52,7 @@ const UserSchema = new Schema({
     state: {type: String, required: false, maxLength: 2},
     zip: {type: String, required: false, maxLength: 5},
     clients: [{type: Schema.Types.ObjectId, ref: 'Client'}],
+    defaultBalanceNotifyThreshold: {type: Schema.Types.Decimal128, required: false, get: Getters.numberGetter},
     paymentInfo: {type: Object, required: false, maxLength: 300},
     license: {type: String, required: false, maxLength: 100}
 }) as PassportLocalSchema;

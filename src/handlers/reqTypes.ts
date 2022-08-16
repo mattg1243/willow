@@ -55,7 +55,8 @@ export interface IAddNewClientReqBody extends BaseUserClient {
   ownerID: string,
   phonenumber: string,
   rate: number,
-  user: string
+  user: string,
+  balanceNotifyThreshold: string
 }
 
 export interface IDeleteClient {

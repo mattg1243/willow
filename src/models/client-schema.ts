@@ -10,6 +10,7 @@ export interface IClient extends Document {
   email?: string;
   sessions?: Array<IEvent>;
   balance: number;
+  balanceNotifyThreshold?: number,
   rate?: number;
   isArchived: boolean;
 }
@@ -23,6 +24,7 @@ const ClientSchema = new Schema(
     email: { type: String, required: false, maxLength: 100 },
     sessions: [{ type: Schema.Types.ObjectId, ref: 'events' }], // this needs to be changed to an array of IDs and refactored to "events"
     balance: { type: Schema.Types.Decimal128, get: Getters.numberGetter },
+    balanceNotifyThreshold: { type: Schema.Types.Decimal128, required: false, get: Getters.numberGetter },
     rate: { type: Schema.Types.Decimal128, get: Getters.numberGetter },
     isArchived: { type: Boolean, default: false },
   },

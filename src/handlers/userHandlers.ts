@@ -80,6 +80,7 @@ export default class UserHandlers {
             email: req.body.email, 
             balance: 0,
             rate: req.body.rate,
+            balanceNotifyThreshold: parseFloat(req.body.balanceNotifyThreshold)
         }); 
     
         try {
@@ -112,7 +113,8 @@ export default class UserHandlers {
                 { 
                     fname: req.body.fname, lname: req.body.lname, 
                     email: req.body.email, phonenumber: req.body.phonenumber,
-                    rate: req.body.rate, isArchived: req.body.isArchived
+                    rate: req.body.rate, isArchived: req.body.isArchived,
+                    balanceNotifyThreshold: parseFloat(req.body.balanceNotifyThreshold)
             });
             const respsonse = await DatabaseHelpers.getClients(req.body.user);
             res.status(200).json(respsonse);
