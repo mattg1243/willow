@@ -29,6 +29,7 @@ export default function EditClientsDialog(props) {
     const [email, setEmail] = useState(`${props.client.email}`);
     const [phone, setPhone] = useState(`${props.client.phonenumber}`);
     const [archived, setArchived] = useState(props.client.isArchived)
+    const [balanceNotifyThreshold, setBalanceNotifyThreshold] = useState(`${props.client.balanceNotifyThreshold}`);
     const [rate, setRate] = useState(props.client.rate ? `${props.client.rate}` : null);
     const [deleteIsShown, setDeleteIsShown] = useState(false);
     const [badInput, setBadInput] = useState(false);
@@ -75,6 +76,7 @@ export default function EditClientsDialog(props) {
             phonenumber: phone,
             rate: parseInt(rate),
             isArchived: archived,
+            balanceNotifyThreshold
         }, 
         {
             headers: { 'Authorization': `Bearer ${token}`}
@@ -112,6 +114,8 @@ export default function EditClientsDialog(props) {
             <Input type="tel" isDisabled={props.client.isArchived} onChange={(e) => { setPhone(e.target.value); }} value={phone}/>
             <FormLabel>Billing Rate</FormLabel>
             <Input type="number" isDisabled={props.client.isArchived} onChange={(e) => { setRate(e.target.value); }} value={rate}/>
+            <FormLabel>Balance Warning</FormLabel>
+            <Input type="number" isDisabled={props.client.isArchived} onChange={(e) => { setBalanceNotifyThreshold(e.target.value); }} value={balanceNotifyThreshold}/>
             <FormLabel>Closed</FormLabel>
             {/* need to match the colorScheme for this switch w Willow Green */}
             <Switch size="lg" defaultChecked={archived} onChange={() => { setArchived(archived ? false: true); }}/>

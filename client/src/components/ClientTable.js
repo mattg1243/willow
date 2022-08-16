@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { 
     Button,
+    Badge,
     Table, 
     Thead,
     Tr, 
@@ -12,6 +13,7 @@ import {
     HStack,
     VStack,
     Heading,
+    Tooltip,
 } from '@chakra-ui/react';
 import { useColorMode } from "@chakra-ui/react";
 import ClientSortMenu from "./ClientSortMenu";
@@ -113,7 +115,14 @@ export default function ClientTable(props) {
                         if (client.isArchived) { endpoint += '?closed=true'; }
                         return (
                         <Tr key={client._id} onClick={() => { navigate(endpoint) }}>
-                            <Td>{client.fname + " " + client.lname}</Td>
+                            <Td>
+                                {client.fname + " " + client.lname}
+                                {parseFloat(client.balance) > parseFloat(client.balanceNotifyThreshold) ? null: 
+                                <>
+                                    <Badge colorScheme='red' style={{ marginBottom: '.25rem', marginLeft: '1rem' }}>LOW</Badge>
+                                </> 
+                                }
+                            </Td>
                             <Td isNumeric>${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Td>
                         </Tr>
                         )}

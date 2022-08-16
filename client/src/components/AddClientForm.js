@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Input, VStack, Button, Divider, FormLabel } from '@chakra-ui/react';
+import { Input, VStack, Button, Divider, FormLabel, Tooltip } from '@chakra-ui/react';
+import { InfoIcon } from '@chakra-ui/icons'
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -14,6 +15,7 @@ export default function AddClientForm(props) {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [rate, setRate] = useState(0);
+    const [balanceNotifyThreshold, setBalanceNotifyThreshold] = useState('');
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState([]);
 
@@ -34,6 +36,7 @@ export default function AddClientForm(props) {
             phonenumber: phone,
             rate: rate,
             user: user.id,
+            balanceNotifyThreshold
         }, 
         {
             headers: { 'Authorization': `Bearer ${token}`}
@@ -71,6 +74,13 @@ export default function AddClientForm(props) {
                 <Input onChange={(e) => { setPhone(e.target.value) }} />
                 <FormLabel>Billing Rate</FormLabel>
                 <Input onChange={(e) => { setRate(e.target.value) }} />
+                <Tooltip 
+                    label="Here you can set a balance amount that will result in the client being flagged as low balance.
+                    If a value is not specified here, it will default to $0."
+                        >
+                    <FormLabel>Balance Warning<InfoIcon style={{color: 'grey', marginLeft: '5px'}}/></FormLabel>
+                </Tooltip>
+                <Input onChange={(e) => { setBalanceNotifyThreshold(e.target.value) }} />
                 <Divider />
                 <Button bg={isDark? "brand.dark.purple" : 'brand.green'} style={{color: 'white', marginTop: '1rem'}} onClick={() => { addClient(); }}>Save</Button>
             </VStack>

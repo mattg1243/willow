@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { VStack, HStack, Stack, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
+import { VStack, HStack, Badge, Heading, Text, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, Tooltip, IconButton, ModalFooter } from '@chakra-ui/react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { withBreakpoints } from 'react-breakpoints';
 import { loginAction } from '../actions';
@@ -64,6 +64,7 @@ function ClientPage(props) {
                         <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem'}}>{client.fname + " " + client.lname}</Heading>
                         <Text style={{fontFamily: '"Quicksand", sans-serif', fontSize: '1.5rem', paddingBottom: '1rem'}}>
                             Balance: ${client.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            {parseFloat(client.balance) > parseFloat(client.balanceNotifyThreshold) ? null: <><Badge colorScheme='red' style={{ marginBottom: '.25rem', marginLeft: '1rem' }}>LOW</Badge></> }
                         </Text>
                     </VStack>
                         <VStack style={{flexDirection: breakpoints[currentBreakpoint] > breakpoints.tablet ? 'row': 'column', alignItems: 'end', justifyContent: 'end'}}>
