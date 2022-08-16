@@ -7,9 +7,10 @@
 
 import request from "supertest";
 import app from "../src/app";
-import { testUser, testClient, testEvent } from "./testData";
+import { testUser, testClient } from "./testData";
 import { before } from "mocha";
-import jwt from "jsonwebtoken";
+import { expect } from 'chai';
+import jwt, { Secret } from "jsonwebtoken";
 import path from "path";
 
 require("dotenv").config({path: path.resolve(__dirname, '../../.env')});
@@ -20,7 +21,7 @@ let token, client_id, event_id;
 describe("User Routes", () => {
   before("Sign the JWT", (done) => {
     // create a new token for every test
-    token = jwt.sign({ userID: testUser._id }, process.env.JWT_SECRET, {
+    token = jwt.sign({ userID: testUser._id }, process.env.JWT_SECRET as Secret, {
       expiresIn: "7200s",
     });
     done();
@@ -113,7 +114,10 @@ describe("User Routes", () => {
         }
 
         try {
-          event_id = JSON.parse(response.text)["events"][0]["_id"];
+          const eventsRes = JSON.parse(response.text)["events"];
+          const newEvent = eventsRes[eventsRes.length - 1]
+          event_id = newEvent["_id"];
+          expect(newEvent.amount).to.equal("-400.00")
           done();
         } catch (e) {
           done(e);
