@@ -9,6 +9,7 @@ import passport from 'passport';
 import helmet from 'helmet';
 // const User = require('./models/user-model')
 import { verifyJWT } from './middleware/auth';
+import forceHttps from './middleware/https';
 import cors from 'cors';
 import User from './models/user-model';
 // import User from './models/user-model';
@@ -99,6 +100,7 @@ app.use(function(req, res, next) {
 
 // Base routes
 // app.use('/', indexRouter);
+app.use('*', forceHttps);
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
 app.use('/api', verifyJWT, apiRouter);
