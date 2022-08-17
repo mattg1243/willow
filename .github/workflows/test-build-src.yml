@@ -37,11 +37,12 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
-        docker build . -t willowreg.azurecr.io/willowapp:${{ github.sha }}
-        docker push willowreg.azurecr.io/willowapp:${{ github.sha }}     
+        docker build . -t willowreg.azurecr.io/willowapp:latest
+        docker push willowreg.azurecr.io/willowapp:latest    
 
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'willowapp'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'willowreg.azurecr.io/willowapp:${{ github.sha }}'
+    # - uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'willowapp'
+    #     slot-name: 'production'
+    #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    #     images: 'willowreg.azurecr.io/willowapp:latest'
