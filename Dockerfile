@@ -37,7 +37,10 @@ RUN npm run build
 # WORKDIR /app/moxie
 # RUN cargo build --release
 
+# expose ports
 EXPOSE 8080 2222 3001
+# start the server
+WORKDIR /app
 CMD ["npm", "start"]
 
 # OLD BUILD PROCEDURES
