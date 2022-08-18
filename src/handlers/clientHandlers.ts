@@ -235,6 +235,7 @@ export default class ClientHandlers {
                 paymentMethods: providerInfo.paymentInfo,
                 events: eventsList,
             }
+            // TODO: instead of writing HTML file, pass the generator the raw HTML string
             // create html template
             const outputFilename = `${clientInfo.fname + "-" + clientInfo.lname}`
             const g = new Generator();
@@ -251,6 +252,9 @@ export default class ClientHandlers {
                     fs.unlink(`public/invoices/${outputFilename}.pdf`, function (err) {
                         if (err) return console.error(err)
                     });
+                    fs.unlink(`templates/${outputFilename}.html`, function (err) {
+                      if (err) return console.error(err)
+                  });
                 });
     
             } 
