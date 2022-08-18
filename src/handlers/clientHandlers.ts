@@ -7,6 +7,7 @@ import User from '../models/user-model';
 import Client from '../models/client-schema';
 import Event, { IEvent } from '../models/event-schema';
 import DatabaseHelpers from '../utils/databaseHelpers';
+import Generator from '@/utils/Generator';
 import { ISaveEventReqBody, IDeleteEventReqBody, IMakeStatementReqBody } from './reqTypes';
 
 export default class ClientHandlers {
