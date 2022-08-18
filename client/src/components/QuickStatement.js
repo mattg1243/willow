@@ -58,8 +58,8 @@ export default function QuickStatement(props) {
     setLoading(true);
     axios.post(`/client/makestatement/${user.id}/${client._id}/${startdate}/${enddate}`,
       {
-        amount: parseFloat(amount),
-        notes: notes,
+        amount: 400,
+        notes: "Please send the payment asap so i can cop a bunch of stuff on amazon please thanks",
       },
       {
         headers: {
@@ -182,11 +182,11 @@ export default function QuickStatement(props) {
                 <Box>
                   <Text mb="8px">Amount</Text>
                   <InputGroup>
-                      <Input type="text" onChange={(e) => { setAmount(e.target.value) }}/>
+                      <Input type="text" value={amount} onChange={(e) => { setAmount(e.target.value) }}/>
                   </InputGroup>
                   <Text mb="8px">Notes</Text>
                   <InputGroup>
-                      <Input type="text" onChange={(e) => { setNotes(e.target.value) }}/>
+                      <Input type="text" value={notes} onChange={(e) => { setNotes(e.target.value) }}/>
                   </InputGroup>
                 </Box>
                 <Alert status='error' style={{display: message ? 'flex': 'none'}}>

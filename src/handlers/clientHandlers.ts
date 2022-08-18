@@ -7,7 +7,7 @@ import User from '../models/user-model';
 import Client from '../models/client-schema';
 import Event, { IEvent } from '../models/event-schema';
 import DatabaseHelpers from '../utils/databaseHelpers';
-import Generator from '@/utils/Generator';
+import Generator from '../utils/Generator';
 import { ISaveEventReqBody, IDeleteEventReqBody, IMakeStatementReqBody } from './reqTypes';
 
 export default class ClientHandlers {
@@ -132,6 +132,7 @@ export default class ClientHandlers {
       city: string;
       state: string;
       zip: string;
+      phone: string
       paymentInfo: any;
       license: string;
     }
@@ -146,12 +147,9 @@ export default class ClientHandlers {
     let eventsList: Array<IEvent>;
     // timing labels
     const dbTime = 'Time in database: ';
-    const genTime = 'Time in generator script: ';
-
     // outline argument objects
     let clientInfo: IClientInfo;
     let providerInfo: IProviderInfo;
-
     // read from the database
     console.time(dbTime);
     async.parallel(
@@ -215,86 +213,50 @@ export default class ClientHandlers {
             .clone();
         },
       ],
-      (err, result) => {
+      async (err, result) => {
         console.timeEnd(dbTime);
         // catch error
         if (err) {
           throw err;
         }
 
-        const options = {
-          mode: 'text',
-          args: [JSON.stringify(providerInfo), JSON.stringify(clientInfo), JSON.stringify(eventsList)],
-        };
-        // run the statement generator script
-        console.time(genTime);
-        // console.log("+++   EXCLUDE TEST +++")
-        // console.dir(providerInfo)
-        // console.log("+++ EXCLUDE TEST CLIENT   +++")
-        // console.dir(clientInfo)
-        // fs.writeFile('user.json', JSON.stringify(providerInfo, null, 2), err => console.error(err));
-        // fs.writeFile('client.json', JSON.stringify(clientInfo, null, 2), err => console.error(err));
-
-        console.log(`${JSON.stringify(clientInfo, null, 2)}`);
-        exec(
-          `moxie/target/release/moxie '${JSON.stringify(clientInfo)}' '${JSON.stringify(eventsList)}' '${JSON.stringify(
-            providerInfo
-          )}'`,
-          { shell: 'true' },
-          (error, stdout, stderr) => {
-            if (error) {
-              console.error(`exec error: ${error}`);
-              return;
+              // create arg object for the Generator
+              const argObj = {
+                date: new Date(),
+                userName: providerInfo.fname + " " + providerInfo.lname,
+                userAddress: providerInfo.street,
+                userCityStateZip: providerInfo.city + ", " + providerInfo.state + " " + providerInfo.zip,
+                userPhone: providerInfo.phone,
+                userLicense: providerInfo.license,
+                clientName: clientInfo.fname + " " + clientInfo.lname,
+                clientBalance: `$${clientInfo.balance}`,
+                amountDue: amountInput ? amountInput: " N/A ",
+                note: notesInput ? notesInput: " N/A ",
+                paymentMethods: providerInfo.paymentInfo,
+                events: eventsList,
             }
-            if (stdout) {
-              console.log(`stdout: ${stdout}`);
-            }
-            if (stderr) {
-              console.error(`stderr: ${stderr}`);
-            }
+            // create html template
+            const outputFilename = `${clientInfo.fname + "-" + clientInfo.lname}`
+            const g = new Generator();
+            const htmlStr = g.formatString(argObj);
+            g.saveFileFromString(htmlStr, `templates/${outputFilename}.html`);
+            // create the pdf
             try {
-              res
-                .status(200)
-                .download(
-                  `public/invoices/statementtest.pdf`,
-                  `${`${clientInfo.fname}-${clientInfo.lname}`}.pdf`,
-                  (err) => {
+                await g.makePdfFromHtml(htmlStr, outputFilename);
+
+                res.status(200).download(`public/invoices/${outputFilename}.pdf`, `${outputFilename}.pdf`, function (err) {
+    
                     if (err) return console.error(err);
-                    // delete the pdf from the server after download
-                    fs.unlink(`public/invoices/statementtest.pdf`, (err) => {
-                      if (err) return console.error(err);
+                    // delete the file from the server after download
+                    fs.unlink(`public/invoices/${outputFilename}.pdf`, function (err) {
+                        if (err) return console.error(err)
                     });
-                  }
-                );
-            } catch (err) {
-              throw err;
-            }
-          }
-        );
+                });
+    
+            } 
+            catch (err) { throw err; }
       }
     );
-
-    // PythonShell.run("Python/src/core/main.py", options, (err, result) => {
-    //     if (err) return console.error(err)
-
-    //     console.log("+++++++++++++++++ PYTHON OUTPUT +++++++++++++++++ \n")
-    //     console.log(result)
-    //     console.log("+++++++++++++++ END PYTHON OUTPUT +++++++++++++++ \n")
-    //     console.timeEnd(genTime);
-    //     console.log('');
-    //     try {
-    //         res.status(200).download(`public/invoices/${clientInfo.clientname}.pdf`, `${clientInfo.clientname}.pdf`, function (err) {
-
-    //             if (err) return console.error(err);
-    //             // delete the pdf from the server after download
-    //             fs.unlink(`public/invoices/${clientInfo.clientname}.pdf`, function (err) {
-    //                 if (err) return console.error(err)
-
-    //             });
-    //         })
-    //     }
-    //     catch (err) { throw err; }
-    // })
   };
 
   static downloadStatement = async (req: Request, res: Response) => {

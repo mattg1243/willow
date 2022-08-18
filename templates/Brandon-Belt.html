@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Statement Template</title>
+    </head><body>
+    <main>
+      <!-- header section -->
+      <div id="heading">
+        <h1>Account Statment</h1>
+        <p id="date-section"><strong>Date: Thursday, August 18, 2022</strong></p>
+        <div class="row justify-content-center provider-info-section text-align-center">
+          <div class="col-3" id="providerNameField">David Gallucci</div>
+          <div class="col-1 bullet">&bull;</div>
+          <div class="col-3">3215 Trawler Place</div>
+          <div class="col-1 bullet">&bull;</div>
+          <div class="col-3">Davis, CA 95616</div>
+        </div>
+        <div class="row justify-content-center provider-info-section text-align-center">
+          <div class="col-3">9253662139</div>
+          <div class="col-1 bullet">&bull;</div>
+          <div class="col-3">MFC 42238</div>
+        </div>
+        <div class="row" id="info-section">
+          <div class="col client-info-section text-align-start">
+            <!-- client section -->
+            <div class="row">
+              <p><strong>Client: </strong>Brandon Belt</p>
+            </div>
+            <div class="row">
+              <p><strong>Balance: </strong>$1707.5</p>
+            </div>
+            <div class="row">
+              <p><strong>Amount Due: </strong> N/A </p>
+            </div>
+            <div class="row" id="notes-field">
+              <p>
+                <strong>Note: </strong> N/A 
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" id="info-spacer"></div>
+          <div class="col client-info-section payment-details-section text-align-start">
+            <div class="row-1">
+              <p><strong>Payment Methods</strong></p>
+            </div>
+            <div class="row-1 payment-details-section">
+              <p><strong>Check: </strong>Please mail check to the above address</p>
+            </div>
+            <div class="row-1">
+              <p><strong>PayPal: </strong></p>
+            </div>
+            <div class="row-1">
+              <p><strong>Venmo: </strong>scottg123</p>
+            </div>
+            <div class="row-1">
+              <p><strong>Zelle: </strong>925-366-2139</p>
+            </div>
+          </div>
+        </div>
+      </div>    <!-- table section -->
+    <div class="contain" id="table-container">
+      <table class="table table-borderless">
+        <!-- table header -->
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Type</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Amount</th>
+            <th scope="col" class="text-align-right">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+                        <td>9/30/2021</td>
+                        <td>Meeting</td>
+                        <td>0.5</td>
+                        <td>200</td>
+                        <td>$-100.00</td>
+                        <td class="text-align-right">$-100.00</td>
+                      </tr><tr>
+                        <td>10/5/2021</td>
+                        <td>4 Way Meeting</td>
+                        <td>1</td>
+                        <td>200</td>
+                        <td>$-200.00</td>
+                        <td class="text-align-right">$-300.00</td>
+                      </tr><tr>
+                        <td>11/30/2021</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>200</td>
+                        <td>$-200.00</td>
+                        <td class="text-align-right">$-500.00</td>
+                      </tr><tr>
+                        <td>12/1/2021</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>200</td>
+                        <td>$-200.00</td>
+                        <td class="text-align-right">$-700.00</td>
+                      </tr><tr>
+                        <td>12/2/2021</td>
+                        <td>Meeting</td>
+                        <td>4</td>
+                        <td>200</td>
+                        <td>$-800.00</td>
+                        <td class="text-align-right">$-1500.00</td>
+                      </tr><tr>
+                        <td>12/4/2021</td>
+                        <td>Email</td>
+                        <td>0.4</td>
+                        <td>200</td>
+                        <td>$-80.00</td>
+                        <td class="text-align-right">$-1580.00</td>
+                      </tr><tr>
+                        <td>12/5/2021</td>
+                        <td>Phone Call</td>
+                        <td>0.2</td>
+                        <td>200</td>
+                        <td>$-40.00</td>
+                        <td class="text-align-right">$-1620.00</td>
+                      </tr><tr>
+                        <td>12/6/2021</td>
+                        <td>Phone Call</td>
+                        <td>0.2</td>
+                        <td>200</td>
+                        <td>$-40.00</td>
+                        <td class="text-align-right">$-1660.00</td>
+                      </tr><tr>
+                        <td>12/7/2021</td>
+                        <td>Meeting</td>
+                        <td>0.5</td>
+                        <td>125</td>
+                        <td>$-62.50</td>
+                        <td class="text-align-right">$-1722.50</td>
+                      </tr><tr>
+                        <td>12/8/2021</td>
+                        <td>Refund</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>$-500.00</td>
+                        <td class="text-align-right">$-2222.50</td>
+                      </tr><tr>
+                        <td>12/9/2021</td>
+                        <td>Other</td>
+                        <td>1.4</td>
+                        <td>225</td>
+                        <td>$-315.00</td>
+                        <td class="text-align-right">$-2537.50</td>
+                      </tr><tr>
+                        <td>12/10/2021</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>175</td>
+                        <td>$-175.00</td>
+                        <td class="text-align-right">$-2712.50</td>
+                      </tr><tr>
+                        <td>12/11/2021</td>
+                        <td>Email</td>
+                        <td>0.3</td>
+                        <td>200</td>
+                        <td>$-60.00</td>
+                        <td class="text-align-right">$-2772.50</td>
+                      </tr><tr>
+                        <td>12/12/2021</td>
+                        <td>Phone Call</td>
+                        <td>0.1</td>
+                        <td>200</td>
+                        <td>$-20.00</td>
+                        <td class="text-align-right">$-2792.50</td>
+                      </tr><tr>
+                        <td>12/13/2021</td>
+                        <td>Meeting</td>
+                        <td>0.3</td>
+                        <td>200</td>
+                        <td>$-60.00</td>
+                        <td class="text-align-right">$-2852.50</td>
+                      </tr><tr>
+                        <td>12/14/2021</td>
+                        <td>Other</td>
+                        <td>0.5</td>
+                        <td>200</td>
+                        <td>$-100.00</td>
+                        <td class="text-align-right">$-2952.50</td>
+                      </tr><tr>
+                        <td>12/15/2021</td>
+                        <td>Meeting</td>
+                        <td>4</td>
+                        <td>200</td>
+                        <td>$-800.00</td>
+                        <td class="text-align-right">$-3752.50</td>
+                      </tr><tr>
+                        <td>12/16/2021</td>
+                        <td>Meeting</td>
+                        <td>2</td>
+                        <td>200</td>
+                        <td>$-400.00</td>
+                        <td class="text-align-right">$-4152.50</td>
+                      </tr><tr>
+                        <td>1/7/2022</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>200</td>
+                        <td>$-200.00</td>
+                        <td class="text-align-right">$-4352.50</td>
+                      </tr><tr>
+                        <td>1/13/2022</td>
+                        <td>Phone Call</td>
+                        <td>1</td>
+                        <td>190</td>
+                        <td>$-190.00</td>
+                        <td class="text-align-right">$-4542.50</td>
+                      </tr><tr>
+                        <td>1/31/2022</td>
+                        <td>Other</td>
+                        <td>1</td>
+                        <td>200</td>
+                        <td>$-200.00</td>
+                        <td class="text-align-right">$-4742.50</td>
+                      </tr><tr>
+                        <td>1/31/2022</td>
+                        <td>Other</td>
+                        <td>2</td>
+                        <td>200</td>
+                        <td>$-400.00</td>
+                        <td class="text-align-right">$-5142.50</td>
+                      </tr><tr>
+                        <td>2/3/2022</td>
+                        <td>Payment</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>$500.00</td>
+                        <td class="text-align-right">$-4642.50</td>
+                      </tr><tr>
+                        <td>2/3/2022</td>
+                        <td>Payment</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>$600.00</td>
+                        <td class="text-align-right">$-4042.50</td>
+                      </tr><tr>
+                        <td>3/1/2022</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>250</td>
+                        <td>$-250.00</td>
+                        <td class="text-align-right">$-4292.50</td>
+                      </tr><tr>
+                        <td>3/2/2022</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>250</td>
+                        <td>$-250.00</td>
+                        <td class="text-align-right">$-4542.50</td>
+                      </tr><tr>
+                        <td>3/16/2022</td>
+                        <td>Retainer</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>$2500.00</td>
+                        <td class="text-align-right">$-2042.50</td>
+                      </tr><tr>
+                        <td>8/13/2022</td>
+                        <td>Meeting</td>
+                        <td>1</td>
+                        <td>250</td>
+                        <td>$-250.00</td>
+                        <td class="text-align-right">$-2292.50</td>
+                      </tr><tr>
+                        <td>8/15/2022</td>
+                        <td>Retainer</td>
+                        <td>N/A</td>
+                        <td>250</td>
+                        <td>$4000.00</td>
+                        <td class="text-align-right">$1707.50</td>
+                      </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+      </body>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+      ></script>  
+    </html>

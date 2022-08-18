@@ -122,7 +122,7 @@ export default class Generator {
                         <td>${new Date(e.date).toLocaleDateString("en-US")}</td>
                         <td>${e.type}</td>
                         <td>${e.duration? e.duration: 'N/A'}</td>
-                        <td>$${e.rate}</td>
+                        <td>${e.rate? `${e.rate}`: 'N/A'}</td>
                         <td>$${e.amount}</td>
                         <td class="text-align-right">$${e.newBalance}</td>
                       </tr>`;
