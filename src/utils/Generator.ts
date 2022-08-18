@@ -149,6 +149,7 @@ export default class Generator {
       try {
         // launch a new chrome instance
         const browser = await puppeteer.launch({
+          executablePath: '/usr/bin/google-chrome',
           headless: true,
         });
 
