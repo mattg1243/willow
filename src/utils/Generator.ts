@@ -164,10 +164,10 @@ export default class Generator {
         });
         // link css and js
         await page.addScriptTag({
-          url: "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js",
+          path: path.resolve(__dirname, "../../public/javascripts/bootstrap.bundle.min.js"),
         });
         await page.addStyleTag({
-          url: "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
+          path: path.resolve(__dirname, "../../public/stylesheets/bootstrap.min.css"),
         });
         await page.addStyleTag({
           path: path.resolve(__dirname, "../../templates/statement.css"),

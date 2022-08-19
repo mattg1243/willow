@@ -4,6 +4,11 @@
   border: 0;
 }
 
+@font-face {
+  font-family: 'sans-serif';
+  src: url('./OpenSans-Light.ttf');
+}
+
 @page {
   size: A4;
   margin: .5in;
