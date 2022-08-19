@@ -50,17 +50,19 @@ export default class Generator {
         <p id="date-section"><strong>Date: ${new Date(
           obj.date
         ).toLocaleDateString("en-US", dateOptions)}</strong></p>
+        <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
-          <div class="col-3" id="providerNameField">${obj.userName}</div>
-          <div class="col-1 bullet">&bull;</div>
-          <div class="col-3">${obj.userAddress}</div>
-          <div class="col-1 bullet">&bull;</div>
-          <div class="col-3">${obj.userCityStateZip}</div>
+          <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
+          <div class="col-auto bullet">&bull;</div>
+          <div class="col-auto text-align-center">${obj.userAddress}</div>
+          <div class="col-auto bullet">&bull;</div>
+          <div class="col-auto text-align-start">${obj.userCityStateZip}</div>
+        </div>
         </div>
         <div class="row justify-content-center provider-info-section text-align-center">
-          <div class="col-3">${obj.userPhone}</div>
-          <div class="col-1 bullet">&bull;</div>
-          <div class="col-3">${obj.userLicense}</div>
+          <div class="col-auto text-align-end">${obj.userPhone}</div>
+          <div class="col-auto bullet">&bull;</div>
+          <div class="col-auto text-align-start">${obj.userLicense}</div>
         </div>
         <div class="row" id="info-section">
           <div class="col client-info-section text-align-start">
@@ -150,6 +152,7 @@ export default class Generator {
         // launch a new chrome instance
         const browser = await puppeteer.launch({
           headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         // create a new page

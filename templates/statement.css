@@ -56,13 +56,13 @@ td {
 
 .provider-info-section,
 .client-info-section {
-  width: 600px;
+  display: flex;
+  width: 100%;
   white-space: nowrap;
 }
 
 .client-info-section {
   padding-top: 2rem;
-  display: flex;
   flex-direction: column;
   overflow-wrap: break-word;
 }
@@ -76,7 +76,8 @@ td {
   font-weight: bold;
   text-align: center;
   justify-content: center;
-  margin: -8px -18px 0px 2px;
+  margin: -8px -4px 0px 0px;
+  padding: 0px;
 }
 
 .text-align-right {
@@ -89,6 +90,10 @@ td {
 
 .text-align-start {
   text-align: start;
+}
+
+.text-align-end {
+  text-align: end;
 }
 
 .row {
