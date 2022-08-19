@@ -25,14 +25,11 @@ export default class Generator {
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <title>Statement Template</title>
     </head>`;
   htmlEnd = `
-        <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"
-      ></script>  
     </html>`;
   
   formatString(obj: IFormatStringArg) {
@@ -143,7 +140,7 @@ export default class Generator {
     fs.writeFileSync(path, str);
   }
 
-  async makePdfFromHtml(htmlStr, outputFile) {
+  async makePdfFromHtml(htmlStr: string, outputFile: string) {
     const genTime = "Statement generated in";
     console.time(genTime);
 
@@ -170,8 +167,13 @@ export default class Generator {
           path: path.resolve(__dirname, "../../public/stylesheets/bootstrap.min.css"),
         });
         await page.addStyleTag({
+          url: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap",
+        })
+        await page.addStyleTag({
           path: path.resolve(__dirname, "../../templates/statement.css"),
         });
+        // wait for styles to load 
+        await page.evaluateHandle('document.fonts.ready');
         // save file
         await page.pdf({
           format: "Letter",

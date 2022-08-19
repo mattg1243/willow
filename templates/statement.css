@@ -4,18 +4,18 @@
   border: 0;
 }
 
-@font-face {
-  font-family: 'custombody';
-  src: url('./OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
-}
-
 @page {
   size: A4;
   margin: .5in;
 }
 
-body {
-  font-family: 'custombody', san-serif;
+@font-face {
+  font-family: 'custombody';
+  src: url('OpenSans-Regular') format(truetype);
+}
+
+main {
+  font-family: 'Open Sans', sans-serif;
 }
 
 table {
