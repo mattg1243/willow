@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import puppeteer from "puppeteer";
-import { IPaymentInfo } from "@/models/user-model";
+import { IPaymentInfo } from "../models/user-model";
 
 interface IFormatStringArg {
   date: Date,
@@ -149,7 +149,6 @@ export default class Generator {
       try {
         // launch a new chrome instance
         const browser = await puppeteer.launch({
-          executablePath: '/usr/bin/google-chrome',
           headless: true,
         });
 
@@ -182,7 +181,7 @@ export default class Generator {
         resolve(null);
         console.timeEnd(genTime);
       }
-      catch (e) { reject(); }
+      catch (e) { reject(e); }
     });
   }
 }

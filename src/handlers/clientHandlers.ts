@@ -235,15 +235,14 @@ export default class ClientHandlers {
                 paymentMethods: providerInfo.paymentInfo,
                 events: eventsList,
             }
+            // TODO: instead of writing HTML file, pass the generator the raw HTML string
+            // create html template
+            const outputFilename = `${clientInfo.fname + "-" + clientInfo.lname}`
+            const g = new Generator();
+            const htmlStr = g.formatString(argObj);
+            // create the pdf
             try {
-              // TODO: instead of writing HTML file, pass the generator the raw HTML string
-              // create html template
-              const outputFilename = `${clientInfo.fname + "-" + clientInfo.lname}`
-              const g = new Generator();
-              const htmlStr = g.formatString(argObj);
-              g.saveFileFromString(htmlStr, `templates/${outputFilename}.html`);
-              // create the pdf  
-              await g.makePdfFromHtml(htmlStr, outputFilename);
+                await g.makePdfFromHtml(htmlStr, outputFilename);
 
                 res.status(200).download(`public/invoices/${outputFilename}.pdf`, `${outputFilename}.pdf`, function (err) {
     
@@ -252,9 +251,6 @@ export default class ClientHandlers {
                     fs.unlink(`public/invoices/${outputFilename}.pdf`, function (err) {
                         if (err) return console.error(err)
                     });
-                    fs.unlink(`templates/${outputFilename}.html`, function (err) {
-                      if (err) return console.error(err)
-                  });
                 });
     
             } 
