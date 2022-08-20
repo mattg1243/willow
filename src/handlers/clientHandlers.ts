@@ -152,6 +152,7 @@ export default class ClientHandlers {
     let providerInfo: IProviderInfo;
     // read from the database
     console.time(dbTime);
+    console.log(req.body);
     async.parallel(
       [
         // populate client object
@@ -230,8 +231,8 @@ export default class ClientHandlers {
                 userLicense: providerInfo.license,
                 clientName: clientInfo.fname + " " + clientInfo.lname,
                 clientBalance: `$${clientInfo.balance}`,
-                amountDue: amountInput ? amountInput: " N/A ",
-                note: notesInput ? notesInput: " N/A ",
+                amountDue: req.body.amount,
+                note: req.body.notes,
                 paymentMethods: providerInfo.paymentInfo,
                 events: eventsList,
             }

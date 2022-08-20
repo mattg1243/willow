@@ -13,7 +13,7 @@ interface IFormatStringArg {
   userLicense: string,
   clientName: string,
   clientBalance: number | string,
-  amountDue: number | string,
+  amountDue: number,
   note: string,
   paymentMethods: IPaymentInfo,
   events: Array<any>
