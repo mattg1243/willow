@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -46,9 +46,10 @@
   </body>
   <style>
     html, body, #root, #root>div {
-      height: 100%;
+      height:auto!important;
       width: 100%;
       margin: auto;
+      overflow-x: hidden;
     }
   </style>
 </html>

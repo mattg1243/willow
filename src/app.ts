@@ -7,6 +7,7 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import helmet from 'helmet';
+import puppeteer from 'puppeteer';
 // const User = require('./models/user-model')
 import { verifyJWT } from './middleware/auth';
 import forceHttps from './middleware/https';
@@ -38,7 +39,17 @@ app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 // set view engine to satisify error codes
 app.set('view engine', 'jade');
-
+// launch puppeteer instance
+let browser: puppeteer.Browser;
+let page: puppeteer.Page;
+(async () => {
+  browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+  page = await browser.newPage();
+})();
+export { page };
 // middleware
 app.use(helmet.contentSecurityPolicy({
   useDefaults: false,
@@ -126,5 +137,6 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port);
+
 
 export default app;

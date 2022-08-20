@@ -11,11 +11,11 @@
 
 @font-face {
   font-family: 'custombody';
-  src: url('OpenSans-Regular') format(truetype);
+  src: url('OpenSans-Regular.ttf') format(truetype);
 }
 
 main {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'custombody', sans-serif;
 }
 
 table {

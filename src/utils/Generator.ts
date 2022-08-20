@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import puppeteer from "puppeteer";
 import { IPaymentInfo } from "../models/user-model";
+import { page } from '../app';
 
 interface IFormatStringArg {
   date: Date,
@@ -25,8 +26,6 @@ export default class Generator {
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <title>Statement Template</title>
     </head>`;
   htmlEnd = `
@@ -143,19 +142,19 @@ export default class Generator {
   async makePdfFromHtml(htmlStr: string, outputFile: string) {
     const genTime = "Statement generated in";
     console.time(genTime);
-
+    const launchTime = "Puppeteer launched in: "
+    const styleTime = "Style tags added in: "
+    const contentTime = "Content set in: "
+    const pdfTime = "PDF made in:"
     return new Promise(async (resolve, reject) => {
       try {
         // launch a new chrome instance
-        const browser = await puppeteer.launch({
-          headless: true,
-          args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-
+        console.time(launchTime);
         // create a new page
-        const page = await browser.newPage();
-
+        
+        console.timeEnd(launchTime);
         // set html as the pages content
+        console.time(styleTime)
         await page.setContent(htmlStr, {
           waitUntil: "domcontentloaded",
         });
@@ -166,23 +165,24 @@ export default class Generator {
         await page.addStyleTag({
           path: path.resolve(__dirname, "../../public/stylesheets/bootstrap.min.css"),
         });
-        await page.addStyleTag({
-          url: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap",
-        })
+        // await page.addStyleTag({
+        //   url: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap",
+        // })
         await page.addStyleTag({
           path: path.resolve(__dirname, "../../templates/statement.css"),
         });
         // wait for styles to load 
         await page.evaluateHandle('document.fonts.ready');
+        console.timeEnd(styleTime)
+        console.time(pdfTime)
         // save file
         await page.pdf({
           format: "Letter",
           margin: {},
           path: path.resolve(__dirname, `../../public/invoices/${outputFile}.pdf`),
         });
-
+        console.timeEnd(pdfTime)
         // close the browser
-        await browser.close();
         resolve(null);
         console.timeEnd(genTime);
       }
