@@ -58,13 +58,13 @@ export default function QuickStatement(props) {
     setLoading(true);
     axios.post(`/client/makestatement/${user.id}/${client._id}/${startdate}/${enddate}`,
       {
-        amount: 400,
-        notes: "Please send the payment asap so i can cop a bunch of stuff on amazon please thanks",
+        amount: amount,
+        notes: notes,
       },
       {
         headers: {
         'Authorization': `Bearer ${token}`,
-        'content-type': 'text/json',
+        'content-type': 'application/json',
       },
       responseType: 'blob'
     })

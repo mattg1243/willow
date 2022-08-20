@@ -231,8 +231,8 @@ export default class ClientHandlers {
                 userLicense: providerInfo.license,
                 clientName: clientInfo.fname + " " + clientInfo.lname,
                 clientBalance: `$${clientInfo.balance}`,
-                amountDue: req.body.amount,
-                note: req.body.notes,
+                amountDue: amountInput ? amountInput: ' N/A ',
+                note: notesInput ? notesInput: ' N/A ',
                 paymentMethods: providerInfo.paymentInfo,
                 events: eventsList,
             }
