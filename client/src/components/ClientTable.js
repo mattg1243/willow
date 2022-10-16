@@ -12,8 +12,11 @@ import {
     Tbody,
     HStack,
     VStack,
+    Grid,
+    GridItem,
     Heading,
-    Tooltip,
+    SimpleGrid,
+    Spacer,
 } from '@chakra-ui/react';
 import { useColorMode } from "@chakra-ui/react";
 import ClientSortMenu from "./ClientSortMenu";
@@ -84,21 +87,24 @@ export default function ClientTable(props) {
     return (
         <>
         {/* top stack, "Client", Add button, Sort menu */}
-        <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', justifyContent: 'center', width: '85%'}}>
+        <HStack style={{paddingRight: '2rem', paddingLeft: '2rem', width: '100%'}}>
         {isDesktop ? null : <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>}
-            <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', position: 'absolute', alignSelf: 'center'}}>
-                {props.archiveMode ? <>Closed Cases</>: <>Clients</>}
-            </Heading>
-                <VStack style={{flexDirection: isDesktop ? 'row': 'column', alignItems: 'end', marginLeft: "100%"}}>
-                <Button 
-                    variant="outline"
-                    color="white" 
-                    bg={isDark ? 'brand.dark.purple': 'brand.green'} 
-                    style={{marginRight: isDesktop ? '1rem': null}}
-                    onClick={() => {props.addClientShown(true)}}
-                    >Add</Button>
-                   {isDesktop ? <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>: null} 
-            </VStack>
+            <SimpleGrid columns={3} spacing={5} width='100%' justifyContent='space-between' alignItems='center'>
+                    <Spacer />
+                    <Heading style={{fontFamily: '"Quicksand", sans-serif', fontSize: '3rem', alignItems: 'center', justifySelf: 'center', marginRight: isDesktop ? '0': '3.5rem'}}>
+                        {props.archiveMode ? <>Closed Cases</>: <>Clients</>}
+                    </Heading>
+                    <VStack justifySelf='flex-end' justifyContent='flex-end'>
+                        <Button 
+                        variant="outline"
+                        color="white" 
+                        bg={isDark ? 'brand.dark.purple': 'brand.green'} 
+                        style={{marginRight: isDesktop ? '1rem': null, marginLeft: '2rem'}}
+                        onClick={() => {props.addClientShown(true)}}
+                        >Add</Button>
+                        {isDesktop ? <ClientSortMenu setSorting={setSorting} currBreakpoint={currBreakpoint} breakpoints={breakpoints}/>: null} 
+                    </VStack>
+            </SimpleGrid>
         </HStack>
         {/* table */}
             <Table size='lg' style={{marginBottom: '2rem', tableLayout: 'fixed'}} variant='striped'>
