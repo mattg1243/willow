@@ -155,6 +155,7 @@ export default class UserValidators {
       .isAlpha(),
 
     body("lname", "Missing last name")
+      .optional({ checkFalsy: true })
       .trim()
       .escape()
       .isLength({ min: 1, max: 50 })
