@@ -13,6 +13,7 @@ export default class UserHandlers {
 
     static registerUser = async (req: Request<ParamsDictionary, {}, IRegisterUserReqBody>, res: Response): Promise<Response> => {
         const { fname, lname, email, username, password, nameForHeader, phone, street, city, state, zip, paymentInfo } = req.body;
+        console.log(req.body)
         try {
             await User.register(new User({
                     username, 
@@ -25,13 +26,17 @@ export default class UserHandlers {
                     city, 
                     state, 
                     zip, 
-                    paymentInfo: JSON.parse(paymentInfo)}),
+                    paymentInfo: paymentInfo
+                }),
                 password)
                 
                 const response = await DatabaseHelpers.getAllData({ username: req.body.username });
                 return res.status(200).json(response);
         } 
-        catch(err) { return res.status(500).send(err.message); } 
+        catch (err) { 
+            console.log(err.message);
+            return res.status(500).send(err.message); 
+        } 
     }
     
     static updateUserInfo = async (req: Request<ParamsDictionary, {}, IUpdateUserReqBody>, res: Response): Promise<Response> => {
