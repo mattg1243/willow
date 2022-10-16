@@ -8,12 +8,14 @@ import {
     Button, 
     Tooltip, 
     Divider, 
+    FormLabel,
 } from '@chakra-ui/react';
 import { QuestionIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginAction } from '../actions';
 import BadInputAlert from './BadInputAlert';
+import PaymentInfoInput from './PaymentInfoInput';
 import axios from 'axios';
 
 export default function Register() {
@@ -32,6 +34,10 @@ export default function Register() {
     const [zip, setZip] = useState('');
     const [badInput, setBadInput] = useState(false);
     const [errMsg, setErrMsg] = useState([])
+    const [checkField, setCheckField] = useState("")
+    const [venmoField, setVenmoField] = useState("")
+    const [paypalField, setPaypalField] = useState("")
+    const [zelleField, setZelleField] = useState("")
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,8 +46,14 @@ export default function Register() {
         axios.post("/user/register/newuser", {
             fname: fname, lname: lname, email: email, username: username,
             password: password, passwordConfirm: passwordConfirm, nameForHeader: nameForHeader, phone: phone,
-            street: street, city: city, state: state, zip: zip,
-        })
+            street: street, city: city, state: state, zip: zip, 
+            paymentInfo: {
+                check: checkField,
+                venmo: venmoField,
+                paypal: paypalField,
+                zelle: zelleField
+            }
+        }) 
         .then((response) => {       
             if (response.data) {
                 dispatch(loginAction(response.data));
@@ -100,6 +112,18 @@ export default function Register() {
                         <Input className="textInput" placeholder="State" type="text" size='lg' focusBorderColor="brand.green" onChange={(e) => {setState(e.target.value);}}/>
                         <Input className="textInput" placeholder="Zip" type="number" size='lg' focusBorderColor="brand.green" onChange={(e) => {setZip(e.target.value);}}/>
                     </InputGroup>
+                    <Tooltip 
+                    label="This will tell your clients how you'd like to receive payment. 
+                        It will show on the bottom of statements, but is not required (limited to 80 characters)."
+                        >
+                    <FormLabel>Payment Info <QuestionIcon style={{color: 'grey'}}/></FormLabel>
+                </Tooltip>
+                {/* payment info fields */}
+                <PaymentInfoInput fieldLabel="Check" stateName={checkField} stateSetter={setCheckField} />
+                <PaymentInfoInput fieldLabel="Venmo" stateName={venmoField} stateSetter={setVenmoField} />
+                <PaymentInfoInput fieldLabel="PayPal" stateName={paypalField} stateSetter={setPaypalField} />
+                <PaymentInfoInput fieldLabel="Zelle  " stateName={zelleField} stateSetter={setZelleField} />
+                {/* buttons */}
                     <Button background="#63326E" color="#fff" onClick={() => { registerUser(); }}>Register</Button>
                 </VStack>
             </Container>
