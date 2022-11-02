@@ -9,6 +9,7 @@
     "start": "node ./dist/app.js",
     "tsc": "tsc",
     "devstart": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"",
+    "dockerstart": "docker run --rm -it --env-file ./.env -p 2222:2222/tcp -p 3001:3001/tcp -p 8080:8080/tcp willow:latest",
     "build": "cd client && npm run build",
     "serverstart": "DEBUG=exp-billing:* npm run devstart",
     "test": "mocha --require mocha-suppress-logs -r ts-node/register --exit -t 5000 'test/*.test.ts'",

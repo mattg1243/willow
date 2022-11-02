@@ -33,6 +33,8 @@ function ClientPage(props) {
     const client = clients.find(client => client._id === id);
     const allEvents = useSelector(state => state.events);
     const events = allEvents.filter(event => event.clientID === id);
+    // sort events by date
+    events.sort((a, b) => {return new Date(a.date) - new Date(b.date)});
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
