@@ -47,11 +47,7 @@ export default class Generator {
         <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
           <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
-          ${
-            obj.userAddress.length > 0
-              ? `<div class="col-auto bullet">&bull;</div><div class="col-auto text-align-center">${obj.userAddress}</div>`
-              : ''
-          }
+          ${obj.userAddress.length > 0 ? `` : ''}
           
           ${
             obj.userCityStateZip.length > 0
@@ -75,12 +71,10 @@ export default class Generator {
               <p><strong>Balance: </strong>${obj.clientBalance}</p>
             </div>
             <div class="row">
-              <p><strong>Amount Due: </strong>${obj.amountDue}</p>
+              ${obj.amountDue ? `<p><strong>Amount Due: </strong>${obj.amountDue}</p>` : ''}  
             </div>
             <div class="row" id="notes-field">
-              <p>
-                <strong>Note: </strong>${obj.note}
-              </p>
+              ${obj.note ? `<p><strong>Note: </strong>${obj.note}</p>` : ''}
             </div>
           </div>
           <div class="col-lg-4" id="info-spacer"></div>

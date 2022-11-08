@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ParamsDictionary } from "express-serve-static-core";
+import { ParamsDictionary } from 'express-serve-static-core';
 import async from 'async';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -28,9 +28,9 @@ export default class ClientHandlers {
     } else {
       time = parseFloat(hours) + parseFloat(minutes);
       amount = -(time * rate);
-      console.log("TIME: ", time);
-      console.log("HOURS: ", hours, req.body.hours)
-      console.log("MINUTES: ", minutes, req.body.minutes)
+      console.log('TIME: ', time);
+      console.log('HOURS: ', hours, req.body.hours);
+      console.log('MINUTES: ', minutes, req.body.minutes);
     }
     // create the new Event
     const event = new Event({
@@ -59,7 +59,10 @@ export default class ClientHandlers {
     }
   };
 
-  static updateEvent = async (req: Request<ParamsDictionary, {}, ISaveEventReqBody>, res: Response): Promise<Response> => {
+  static updateEvent = async (
+    req: Request<ParamsDictionary, {}, ISaveEventReqBody>,
+    res: Response
+  ): Promise<Response> => {
     let { clientID, date, type, detail, hours, minutes, rate, amount, user } = req.body;
     let duration: number;
     const eventid: string = req.params.eventid;
@@ -96,7 +99,10 @@ export default class ClientHandlers {
     }
   };
 
-  static deleteEvent = async (req: Request<ParamsDictionary, {}, IDeleteEventReqBody>, res: Response): Promise<Response> => {
+  static deleteEvent = async (
+    req: Request<ParamsDictionary, {}, IDeleteEventReqBody>,
+    res: Response
+  ): Promise<Response> => {
     try {
       // only using a callback here in order to access the deleted events amount
       Event.findByIdAndDelete(req.body.eventID, async (err, event) => {
@@ -123,7 +129,7 @@ export default class ClientHandlers {
     }
 
     interface IClientInfo extends base {
-      balance: number | string;
+      balance: string;
       rate: number | string;
     }
 
@@ -133,7 +139,7 @@ export default class ClientHandlers {
       city?: string;
       state?: string;
       zip?: string;
-      phone: string
+      phone: string;
       paymentInfo: any;
       license: string;
     }
@@ -221,42 +227,49 @@ export default class ClientHandlers {
         if (err) {
           throw err;
         }
+        // check if user is displaying their address
+        let address: string = '';
+        let cityStateZip: string = '';
+        if (providerInfo.city && providerInfo.state && providerInfo.zip) {
+          cityStateZip = providerInfo.city + ', ' + providerInfo.state + ' ' + providerInfo.zip;
+        }
+        if (providerInfo.street) {
+          address = providerInfo.street;
+        }
+        // create arg object for the Generator
+        const argObj: IFormatStringArg = {
+          date: new Date(),
+          userName: providerInfo.fname + ' ' + providerInfo.lname,
+          userAddress: address,
+          userCityStateZip: cityStateZip,
+          userPhone: providerInfo.phone,
+          userLicense: providerInfo.license,
+          clientName: clientInfo.fname + ' ' + clientInfo.lname,
+          clientBalance: `$${parseFloat(clientInfo.balance).toFixed(2)}`,
+          amountDue: amountInput ? amountInput : null,
+          note: notesInput ? notesInput : null,
+          paymentMethods: providerInfo.paymentInfo,
+          events: eventsList,
+        };
+        // TODO: instead of writing HTML file, pass the generator the raw HTML string
+        // create html template
+        const outputFilename = `${clientInfo.fname + '-' + clientInfo.lname}`;
+        const g = new Generator();
+        const htmlStr = g.formatString(argObj);
+        // create the pdf
+        try {
+          await g.makePdfFromHtml(htmlStr, outputFilename);
 
-              // create arg object for the Generator
-              const argObj: IFormatStringArg = {
-                date: new Date(),
-                userName: providerInfo.fname + " " + providerInfo.lname,
-                userAddress: providerInfo.street,
-                userCityStateZip: providerInfo.city + ", " + providerInfo.state + " " + providerInfo.zip,
-                userPhone: providerInfo.phone,
-                userLicense: providerInfo.license,
-                clientName: clientInfo.fname + " " + clientInfo.lname,
-                clientBalance: `$${clientInfo.balance}`,
-                amountDue: amountInput ? amountInput: null,
-                note: notesInput ? notesInput: null,
-                paymentMethods: providerInfo.paymentInfo,
-                events: eventsList,
-            }
-            // TODO: instead of writing HTML file, pass the generator the raw HTML string
-            // create html template
-            const outputFilename = `${clientInfo.fname + "-" + clientInfo.lname}`
-            const g = new Generator();
-            const htmlStr = g.formatString(argObj);
-            // create the pdf
-            try {
-                await g.makePdfFromHtml(htmlStr, outputFilename);
-
-                res.status(200).download(`public/invoices/${outputFilename}.pdf`, `${outputFilename}.pdf`, function (err) {
-    
-                    if (err) return console.error(err);
-                    // delete the file from the server after download
-                    fs.unlink(`public/invoices/${outputFilename}.pdf`, function (err) {
-                        if (err) return console.error(err)
-                    });
-                });
-    
-            } 
-            catch (err) { throw err; }
+          res.status(200).download(`public/invoices/${outputFilename}.pdf`, `${outputFilename}.pdf`, function (err) {
+            if (err) return console.error(err);
+            // delete the file from the server after download
+            fs.unlink(`public/invoices/${outputFilename}.pdf`, function (err) {
+              if (err) return console.error(err);
+            });
+          });
+        } catch (err) {
+          throw err;
+        }
       }
     );
   };
