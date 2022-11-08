@@ -9,6 +9,7 @@ import Event, { IEvent } from '../models/event-schema';
 import DatabaseHelpers from '../utils/databaseHelpers';
 import Generator from '../utils/Generator';
 import { ISaveEventReqBody, IDeleteEventReqBody, IMakeStatementReqBody } from './reqTypes';
+import { IFormatStringArg } from '../utils/Generator';
 
 export default class ClientHandlers {
   static addEvent = async (req: Request<ParamsDictionary, {}, ISaveEventReqBody>, res: Response): Promise<Response> => {
@@ -128,10 +129,10 @@ export default class ClientHandlers {
 
     interface IProviderInfo extends base {
       nameForHeader: string;
-      street: string;
-      city: string;
-      state: string;
-      zip: string;
+      street?: string;
+      city?: string;
+      state?: string;
+      zip?: string;
       phone: string
       paymentInfo: any;
       license: string;
@@ -222,7 +223,7 @@ export default class ClientHandlers {
         }
 
               // create arg object for the Generator
-              const argObj = {
+              const argObj: IFormatStringArg = {
                 date: new Date(),
                 userName: providerInfo.fname + " " + providerInfo.lname,
                 userAddress: providerInfo.street,
@@ -231,8 +232,8 @@ export default class ClientHandlers {
                 userLicense: providerInfo.license,
                 clientName: clientInfo.fname + " " + clientInfo.lname,
                 clientBalance: `$${clientInfo.balance}`,
-                amountDue: amountInput ? amountInput: ' N/A ',
-                note: notesInput ? notesInput: ' N/A ',
+                amountDue: amountInput ? amountInput: null,
+                note: notesInput ? notesInput: null,
                 paymentMethods: providerInfo.paymentInfo,
                 events: eventsList,
             }

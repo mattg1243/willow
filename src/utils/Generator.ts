@@ -1,22 +1,22 @@
-import fs from "fs";
-import path from "path";
-import puppeteer from "puppeteer";
-import { IPaymentInfo } from "../models/user-model";
+import fs from 'fs';
+import path from 'path';
+import puppeteer from 'puppeteer';
+import { IPaymentInfo } from '../models/user-model';
 import { page } from '../app';
 
-interface IFormatStringArg {
-  date: Date,
-  userName: string,
-  userAddress: string,
-  userCityStateZip: string,
-  userPhone: string,
-  userLicense: string,
-  clientName: string,
-  clientBalance: number | string,
-  amountDue: number | string,
-  note: string,
-  paymentMethods: IPaymentInfo,
-  events: Array<any>
+export interface IFormatStringArg {
+  date: Date;
+  userName: string;
+  userAddress?: string;
+  userCityStateZip?: string;
+  userPhone: string;
+  userLicense: string;
+  clientName: string;
+  clientBalance: number | string;
+  amountDue: number | string;
+  note: string;
+  paymentMethods: IPaymentInfo;
+  events: Array<any>;
 }
 
 export default class Generator {
@@ -30,29 +30,34 @@ export default class Generator {
     </head>`;
   htmlEnd = `
     </html>`;
-  
+
   formatString(obj: IFormatStringArg) {
     const dateOptions: Intl.DateTimeFormatOptions = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     };
     let headerSection = `<body>
     <main>
       <!-- header section -->
       <div id="heading">
         <h1>Account Statment</h1>
-        <p id="date-section"><strong>Date: ${new Date(
-          obj.date
-        ).toLocaleDateString("en-US", dateOptions)}</strong></p>
+        <p id="date-section"><strong>Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</strong></p>
         <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
           <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
-          <div class="col-auto bullet">&bull;</div>
-          <div class="col-auto text-align-center">${obj.userAddress}</div>
-          <div class="col-auto bullet">&bull;</div>
-          <div class="col-auto text-align-start">${obj.userCityStateZip}</div>
+          ${
+            obj.userAddress.length > 0
+              ? `<div class="col-auto bullet">&bull;</div><div class="col-auto text-align-center">${obj.userAddress}</div>`
+              : ''
+          }
+          
+          ${
+            obj.userCityStateZip.length > 0
+              ? `<div class="col-auto bullet">&bull;</div><div class="col-auto text-align-start">${obj.userCityStateZip}</div>`
+              : ''
+          }
         </div>
         </div>
         <div class="row justify-content-center provider-info-section text-align-center">
@@ -84,16 +89,16 @@ export default class Generator {
               <p><strong>Payment Methods</strong></p>
             </div>
             <div class="row-1 payment-details-section">
-              <p><strong>Check: </strong>${obj.paymentMethods.check}</p>
+              ${obj.paymentMethods.check ? `<p><strong>Check: </strong>${obj.paymentMethods.check}</p>` : ''}
             </div>
             <div class="row-1">
-              <p><strong>PayPal: </strong>${obj.paymentMethods.paypal}</p>
+              ${obj.paymentMethods.paypal ? `<p><strong>PayPal: </strong>${obj.paymentMethods.paypal}</p>` : ''}
             </div>
             <div class="row-1">
-              <p><strong>Venmo: </strong>${obj.paymentMethods.venmo}</p>
+              ${obj.paymentMethods.venmo ? `<p><strong>Venmo: </strong>${obj.paymentMethods.venmo}</p>` : ''}
             </div>
             <div class="row-1">
-              <p><strong>Zelle: </strong>${obj.paymentMethods.zelle}</p>
+              ${obj.paymentMethods.zelle ? `<p><strong>Zelle: </strong>${obj.paymentMethods.zelle}</p>` : ''}
             </div>
           </div>
         </div>
@@ -117,15 +122,15 @@ export default class Generator {
           ${obj.events
             .map((e) => {
               return `<tr>
-                        <td>${new Date(e.date).toLocaleDateString("en-US")}</td>
+                        <td>${new Date(e.date).toLocaleDateString('en-US')}</td>
                         <td>${e.type}</td>
-                        <td>${e.duration? e.duration: 'N/A'}</td>
-                        <td>${e.rate? `${e.rate}`: 'N/A'}</td>
+                        <td>${e.duration ? e.duration : 'N/A'}</td>
+                        <td>${e.rate ? `${e.rate}` : 'N/A'}</td>
                         <td>$${e.amount}</td>
                         <td class="text-align-right">$${e.newBalance}</td>
                       </tr>`;
             })
-            .join("")}
+            .join('')}
         </tbody>
       </table>
     </div>
@@ -140,53 +145,54 @@ export default class Generator {
   }
 
   async makePdfFromHtml(htmlStr: string, outputFile: string) {
-    const genTime = "Statement generated in";
+    const genTime = 'Statement generated in';
     console.time(genTime);
-    const launchTime = "Puppeteer launched in: "
-    const styleTime = "Style tags added in: "
-    const contentTime = "Content set in: "
-    const pdfTime = "PDF made in:"
+    const launchTime = 'Puppeteer launched in: ';
+    const styleTime = 'Style tags added in: ';
+    const contentTime = 'Content set in: ';
+    const pdfTime = 'PDF made in:';
     return new Promise(async (resolve, reject) => {
       try {
         // launch a new chrome instance
         console.time(launchTime);
         // create a new page
-        
+
         console.timeEnd(launchTime);
         // set html as the pages content
-        console.time(styleTime)
+        console.time(styleTime);
         await page.setContent(htmlStr, {
-          waitUntil: "domcontentloaded",
+          waitUntil: 'domcontentloaded',
         });
         // link css and js
         await page.addScriptTag({
-          path: path.resolve(__dirname, "../../public/javascripts/bootstrap.bundle.min.js"),
+          path: path.resolve(__dirname, '../../public/javascripts/bootstrap.bundle.min.js'),
         });
         await page.addStyleTag({
-          path: path.resolve(__dirname, "../../public/stylesheets/bootstrap.min.css"),
+          path: path.resolve(__dirname, '../../public/stylesheets/bootstrap.min.css'),
         });
         // await page.addStyleTag({
         //   url: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap",
         // })
         await page.addStyleTag({
-          path: path.resolve(__dirname, "../../templates/statement.css"),
+          path: path.resolve(__dirname, '../../templates/statement.css'),
         });
-        // wait for styles to load 
+        // wait for styles to load
         await page.evaluateHandle('document.fonts.ready');
-        console.timeEnd(styleTime)
-        console.time(pdfTime)
+        console.timeEnd(styleTime);
+        console.time(pdfTime);
         // save file
         await page.pdf({
-          format: "Letter",
+          format: 'Letter',
           margin: {},
           path: path.resolve(__dirname, `../../public/invoices/${outputFile}.pdf`),
         });
-        console.timeEnd(pdfTime)
+        console.timeEnd(pdfTime);
         // close the browser
         resolve(null);
         console.timeEnd(genTime);
+      } catch (e) {
+        reject(e);
       }
-      catch (e) { reject(e); }
     });
   }
 }
