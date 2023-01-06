@@ -42,7 +42,7 @@ export default class Generator {
     <main>
       <!-- header section -->
       <div id="heading">
-        <h1>Account Statment</h1>
+        <h1>Account Statement</h1>
         <p id="date-section"><strong>Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</strong></p>
         <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
