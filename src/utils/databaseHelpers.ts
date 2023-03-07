@@ -128,7 +128,7 @@ export default class DatabaseHelpers {
     response.events = events;
     // create token from the user ID
     response.token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '3600s',
+      expiresIn: '365d',
     });
     return Promise.resolve(response);
   };
