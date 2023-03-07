@@ -33,7 +33,6 @@ export default class Generator {
 
   formatString(obj: IFormatStringArg) {
     const dateOptions: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -43,23 +42,23 @@ export default class Generator {
       <!-- header section -->
       <div id="heading">
         <h1>Account Statement</h1>
-        <p id="date-section"><strong>Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</strong></p>
+        <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
+        <div> </div>
         <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
-          <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
-          ${obj.userAddress.length > 0 ? `` : ''}
-          
           ${
             obj.userCityStateZip.length > 0
-              ? `<div class="col-auto bullet">&bull;</div><div class="col-auto text-align-start">${obj.userCityStateZip}</div>`
+              ? `<div class="col-auto text-align-start">${
+                  obj.userAddress.length > 0 ? `<div class="col-auto text-align-center">${obj.userAddress}</div>` : ''
+                }${obj.userCityStateZip}</div>`
               : ''
           }
+          <div class="justify-content-center provider-info-section text-align-center">
+          <div class="row text-align-end">${obj.userPhone}</div>
+          <div class="row text-align-start">${obj.userLicense}</div>
         </div>
+          <p id="date-section"><strong>Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</strong></p>
         </div>
-        <div class="row justify-content-center provider-info-section text-align-center">
-          <div class="col-auto text-align-end">${obj.userPhone}</div>
-          <div class="col-auto bullet">&bull;</div>
-          <div class="col-auto text-align-start">${obj.userLicense}</div>
         </div>
         <div class="row" id="info-section">
           <div class="col client-info-section text-align-start">
