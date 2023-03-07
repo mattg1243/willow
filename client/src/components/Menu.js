@@ -30,6 +30,8 @@ export default function HamburgerMenu() {
 
     useEffect(() => {console.log(statementDrawerOpen)})
 
+    const maintMsg = "This feature is under maintenence. To generate a statement, please go to the client's page and click on the Statement button.";
+
     return(
         <>
         <Menu>
@@ -49,9 +51,9 @@ export default function HamburgerMenu() {
                 <MenuItem icon={<FaRegFileArchive color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { navigate('/client-archive') }} >
                     Closed Cases
                 </MenuItem>
-                <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true); }}>
+                {/* <MenuItem icon={<FaFileInvoiceDollar color={isDark? "white" : "black"} />} color={isDark? "white" : "black"} onClick={() => { setStatementDrawerOpen(true); }} disabled tooltip={maintMsg}>
                     Quick Statement
-                </MenuItem>
+                </MenuItem> */}
                 <MenuDivider />
                 <MenuItem icon={<FaUserCircle color={isDark? "white" : "black"}/>} color={isDark? "white" : "black"} onClick={() => { navigate('/profile') }}>
                     Profile
