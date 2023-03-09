@@ -18,7 +18,9 @@ export interface IFormatStringArg {
   paymentMethods: IPaymentInfo;
   events: Array<any>;
 }
-
+/**
+ * Static class encapsulating statement generator functionality.
+ */
 export default class Generator {
   htmlHead = `<!DOCTYPE html>
   <html lang="en">
@@ -31,6 +33,15 @@ export default class Generator {
   htmlEnd = `
     </html>`;
 
+  /**
+   * This function takes the user's phone number and adds dashes.
+   * @param phoneNumberStr
+   */
+  formatPhoneNumber(phoneNumberStr: string) {
+    phoneNumberStr = phoneNumberStr.replace(/\D[^\.]/g, '');
+    return phoneNumberStr.slice(0, 3) + '-' + phoneNumberStr.slice(3, 6) + '-' + phoneNumberStr.slice(6);
+  }
+
   formatString(obj: IFormatStringArg) {
     const dateOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -42,22 +53,26 @@ export default class Generator {
       <!-- header section -->
       <div id="heading">
         <h1>Account Statement</h1>
-        <div class="col-auto text-align-end" id="providerNameField">${obj.userName}</div>
+        <div class="col-auto text-align-end" id="providerNameField"><h3>${obj.userName}</h3></div>
         <div> </div>
         <div class="container">
         <div class="row justify-content-center provider-info-section text-align-center">
           ${
             obj.userCityStateZip.length > 0
-              ? `<div class="col-auto text-align-start">${
+              ? `<div class="col-auto text-align-center">${
                   obj.userAddress.length > 0 ? `<div class="col-auto text-align-center">${obj.userAddress}</div>` : ''
                 }${obj.userCityStateZip}</div>`
               : ''
           }
-          <div class="justify-content-center provider-info-section text-align-center">
-          <div class="row text-align-end">${obj.userPhone}</div>
-          <div class="row text-align-start">${obj.userLicense}</div>
+          <div class="col-auto justify-content-center provider-info-section text-align-center">
+          <div class="row">
+            <div class="row text-align-end">${this.formatPhoneNumber(obj.userPhone)}</div>
+          </div>
+          <div class="row">
+            <div class="row text-align-end">${obj.userLicense}</div>
+          </div>
         </div>
-          <p id="date-section"><strong>Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</strong></p>
+          <p id="date-section">Date: ${new Date(obj.date).toLocaleDateString('en-US', dateOptions)}</p>
         </div>
         </div>
         <div class="row" id="info-section">
