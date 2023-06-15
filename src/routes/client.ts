@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import ClientHandlers from '../handlers/clientHandlers';
 import ClientValidators from '../middleware/validators/clientValidators';
+import EventHandlers from '../handlers/eventHandlers';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post(
   ClientValidators.addEventValidator,
   ClientValidators.validate,
   (req: Request, res: Response) => {
-    ClientHandlers.addEvent(req, res);
+    EventHandlers.addEvent(req, res);
   }
 );
 // update an event
@@ -22,7 +23,7 @@ router.post(
   ClientValidators.addEventValidator,
   ClientValidators.validate,
   (req: Request, res: Response) => {
-    ClientHandlers.updateEvent(req, res);
+    EventHandlers.updateEvent(req, res);
   }
 );
 // delete an event
@@ -31,7 +32,7 @@ router.post(
   ClientValidators.deleteEventValidator,
   ClientValidators.validate,
   (req: Request, res: Response) => {
-    ClientHandlers.deleteEvent(req, res);
+    EventHandlers.deleteEvent(req, res);
   }
 );
 // generate and download statment
