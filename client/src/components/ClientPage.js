@@ -66,7 +66,7 @@ function ClientPage(props) {
   const deleteEvent = (eventID) => {
     axios
       .post(
-        `/client/deleteevent`,
+        `/event/deleteevent`,
         {
           clientID: id,
           eventID: eventID,
