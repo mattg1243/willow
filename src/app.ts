@@ -22,6 +22,7 @@ require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 import loginRouter from './routes/login';
 import userRouter from './routes/user';
 import clientRouter from './routes/client';
+import eventsRouter from './routes/events';
 import apiRouter from './routes/api';
 const port = process.env.PORT || 3001;
 
@@ -116,6 +117,7 @@ app.use('/login', loginRouter);
 app.use('/user', userRouter);
 app.use('/api', verifyJWT, apiRouter);
 app.use('/client', verifyJWT, clientRouter);
+app.use('/events', eventsRouter);
 // rendering from react build
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
