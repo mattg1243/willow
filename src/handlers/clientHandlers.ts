@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import async from 'async';
 import fs from 'fs';
-import { exec } from 'child_process';
+import { ObjectId } from 'mongodb';
 import User from '../models/user-model';
 import Client from '../models/client-schema';
 import Event, { IEvent } from '../models/event-schema';
@@ -11,7 +11,26 @@ import Generator from '../utils/Generator';
 import { ISaveEventReqBody, IDeleteEventReqBody, IMakeStatementReqBody } from './reqTypes';
 import { IFormatStringArg } from '../utils/Generator';
 
+// TODO: seperate this into a ClientHandler class and an EventHandler class
 export default class ClientHandlers {
+  static getClient = async (req: Request, res: Response) => {
+    const id = req.query.id;
+    const isValidObjectID = ObjectId.isValid(id as string);
+    if (!id) {
+      return res.status(400).json({ message: 'No client id provided with request' });
+    } else if (!isValidObjectID) {
+      return res.status(402).json({ message: 'Client id param is not valid type ObjectID' });
+    }
+    try {
+      const clientQuery = await Client.findOne({ _id: id });
+      console.log(clientQuery);
+      return res.status(200).json({ client: clientQuery.toJSON() });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'An error occurred getting client data', err });
+    }
+  };
+  // remove
   static addEvent = async (req: Request<ParamsDictionary, {}, ISaveEventReqBody>, res: Response): Promise<Response> => {
     /* DEBUG LOGS
     console.log("Add event req.body: \n"); 
@@ -58,7 +77,7 @@ export default class ClientHandlers {
       return res.status(503).json({ error: err });
     }
   };
-
+  // remove
   static updateEvent = async (
     req: Request<ParamsDictionary, {}, ISaveEventReqBody>,
     res: Response
@@ -98,7 +117,7 @@ export default class ClientHandlers {
       return res.status(503).json({ error: err });
     }
   };
-
+  // remove
   static deleteEvent = async (
     req: Request<ParamsDictionary, {}, IDeleteEventReqBody>,
     res: Response
