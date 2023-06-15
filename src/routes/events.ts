@@ -1,14 +1,14 @@
 import { Router, Request, Response } from 'express';
 import EventHandlers from '../handlers/eventHandlers';
-import ClientValidators from '../middleware/validators/clientValidators';
+import EventValidators from '../middleware/validators/eventValidators';
 
 const router = Router();
 
 // add new event to clients record
 router.post(
   '/:id/addevent',
-  ClientValidators.addEventValidator,
-  ClientValidators.validate,
+  EventValidators.addEventValidator,
+  EventValidators.validate,
   (req: Request, res: Response) => {
     EventHandlers.addEvent(req, res);
   }
@@ -17,8 +17,8 @@ router.post(
 // update an event
 router.post(
   '/event/:eventid',
-  ClientValidators.addEventValidator,
-  ClientValidators.validate,
+  EventValidators.addEventValidator,
+  EventValidators.validate,
   (req: Request, res: Response) => {
     EventHandlers.updateEvent(req, res);
   }
@@ -27,8 +27,8 @@ router.post(
 // delete an event
 router.post(
   '/deleteevent',
-  ClientValidators.deleteEventValidator,
-  ClientValidators.validate,
+  EventValidators.deleteEventValidator,
+  EventValidators.validate,
   (req: Request, res: Response) => {
     EventHandlers.deleteEvent(req, res);
   }
