@@ -4,6 +4,9 @@ import ClientValidators from '../middleware/validators/clientValidators';
 
 const router = Router();
 
+router.get('/', (req: Request, res: Response) => {
+  EventHandlers.getEvent(req, res);
+});
 // add new event to clients record
 router.post(
   '/:id/addevent',
