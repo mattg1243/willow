@@ -4,8 +4,27 @@ import DatabaseHelpers from '../utils/databaseHelpers';
 import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ISaveEventReqBody, IDeleteEventReqBody } from './reqTypes';
+import { ObjectId } from 'mongodb';
 
 export default class EventHandlers {
+  static getEvent = async (req: Request, res: Response) => {
+    const id = req.query.id;
+    const isValidObjectID = ObjectId.isValid(id as string);
+    if (!id) {
+      return res.status(400).json({ message: 'No event id provided with request' });
+    } else if (!isValidObjectID) {
+      return res.status(402).json({ message: 'Event id param is not a valid type ObjectID' });
+    }
+    try {
+      const eventQuery = await Event.findOne({ _id: id });
+      console.log(eventQuery);
+      return res.status(200).json({ event: eventQuery.toJSON() });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'An error occured getting event data for event', err });
+    }
+  };
+
   static addEvent = async (req: Request<ParamsDictionary, {}, ISaveEventReqBody>, res: Response): Promise<Response> => {
     /* DEBUG LOGS
     console.log("Add event req.body: \n"); 

@@ -1,4 +1,0 @@
-borb==2.0.9.1
-prettyprint
-datetime
-qrcode
