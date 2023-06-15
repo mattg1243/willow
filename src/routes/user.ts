@@ -1,13 +1,13 @@
-import { Router, Request, Response } from "express";
-import UserHandlers from "../handlers/userHandlers";
-import UserValidators from "../middleware/validators/userValidators";
-import { verifyJWT } from "../middleware/auth";
+import { Router, Request, Response } from 'express';
+import UserHandlers from '../handlers/userHandlers';
+import UserValidators from '../middleware/validators/userValidators';
+import { verifyJWT } from '../middleware/auth';
 
 const router = Router();
 
 // register new user to DB
 router.post(
-  "/register/newuser",
+  '/register/newuser',
   UserValidators.registerUserValidator,
   UserValidators.validate,
   (req: Request, res: Response) => {
@@ -16,7 +16,7 @@ router.post(
 );
 // update users info from preferences page
 router.post(
-  "/updateinfo",
+  '/updateinfo',
   UserValidators.updateUserInfoValidator,
   UserValidators.validate,
   verifyJWT,
@@ -26,7 +26,7 @@ router.post(
 );
 // add a new client
 router.post(
-  "/newclient",
+  '/newclient',
   UserValidators.newClientValidator,
   UserValidators.validate,
   verifyJWT,
@@ -36,7 +36,7 @@ router.post(
 );
 // delete a client and all associated events
 router.post(
-  "/deleteclient",
+  '/deleteclient',
   UserValidators.deleteClientValidator,
   UserValidators.validate,
   verifyJWT,
@@ -46,7 +46,7 @@ router.post(
 );
 // update a clients information
 router.post(
-  "/updateclient",
+  '/updateclient',
   UserValidators.udpateClientValidator,
   UserValidators.validate,
   verifyJWT,
@@ -56,7 +56,7 @@ router.post(
 );
 // reset password
 router.post(
-  "/resetpassword",
+  '/resetpassword',
   UserValidators.resetPasswordValidator,
   UserValidators.validate,
   (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ router.post(
 );
 // save new password
 router.post(
-  "/changepassword",
+  '/changepassword',
   UserValidators.changePasswordValidator,
   UserValidators.validate,
   (req: Request, res: Response) => {
