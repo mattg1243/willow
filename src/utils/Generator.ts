@@ -15,7 +15,7 @@ export interface IFormatStringArg {
   clientBalance: number | string;
   amountDue: number | string;
   note: string;
-  paymentMethods: IPaymentInfo;
+  paymentMethods?: IPaymentInfo;
   events: Array<any>;
 }
 /**
@@ -97,16 +97,16 @@ export default class Generator {
               <p><strong>Payment Methods</strong></p>
             </div>
             <div class="row-1 payment-details-section">
-              ${obj.paymentMethods.check ? `<p><strong>Check: </strong>${obj.paymentMethods.check}</p>` : ''}
+              ${obj.paymentMethods?.check ? `<p><strong>Check: </strong>${obj.paymentMethods.check}</p>` : ''}
             </div>
             <div class="row-1">
-              ${obj.paymentMethods.paypal ? `<p><strong>PayPal: </strong>${obj.paymentMethods.paypal}</p>` : ''}
+              ${obj.paymentMethods?.paypal ? `<p><strong>PayPal: </strong>${obj.paymentMethods.paypal}</p>` : ''}
             </div>
             <div class="row-1">
-              ${obj.paymentMethods.venmo ? `<p><strong>Venmo: </strong>${obj.paymentMethods.venmo}</p>` : ''}
+              ${obj.paymentMethods?.venmo ? `<p><strong>Venmo: </strong>${obj.paymentMethods.venmo}</p>` : ''}
             </div>
             <div class="row-1">
-              ${obj.paymentMethods.zelle ? `<p><strong>Zelle: </strong>${obj.paymentMethods.zelle}</p>` : ''}
+              ${obj.paymentMethods?.zelle ? `<p><strong>Zelle: </strong>${obj.paymentMethods.zelle}</p>` : ''}
             </div>
           </div>
         </div>
@@ -127,9 +127,11 @@ export default class Generator {
           </tr>
         </thead>
         <tbody>
-          ${obj.events
-            .map((e) => {
-              return `<tr>
+          ${
+            obj.events.length > 0
+              ? obj.events
+                  .map((e) => {
+                    return `<tr>
                         <td>${new Date(e.date).toLocaleDateString('en-US')}</td>
                         <td>${e.type}</td>
                         <td>${e.duration ? e.duration : 'N/A'}</td>
@@ -137,10 +139,13 @@ export default class Generator {
                         <td>$${e.amount}</td>
                         <td class="text-align-right">$${e.newBalance}</td>
                       </tr>`;
-            })
-            .join('')}
+                  })
+                  .join('')
+              : ``
+          }
         </tbody>
       </table>
+      ${obj.events.length === 0 ? `<h5 class="justify-content-center text-align-center">No charges.</h5>` : ``}
     </div>
   </main>
       </body>`;

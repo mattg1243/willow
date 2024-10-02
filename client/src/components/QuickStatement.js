@@ -75,7 +75,7 @@ export default function QuickStatement(props) {
         const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
         var link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${client.fname}${client.lname[0]}.pdf`);
+        link.setAttribute('download', `${client.fname}${client.lname}.pdf`);
         document.body.appendChild(link);
         link.click();
         setLoading(false);

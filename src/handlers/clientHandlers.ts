@@ -172,7 +172,7 @@ export default class ClientHandlers {
             providerInfo = user._doc;
             callback(null);
           })
-            .select(['-_id', '-clients', '-username', '-__v'])
+            .select(['-_id', '-clients', '-username', '-__v', '-paymentInfo'])
             .clone();
         },
         // populate client object
@@ -206,14 +206,10 @@ export default class ClientHandlers {
               console.log(`${events.length} events read from database`);
               eventsList = events;
 
-              if (eventsList.length === 0) {
-                console.log('There are no events in the given range of dates.');
-                res.status(503).send('There are no events in');
-                return;
+              if (eventsList.length > 0) {
+                // sort the events by date
+                eventsList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
               }
-              // sort the events by date
-              eventsList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
               callback(null);
             }
           )
