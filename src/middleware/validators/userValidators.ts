@@ -123,7 +123,7 @@ export default class UserValidators {
   ];
 
   static newClientValidator = [
-    body('fname', 'Invalid characters in the first name field').trim().escape().isLength({ min: 1, max: 50 }).isAlpha(),
+    body('fname', 'Invalid characters in the first name field').trim().escape().isLength({ min: 1, max: 50 }),
 
     body('lname', 'Missing last name')
       .optional({ checkFalsy: true })
